@@ -56,4 +56,4 @@ class Bullet(pygame.sprite.Sprite):
         )
 
 
-#Diogo really does not stinkks so much
+#Diogo really does not stinkks so much,i agree
