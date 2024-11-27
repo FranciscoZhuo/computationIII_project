@@ -56,4 +56,4 @@ class Bullet(pygame.sprite.Sprite):
         )
 
 
-#Diogo sucks
+#Diogo really really sucks
