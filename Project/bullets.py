@@ -55,3 +55,5 @@ class Bullet(pygame.sprite.Sprite):
             screen, self.color, self.rect.center, self.radius
         )
 
+
+#Diogo sucks
