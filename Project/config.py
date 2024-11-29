@@ -16,7 +16,7 @@ yellow = (255, 255, 0)
 
 
 # SCREEN RESOLUTION
-resolution = (720, 720)
+resolution = (1024, 768)
 width, height = resolution[0], resolution[1] # For Calculations
 fps = 60
 

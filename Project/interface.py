@@ -64,12 +64,12 @@ def interface():
                     credits_()
 
         # Background
-        clock2.tick(fps)
-        if gif_frame != 63:
-            screen.blit(pygame.image.load(f'assets/MainBack_Frame/frame_{gif_frame}_delay-0.13s.png'), (0, 0))
+        clock2.tick(20)
+        if gif_frame != 167:
+            screen.blit(pygame.image.load(f'assets/MainBack/frame_{gif_frame}.png'), (0, 0))
             gif_frame += 1
         else:
-            screen.blit(pygame.image.load(f'assets/MainBack_Frame/frame_{gif_frame}_delay-0.13s.png'), (0, 0))
+            screen.blit(pygame.image.load(f'assets/MainBack/frame_{gif_frame}.png'), (0, 0))
             gif_frame = 0
 
         # Bunch of things
