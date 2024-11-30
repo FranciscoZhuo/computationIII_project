@@ -16,11 +16,11 @@ def interface():
     roboto_font = pygame.font.SysFont("Roboto", 50)
 
     # Text
-    start_text = corbel_font.render("Game Start", True, white)
-    rules_text = corbel_font.render("Rules", True, white)
-    option_text = corbel_font.render("Option", True, white)
-    credits_text = corbel_font.render("Credits", True, white)
-    quit_text = roboto_font.render("QUIT", True, deep_black)
+    start_text = roboto_font.render("Start Game", True, white)
+    rules_text = roboto_font.render("Rules", True, white)
+    #option_text = corbel_font.render("Option", True, white)
+    credits_text = roboto_font.render("Credits", True, white)
+    quit_text = roboto_font.render("QUIT", True, white)
 
 
 
@@ -43,32 +43,17 @@ def interface():
 
             # Detect if the user clicked on the quit button (450, 600 to 590, 660)
             if ev.type == pygame.MOUSEBUTTONDOWN:
-                # mouse <-- (500, 620)
-                if 210 <= mouse[0] <= 510 and 530 <= mouse[1] <= 590:
-                    # If the user clicks the quit button
-                    pygame.quit()
+                if 362 <= mouse[0] <= 662:
+                   if 550 <= mouse[1] <= 610:
+                        pygame.quit()
+                   if 475 <= mouse[1] <= 535:
+                       credits()
+                   if 400 <= mouse[1] <= 460:
+                       under_construction() #Rules
+                   if 325 <= mouse[1] <= 385:
+                       cutscene1()
+                       wilderness_explorer()
 
-            # Detection clicks on Options (90, 600 to 230, 660)
-            if ev.type == pygame.MOUSEBUTTONDOWN:
-                if 210 <= mouse[0] <= 510 and 390 <= mouse[1] <= 450:
-                    # Activate the function that makes the option screen
-                    under_construction()
-
-            # Detection clicks on Rules
-            if ev.type == pygame.MOUSEBUTTONDOWN:
-                if 210 <= mouse[0] <= 510 and 320 <= mouse[1] <= 380:
-                    under_construction()
-
-            # Detection clicks on Wilderness thingy
-            if ev.type == pygame.MOUSEBUTTONDOWN:
-                if 362 <= mouse[0] <= 662 and 400 <= mouse[1] <= 460:
-                    cutscene1()
-                    wilderness_explorer()
-
-            # Detection clicks on Credits
-            if ev.type == pygame.MOUSEBUTTONDOWN:
-                if 210 <= mouse[0] <= 510 and 460 <= mouse[1] <= 520:
-                    credits_()
 
         # Background
         clock_bg.tick(fps)
@@ -87,41 +72,39 @@ def interface():
         # Buttons
 
         # Wilderness Explorer button
-
-        pygame.draw.rect(screen, light_blue_green, [362, 400, 300, 60], border_radius=20)
-
+        pygame.draw.rect(screen, purple, [362, 325, 300, 60], border_radius=20)
         # Text
         start_rect = start_text.get_rect(
-            center=(362 + 300 // 2, 400 + 60 // 2)
+            center=(362 + 300 // 2, 325 + 60 // 2)
         )
         # Writing
         screen.blit(start_text, start_rect)
 
         # Rules
-        pygame.draw.rect(screen, grey, [210, 320, 300, 60])
+        pygame.draw.rect(screen, grey, [362, 400, 300, 60], border_radius=20)
         rules_rect = rules_text.get_rect(
-            center=(210 + 300 // 2, 320 + 60 // 2)
+            center=(362 + 300 // 2, 400 + 60 // 2)
         )
         screen.blit(rules_text, rules_rect)
 
         # Option
-        pygame.draw.rect(screen, grey, [210, 390, 300, 60])
-        options_rect = option_text.get_rect(
-            center=(210 + 300 // 2, 390 + 60 // 2)
-        )
-        screen.blit(option_text, options_rect)
+        #pygame.draw.rect(screen, grey, [210, 390, 300, 60])
+        #options_rect = option_text.get_rect(
+            #center=(210 + 300 // 2, 390 + 60 // 2)
+        #)
+        #screen.blit(option_text, options_rect)
 
         # Credit
-        pygame.draw.rect(screen, grey, [210, 460, 300, 60])
+        pygame.draw.rect(screen, grey, [362, 475, 300, 60], border_radius=20)
         credit_rect = credits_text.get_rect(
-            center=(210 + 300 // 2, 460 + 60 // 2)
+            center=(362 + 300 // 2, 475 + 60 // 2)
         )
         screen.blit(credits_text, credit_rect)
 
         # Quit
-        pygame.draw.rect(screen, purple, [860, 690, 150, 60], border_radius=20)
+        pygame.draw.rect(screen, purple, [362, 550, 300, 60], border_radius=20)
         quit_rect = quit_text.get_rect(
-            center=(860 + 150 // 2, 690 + 60 // 2)
+            center=(362 + 300 // 2, 550 + 60 // 2)
         )
         screen.blit(quit_text, quit_rect)
 
