@@ -1,4 +1,4 @@
-import pygame.time
+import pygame
 
 from utils import * # no need to import pygame because the import is in utils
 from game import *
@@ -119,7 +119,7 @@ def interface():
         screen.blit(credits_text, credit_rect)
 
         # Quit
-        pygame.draw.rect(screen, light_blue_green, [860, 690, 150, 60], border_radius=20)
+        pygame.draw.rect(screen, purple, [860, 690, 150, 60], border_radius=20)
         quit_rect = quit_text.get_rect(
             center=(860 + 150 // 2, 690 + 60 // 2)
         )

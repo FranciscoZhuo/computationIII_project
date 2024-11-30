@@ -1,6 +1,6 @@
 import pygame
 
-from Project.config import resolution, white, deep_black, dark_red
+from config import resolution, white, deep_black, dark_red
 
 
 
