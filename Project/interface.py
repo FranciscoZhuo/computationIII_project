@@ -87,13 +87,6 @@ def interface():
         )
         screen.blit(rules_text, rules_rect)
 
-        # Option
-        #pygame.draw.rect(screen, grey, [210, 390, 300, 60])
-        #options_rect = option_text.get_rect(
-            #center=(210 + 300 // 2, 390 + 60 // 2)
-        #)
-        #screen.blit(option_text, options_rect)
-
         # Credit
         pygame.draw.rect(screen, grey, [362, 475, 300, 60], border_radius=20)
         credit_rect = credits_text.get_rect(
