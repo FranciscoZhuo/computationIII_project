@@ -34,7 +34,7 @@ def cutscene1():
     skip_text = comicsans_font_20.render('Press "ENTER" to skip', True, white)
 
     skip_rect = skip_text.get_rect(
-        center=(550 + 60 // 2, 670 + 20 // 2)
+        center=(800 + 60 // 2, 670 + 20 // 2)
     )
 
 

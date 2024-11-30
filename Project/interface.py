@@ -1,3 +1,5 @@
+import pygame.time
+
 from utils import * # no need to import pygame because the import is in utils
 from game import *
 from cutscene import cutscene1
@@ -11,20 +13,25 @@ def interface():
 
     corbel_font = pygame.font.SysFont("Corbel", 50) # Mudar na entrega
     comicsans_font = pygame.font.SysFont("Comic Sans MS",50)
+    roboto_font = pygame.font.SysFont("Roboto", 50)
 
     # Text
-    wilderness_text = corbel_font.render("Wilderness Explorer", True, white)
-
     start_text = corbel_font.render("Game Start", True, white)
     rules_text = corbel_font.render("Rules", True, white)
     option_text = corbel_font.render("Option", True, white)
     credits_text = corbel_font.render("Credits", True, white)
-    quit_text = corbel_font.render("Quit", True, white)
+    quit_text = roboto_font.render("QUIT", True, deep_black)
 
-    title_text = comicsans_font.render("Computation III - Projecto", True, glowing_light_red)
 
-    gif_frame = 0
-    clock2 = pygame.time.Clock()
+
+    gif_frame_bg = 0
+    clock_bg = pygame.time.Clock()
+
+    # setting the window title
+    pygame.display.set_caption("Surge of the Silent")
+    # setting the icon
+    pygame.display.set_icon(pygame.image.load("assets/icon.png"))
+
 
     #Game Loop
     while True:
@@ -54,7 +61,7 @@ def interface():
 
             # Detection clicks on Wilderness thingy
             if ev.type == pygame.MOUSEBUTTONDOWN:
-                if 210 <= mouse[0] <= 510 and 250 <= mouse[1] <= 310:
+                if 362 <= mouse[0] <= 662 and 400 <= mouse[1] <= 460:
                     cutscene1()
                     wilderness_explorer()
 
@@ -64,13 +71,13 @@ def interface():
                     credits_()
 
         # Background
-        clock2.tick(fps)
-        if gif_frame != 63:
-            screen.blit(pygame.image.load(f'assets/MainBack_Frame/frame_{gif_frame}_delay-0.13s.png'), (0, 0))
-            gif_frame += 1
+        clock_bg.tick(fps)
+        if gif_frame_bg != 7:
+            screen.blit(pygame.image.load(f'assets/MainBG/frame_{gif_frame_bg}.png'), (0, 0))
+            gif_frame_bg += 1
         else:
-            screen.blit(pygame.image.load(f'assets/MainBack_Frame/frame_{gif_frame}_delay-0.13s.png'), (0, 0))
-            gif_frame = 0
+            screen.blit(pygame.image.load(f'assets/MainBG/frame_{gif_frame_bg}.png'), (0, 0))
+            gif_frame_bg = 0
 
         # Bunch of things
 
@@ -81,11 +88,11 @@ def interface():
 
         # Wilderness Explorer button
 
-        pygame.draw.rect(screen, red, [210, 250, 300, 60])
+        pygame.draw.rect(screen, light_blue_green, [362, 400, 300, 60], border_radius=20)
 
         # Text
         start_rect = start_text.get_rect(
-            center=(210 + 300 // 2, 250 + 60 // 2)
+            center=(362 + 300 // 2, 400 + 60 // 2)
         )
         # Writing
         screen.blit(start_text, start_rect)
@@ -112,14 +119,17 @@ def interface():
         screen.blit(credits_text, credit_rect)
 
         # Quit
-        pygame.draw.rect(screen, grey, [210, 530, 300, 60])
+        pygame.draw.rect(screen, light_blue_green, [860, 690, 150, 60], border_radius=20)
         quit_rect = quit_text.get_rect(
-            center=(210 + 300 // 2, 530 + 60 // 2)
+            center=(860 + 150 // 2, 690 + 60 // 2)
         )
         screen.blit(quit_text, quit_rect)
 
         # Display the tittle
-        screen.blit(wilderness_text, (75, 55))
+        title = pygame.image.load("assets/Surge Of The Silent.png")
+        title = pygame.transform.scale(title, (450, 350))
+        screen.blit(title, (287, -70))
+
 
         pygame.display.update()
 
