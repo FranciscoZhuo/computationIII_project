@@ -7,7 +7,7 @@ from game import *
 def cutscene1():
     # Screen setup
     screen = pygame.display.set_mode(resolution)
-    pygame.display.set_caption("Text Fade In and Out")
+
 
     # Font for the text that fades in
     comicsans_font = pygame.font.SysFont("Comic Sans MS",40)
