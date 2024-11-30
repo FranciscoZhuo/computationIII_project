@@ -23,7 +23,7 @@ def interface():
     quit_text = roboto_font.render("QUIT", True, white)
 
 
-
+    # Constants
     gif_frame_bg = 0
     clock_bg = pygame.time.Clock()
 
@@ -31,6 +31,10 @@ def interface():
     pygame.display.set_caption("Surge of the Silent")
     # setting the icon
     pygame.display.set_icon(pygame.image.load("assets/icon.png"))
+
+    # Play the initial soundtrack
+    pygame.mixer.music.load('assets/Rain and Thunder Sounds.mp3')
+    pygame.mixer.music.play(-1)
 
 
     #Game Loop
@@ -64,20 +68,16 @@ def interface():
             screen.blit(pygame.image.load(f'assets/MainBG/frame_{gif_frame_bg}.png'), (0, 0))
             gif_frame_bg = 0
 
-        # Bunch of things
 
         # Get the mouse information
         mouse = pygame.mouse.get_pos()
 
         # Buttons
-
         # Wilderness Explorer button
         pygame.draw.rect(screen, purple, [362, 325, 300, 60], border_radius=20)
-        # Text
         start_rect = start_text.get_rect(
             center=(362 + 300 // 2, 325 + 60 // 2)
         )
-        # Writing
         screen.blit(start_text, start_rect)
 
         # Rules
