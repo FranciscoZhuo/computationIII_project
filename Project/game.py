@@ -62,6 +62,10 @@ def execute_game(player: Player):
         # Shooting
         player.shoot(bullets)
 
+        # Spawn timer
+        if enemy_spawn_timer > 0:
+            enemy_spawn_timer -= 1
+
         # Spawning the enemies
         if enemy_spawn_timer <= 0:
             new_enemy = Enemy()
