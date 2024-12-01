@@ -16,12 +16,11 @@ def interface():
     roboto_font = pygame.font.SysFont("Roboto", 50)
 
     # Text
-    start_text = corbel_font.render("START GAME", True, white)
-    rules_text = corbel_font.render("RULES", True, white)
-    option_text = corbel_font.render("OPTIONS", True, white)
-    credits_text = corbel_font.render("CREDITS", True, white)
-    quit_text = roboto_font.render("QUIT", True, deep_black)
-#   title_text = comicsans_font.render("Computation III - Project", True, glowing_light_red), i dont know if you wnat to put this
+    start_text = roboto_font.render("START GAME", True, white)
+    rules_text = roboto_font.render("RULES", True, white)
+    option_text = roboto_font.render("OPTIONS", True, white)
+    credits_text = roboto_font.render("CREDITS", True, white)
+    quit_text = roboto_font.render("QUIT", True, white)
 
 
     gif_frame_bg = 0
@@ -31,6 +30,10 @@ def interface():
     pygame.display.set_caption("Surge of the Silent")
     # setting the icon
     pygame.display.set_icon(pygame.image.load("assets/icon.png"))
+
+    # Play the soundtrack
+    pygame.mixer.music.load('assets/Rain and Thunder Sounds.mp3')
+    pygame.mixer.music.play(-1)
 
 
     #Game Loop
@@ -47,16 +50,14 @@ def interface():
             if ev.type == pygame.MOUSEBUTTONDOWN:  # verifies if there´s a click or movement in the areas of each button
                 if 362 < mouse[0] < 662:  # it checks if the mouse click is within the horizontal range of the buttons
                     # it checks if the click matches the vertical range for the buttons:
-                    if 250 < mouse[1] < 310:  # START GAME
-                        wilderness_explorer()
+                    if 325 < mouse[1] < 385:  # START GAME
                         cutscene1()
-                    elif 320 < mouse[1] < 380:  # RULES
+                        wilderness_explorer()
+                    elif 400 < mouse[1] < 460:  # RULES
                         rules_()
-                    elif 390 < mouse[1] < 450:  # OPTIONS
-                        under_construction()
-                    elif 460 < mouse[1] < 520:  # CREDITS
+                    elif 475 < mouse[1] < 535:  # CREDITS
                         credits_()
-                    elif 530 < mouse[1] < 590:  # QUIT
+                    elif 550 < mouse[1] < 610:  # QUIT
                         pygame.quit()
 
         # Background
@@ -74,11 +75,10 @@ def interface():
         mouse = pygame.mouse.get_pos()
 
         # Buttons
-        wilderness_color = light_blue_green if 250 < mouse[1] < 310 else grey
-        rules_color = light_blue_green if 320 < mouse[1] < 380 else grey
-        options_color = light_blue_green if 390 < mouse[1] < 450 else grey
-        credits_color = light_blue_green if 460 < mouse[1] < 520 else grey
-        quit_color = light_blue_green if 530 < mouse[1] < 590 else grey
+        wilderness_color = light_blue_green if 325 < mouse[1] < 385 else purple
+        rules_color = light_blue_green if 400 < mouse[1] < 460 else purple
+        credits_color = light_blue_green if 475 < mouse[1] < 537 else purple
+        quit_color = light_blue_green if 550 < mouse[1] < 610 else purple
 
         #Centralizing the buttons
         width_button = 300
@@ -88,15 +88,14 @@ def interface():
 
 
         # Wilderness Explorer button
-        pygame.draw.rect(screen, wilderness_color, [x_button, 250, width_button, height_button], border_radius=15)
-        pygame.draw.rect(screen, rules_color, [x_button, 320, width_button, height_button], border_radius=15)
-        pygame.draw.rect(screen, options_color, [x_button, 390, width_button, height_button], border_radius=15)
-        pygame.draw.rect(screen, credits_color, [x_button, 460, width_button, height_button], border_radius=15)
-        pygame.draw.rect(screen, quit_color, [x_button, 530, width_button, height_button], border_radius=15)
+        pygame.draw.rect(screen, wilderness_color, [x_button, 325, width_button, height_button], border_radius=15)
+        pygame.draw.rect(screen, rules_color, [x_button, 400, width_button, height_button], border_radius=15)
+        pygame.draw.rect(screen, credits_color, [x_button, 475, width_button, height_button], border_radius=15)
+        pygame.draw.rect(screen, quit_color, [x_button, 550, width_button, height_button], border_radius=15)
 
         # Text
         start_rect = start_text.get_rect(
-            center=(x_center, 250 + height_button // 2)
+            center=(x_center, 325 + height_button // 2)
         )
         # Writing
         screen.blit(start_text, start_rect)
@@ -104,28 +103,21 @@ def interface():
         # Rules
         #pygame.draw.rect(screen, grey, [210, 320, 300, 60])
         rules_rect = rules_text.get_rect(
-            center=(x_center,320 + height_button // 2)
+            center=(x_center,400 + height_button // 2)
         )
         screen.blit(rules_text, rules_rect)
-
-        # Option
-        #pygame.draw.rect(screen, grey, [210, 390, 300, 60])
-        options_rect = option_text.get_rect(
-            center=(x_center, 390 + height_button // 2)
-        )
-        screen.blit(option_text, options_rect)
 
         # Credit
         #pygame.draw.rect(screen, grey, [210, 460, 300, 60])
         credit_rect = credits_text.get_rect(
-            center=(x_center, 460 + height_button // 2)
+            center=(x_center, 475 + height_button // 2)
         )
         screen.blit(credits_text, credit_rect)
 
         # Quit
         #pygame.draw.rect(screen, light_blue_green, [860, 690, 150, 60], border_radius=20)
         quit_rect = quit_text.get_rect(
-            center=(x_center, 530 + height_button // 2)
+            center=(x_center, 550 + height_button // 2)
         )
         screen.blit(quit_text, quit_rect)
 
