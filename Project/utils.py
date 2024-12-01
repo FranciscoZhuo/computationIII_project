@@ -1,6 +1,6 @@
 import pygame
 
-from config import resolution, white, deep_black, dark_red
+from config import *
 
 
 
@@ -105,5 +105,4 @@ def under_construction():
         # Update the display
         pygame.display.update()
 
-        # Check for
     pass

@@ -1,5 +1,4 @@
 import pygame
-
 from utils import * # no need to import pygame because the import is in utils
 from game import *
 from cutscene import cutscene1
@@ -10,19 +9,15 @@ def interface():
     pygame.init()
     # creating the screen at the set resolution
     screen = pygame.display.set_mode(resolution)
-
-    corbel_font = pygame.font.SysFont("Corbel", 50) # Mudar na entrega
-    comicsans_font = pygame.font.SysFont("Comic Sans MS",50)
     roboto_font = pygame.font.SysFont("Roboto", 50)
 
     # Text
     start_text = roboto_font.render("START GAME", True, white)
     rules_text = roboto_font.render("RULES", True, white)
-    option_text = roboto_font.render("OPTIONS", True, white)
     credits_text = roboto_font.render("CREDITS", True, white)
     quit_text = roboto_font.render("QUIT", True, white)
 
-
+    # Background configs
     gif_frame_bg = 0
     clock_bg = pygame.time.Clock()
 
@@ -35,10 +30,31 @@ def interface():
     pygame.mixer.music.load('assets/Rain and Thunder Sounds.mp3')
     pygame.mixer.music.play(-1)
 
+    # Sound Bar Settings
+    volume_bar_visible = False  # Flag to toggle the sound bar
+    bar_x, bar_y = 975, 495 # Bottom-right corner
+    bar_width, bar_height = 20, 200  # Vertical bar dimensions
+    knob_height = 10  # Knob height
+    volume = 0.5  # Default volume
+
+    def draw_sound_bar():
+        # Draw the vertical sound bar
+        pygame.draw.rect(screen, grey, [bar_x, bar_y, bar_width, bar_height], border_radius= 20)
+        knob_y = bar_y + int((1 - volume) * bar_height) - knob_height // 2
+        pygame.draw.rect(screen, purple, (bar_x, knob_y, bar_width, knob_height))
+
+    # Mute Button Settings
+    is_muted = False
+
 
     #Game Loop
     while True:
         mouse = pygame.mouse.get_pos() #guarda as coordenadas atuais do cursor do rato
+
+        # Show sound bar if the flag is set
+        if volume_bar_visible:
+            draw_sound_bar()
+
 
         # Event Handling
         for ev in pygame.event.get():
@@ -60,6 +76,33 @@ def interface():
                     elif 550 < mouse[1] < 610:  # QUIT
                         pygame.quit()
 
+            if ev.type == pygame.MOUSEBUTTONDOWN:
+                # Check if the bottom-right button is clicked
+                if 955 < mouse[0] < 1015 and 704 < mouse[1] < 764:
+                    volume_bar_visible = not volume_bar_visible
+
+
+                # Adjust volume if sound bar is visible
+                if volume_bar_visible and bar_x < mouse[0] < bar_x + bar_width:
+                    if bar_y < mouse[1] < bar_y + bar_height:
+                        volume = 1 - (mouse[1] - bar_y) / bar_height  # Calculate volume
+                        pygame.mixer.music.set_volume(volume)
+
+            if ev.type == pygame.MOUSEBUTTONDOWN:
+                # Dragging functionality for the knob
+                if volume_bar_visible:
+                    if bar_x < mouse[0] < bar_x + bar_width and bar_y < mouse[1] < bar_y + bar_height:
+                        volume = 1 - (mouse[1] - bar_y) / bar_height
+                        pygame.mixer.music.set_volume(volume)
+
+            if ev.type == pygame.MOUSEBUTTONDOWN:
+                if 880 < mouse[0] < 940 and 704 < mouse[1] < 764:
+                    is_muted = not is_muted  # Toggle mute state
+                    if is_muted:
+                        pygame.mixer.music.set_volume(0)  # Mute sound
+                    else:
+                        pygame.mixer.music.set_volume(volume)  # Unmute sound
+
         # Background
         clock_bg.tick(fps)
         if gif_frame_bg != 7:
@@ -69,16 +112,36 @@ def interface():
             screen.blit(pygame.image.load(f'assets/MainBG/frame_{gif_frame_bg}.png'), (0, 0))
             gif_frame_bg = 0
 
-        # Bunch of things
+        # Draw Sound volume button and set it on
+        sound_plus = pygame.image.load("assets/Sound_plus.png")
+        sound_minus = pygame.image.load("assets/Sound_minus.png")
 
-        # Get the mouse information
-        mouse = pygame.mouse.get_pos()
+        if volume_bar_visible:
+            screen.blit(sound_minus, (955, 704))
+        else:
+            screen.blit(sound_plus, (955, 704))
+
+        # Draw Mute and not mute Button and set it on
+        sound_mute = pygame.image.load("assets/Sound_mute.png")
+        sound_on = pygame.image.load("assets/Sound_on.png")
+
+
+        if is_muted:
+            screen.blit(sound_mute, (880, 704))
+        else:
+            screen.blit(sound_on, (880, 704))
+
+
+        # Show sound bar if the flag is set
+        if volume_bar_visible:
+            draw_sound_bar()
+
 
         # Buttons
-        wilderness_color = light_blue_green if 325 < mouse[1] < 385 else purple
-        rules_color = light_blue_green if 400 < mouse[1] < 460 else purple
-        credits_color = light_blue_green if 475 < mouse[1] < 537 else purple
-        quit_color = light_blue_green if 550 < mouse[1] < 610 else purple
+        wilderness_color = light_blue_green if 325 < mouse[1] < 385 and 362 < mouse[0] < 662 else purple
+        rules_color = light_blue_green if 400 < mouse[1] < 460 and 362 < mouse[0] < 662 else purple
+        credits_color = light_blue_green if 475 < mouse[1] < 537 and 362 < mouse[0] < 662 else purple
+        quit_color = light_blue_green if 550 < mouse[1] < 610 and 362 < mouse[0] < 662 else purple
 
         #Centralizing the buttons
         width_button = 300
@@ -178,3 +241,4 @@ def rules_():
 
 def wilderness_explorer():
     game_loop()
+
