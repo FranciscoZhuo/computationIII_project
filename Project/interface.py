@@ -1,7 +1,7 @@
 import pygame
 from utils import * # no need to import pygame because the import is in utils
 from game import *
-from cutscene import cutscene1
+from cutscene import *
 
 def interface():
 

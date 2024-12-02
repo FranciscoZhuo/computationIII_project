@@ -101,3 +101,20 @@ def execute_game(player: Player):
             bullet.draw(screen)
 
         pygame.display.flip()
+
+
+def level1(player: Player):
+    """
+
+    Executes the first level of the game
+    """
+    # Clock for controlling the frame rate
+    clock = pygame.time.Clock()
+
+    # Setting up the background:
+    screen = pygame.display.set_mode(resolution)
+    background = pygame.image.load("img/grass.jpg")
+    background = pygame.transform.scale(background, (width, height))
+
+    # Screen setup
+    screen = pygame.display.set_mode(resolution)
