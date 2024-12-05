@@ -198,16 +198,44 @@ def interface():
 def credits_():
     ### BASE SETTINGS ###
     screen = pygame.display.set_mode(resolution)
+    clock = pygame.time.Clock()
 
-    comicsansfont = pygame.font.SysFont("Comic Sans MS", 25)
-    corbelfont = pygame.font.SysFont("Cobel", 50)
+    #FONTS
+    bloodcrowfont = pygame.font.Font("assets/bloodcrow.ttf", 35)
 
-    augusto = comicsansfont.render("Augusto Santos, ajrsantos@novaims.unl.pt", True, white)
-    diogo = comicsansfont.render("Diogo Rasteiro, drasteiro@novaims.unl.pt", True, white)
-    liah = comicsansfont.render("Liah Rosenfeld, lrosenfel@novaims.unl.pt", True, white)
+
+
+    # Background Image
+    background = pygame.image.load("img/credits_bg.png")
+    background = pygame.transform.scale(background, resolution)
+
+    #Music
+    pygame.mixer.music.load("assets/Heart of Courage.mp3")
+    pygame.mixer.music.play(-1)  # Loop the music
+
+    # Credits Text
+    credits = [
+        "Credits",
+        "",
+        "Augusto Santos, ajrsantos@novaims.unl.pt",
+        "Diogo Rasteiro, drasteiro@novaims.unl.pt",
+        "Liah Rosenfeld, lrosenfel@novaims.unl.pt",
+        "",
+        "Special Thanks:",
+        "Our Amazing Players",
+        "And You for Playing!",
+    ]
+
+    # Render Text Surfaces
+    rendered_text = [bloodcrowfont.render(line, True, white) for line in credits]
+
+    # Scrolling Variables
+    scroll_y = resolution[1]  # Start below the screen
+    scroll_speed = 2  # Pixels per frame
+    line_height = 40  # Space between each line of text
 
     while True:
-        # quitting the mouse position
+        # getting the mouse position
         mouse = pygame.mouse.get_pos()
 
         # Getting the events from the user to detect quitting or returning to interface
@@ -216,24 +244,34 @@ def credits_():
                 pygame.quit()
             if ev.type == pygame.MOUSEBUTTONDOWN:
                 if 450 <= mouse[0] <= 590 and 600 <= mouse[1] <= 660:
+                    pygame.mixer.music.stop()  # Stop music on exit
                     interface()
 
         #### DISPLAYING THE CREDITS ####
-        screen.fill(deep_black)
+        screen.blit(background,(0,0))
 
-        # Display my text
-        screen.blit(augusto, (0,0))
-        screen.blit(diogo, (0,25))
-        screen.blit(liah, (0,50))
+        # Scroll and Render Credits
+        for i, line_surface in enumerate(rendered_text):
+            text_x = (resolution[0] - line_surface.get_width()) // 2
+            text_y = scroll_y + i * line_height
+            screen.blit(line_surface, (text_x, text_y))
+
+        # Update scroll position
+        scroll_y -= scroll_speed
+
+        # Reset position if the credits scroll off the screen
+        if scroll_y + len(rendered_text) * line_height < 0:
+            scroll_y = resolution[1]
 
         # Drawing the back button [x, y, width, height]
-        pygame.draw.rect(screen, dark_red, [450, 600, 140, 60])
-        back_text = corbelfont.render("Back", True, white)
+        pygame.draw.rect(screen, deep_black, [450, 600, 140, 60])
+        back_text = bloodcrowfont.render("Back", True, grey)
         back_rect = back_text.get_rect(center=(450 + 140 // 2, 600 + 60 // 2))
         screen.blit(back_text, back_rect)
 
-        # As always
-        pygame.display.update()
+        # Update Display
+        pygame.display.flip()
+        clock.tick(60)
 
 def rules_():
     print("Displaying rules...")
