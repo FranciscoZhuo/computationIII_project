@@ -22,7 +22,7 @@ class PowerUp(ABC, pygame.sprite.Sprite):
         #spawn_time keeps the moment that the power-up was created/initialized
 
     @abstractmethod
-    def apply_powerup(self,player):
+    def apply_powerup(self, player, zombies = None):
         """
         Applies the effect of the power-up on the player.
 
@@ -46,7 +46,10 @@ class LifePowerUp(PowerUp):
         self.image = pygame.transform.scale(self.image,(40, 40))
         self.rect = self.image.get_rect(topleft = (x,y))
 
-    def apply_powerup(self,player):
+    def apply_powerup(self,player, zombies = None):
+        """
+        Increases the player´s life by 20%
+        """
         player.health = min(player.health + player.max_health * 0.2, player.max_health)
 
 class SlowZombiesPowerUp(PowerUp):
@@ -85,35 +88,44 @@ class PowerUpController:
             player(Player): Player object
             zombies(list): List of zombie objects
         """
-        current_time = pygame.time.get_ticks()
-
-        #Spawn power-ups at intervals
-        if current_time - self.last_spawn > self.interval_spawn:
-            self.spawn_power_up()
-            self.last_spawn = current_time
-
-        #Colisions between player and power-ups
-        for power_up in self.power_ups:
-            if pygame.sprite.collide_rect(player, power_up):
-                power_up.apply_powerup(player, zombies)
-                self.power_ups.remove(power_up)
-
-        #Remove power-ups after apears for 15 seconds
-        for power_up in self.power_ups:
-            if power_up.end_powerup():
-                self.power_ups.remove(power_up)
+        self.spawn_powerup()
+        self.collisions(player, zombies)
+        self.remove_powerups()
 
 
     def spawn_powerup(self):
         """
         We want the power-up to spawns on a random place in the screen
         """
-        x = random.randint (50, 750)
-        y = random.randint(50, 550)
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_spawn > self.interval_spawn:
+            x = random.randint (50, 750)
+            y = random.randint(50, 550)
+            type_powerup = random.choice([LifePowerUp, SlowZombiesPowerUp]) #basically, we want the power-up to spawn randomly
+            power_up = type_powerup(x,y)
+            self.power_ups.add(power_up)
+            self.last_spawn = current_time
 
-        type_powerup = random.choice([LifePowerUp, SlowZombiesPowerUp]) #basically, we want the power-up to spawn randomly
-        power_up = type_powerup(x,y)
-        self.power_ups.add(power_up)
+    def collisions(self, player, zombies):
+        """
+        Checks colisions between player and power-ups
+
+        Args:
+            player(Player): player object
+            zombies(list): list of zombies
+        """
+        for power_up in list(self.power_ups): #It´s suposed to create a copy to avoid redundancy
+            if pygame.sprite.collide_rect(player, power_up):
+                power_up.apply_powerup(player, zombies)
+                self.power_ups.remove(power_up)
+
+    def remove_powerups(self):
+        """
+        Removes power-ups after appears for 15 seconds
+        """
+        for power_up in self.power_ups:
+            if power_up.end_powerup():
+                self.power_ups.remove(power_up)
 
     def draw(self, screen):
         """
