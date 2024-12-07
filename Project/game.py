@@ -1,7 +1,7 @@
 from config import *
 import math
 import pygame
-from enemy import *
+from enemy import Enemy
 from player import Player
 from shed import shed
 
@@ -68,19 +68,9 @@ def execute_game(player: Player):
 
         # Spawning the enemies
         if enemy_spawn_timer <= 0:
-            # Randomly select a zombie type
-            zombie_type = random.choice([FastZombie, TankZombie, ExplodingZombie, Enemy])
-            new_enemy = zombie_type()  # Instantiate the selected zombie type
+            new_enemy = Enemy()
             enemies.add(new_enemy)
-            enemy_spawn_timer = 2 * fps  # Every two seconds
-
-        # Weighted random selection
-        zombie_type = random.choices(
-            [FastZombie, TankZombie, ExplodingZombie, Enemy],
-            weights=[0.2, 0.2, 0.1, 0.5],  # 20% Fast, 20% Tank, 10% Exploding, 50% Normal Enemy
-            k=1
-        )[0]
-        new_enemy = zombie_type()
+            enemy_spawn_timer = 2 * fps # Every two seconds
 
         # Checking for collisions between enemies and bullets
         for bullet in bullets:

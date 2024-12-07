@@ -46,35 +46,4 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x = int(self.rect.x)
         self.rect.y = int(self.rect.y)
 
-class FastZombie(Enemy):
-    def __init__(self):
-        super().__init__()
-        self.image.fill(green)  # Green for fast zombies
-        self.speed = random.randint(4, 6)  # Faster than normal enemies
-        self.health = 5  # Lower health since they're faster
-
-class TankZombie(Enemy):
-    def __init__(self):
-        super().__init__()
-        self.image.fill(grey)  # Grey for tank zombies
-        self.speed = random.randint(1, 2)  # Slower than normal enemies
-        self.health = 20  # Much higher health
-
-class ExplodingZombie(Enemy):
-    def __init__(self):
-        super().__init__()
-        self.image.fill(yellow)  # yellow for exploding zombies
-        self.speed = random.randint(2, 3)
-        self.health = 8  # Normal health
-
-    def explode(self, player):
-        """
-        Causes the zombie to explode and deal damage to the player.
-        """
-        # Example of an explosion effect (reduce player health or spawn particles)
-        if pygame.sprite.collide_rect(self, player):
-            player.health -= 10  # Assume player has a health attribute
-            self.kill()  # Remove this zombie from the game
-
-
 
