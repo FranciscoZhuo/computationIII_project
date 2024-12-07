@@ -42,7 +42,7 @@ class PowerUp(ABC, pygame.sprite.Sprite):
 class LifePowerUp(PowerUp):
     def __init__(self, x, y):
         super().__init__(x,y,effect_duration=15000) #the power-up for receiving more 20% of life
-        self.image = pygame.image.load("heart.png").convert_alpha()
+        self.image = pygame.image.load("assets/heart.png").convert_alpha()
         self.image = pygame.transform.scale(self.image,(40, 40))
         self.rect = self.image.get_rect(topleft = (x,y))
 
@@ -77,7 +77,7 @@ class SlowZombiesPowerUp(PowerUp):
 class PowerUpController:
     def __init__(self):
         self.power_ups = pygame.sprite.Group()
-        self.interval_spawn = 1000 #10 sec
+        self.interval_spawn = 10000 #10 sec
         self.last_spawn = pygame.time.get_ticks() #keeps tracking of the last time that a power-up appeared
 
     def update(self, player, zombies):
