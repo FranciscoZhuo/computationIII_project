@@ -4,6 +4,7 @@ import pygame
 from enemy import Enemy
 from player import Player
 from powerups import PowerUpController
+from monetarysystem import MonetarySystem
 from shed import shed
 
 def game_loop():
@@ -50,6 +51,10 @@ def execute_game(player: Player):
     #Initialize the PowerUpController
     power_up_controller = PowerUpController()
 
+    #Initialize Monetary System
+    monetary_system = MonetarySystem() #we can put inside of the MonetarySystem() the initial_balance = amount,
+    # for example initial_balance = 50, which means the player will always start the game with 50€.
+
     running = True
     while running:
         # Control frame rate
@@ -82,6 +87,7 @@ def execute_game(player: Player):
                 bullet.kill()  # Destroy the bullet
                 if zombie.health <= 0:
                     zombie.kill()  # Destroy the enemy
+                    monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
 
 
 
@@ -105,6 +111,10 @@ def execute_game(player: Player):
         zombies.draw(screen)
         for bullet in bullets:
             bullet.draw(screen)
+
+        # Shows monetary balance
+        font = pygame.font.SysFont("Roboto", 30)
+        monetary_system.show_balance(screen,font)
 
         pygame.display.flip()
 
