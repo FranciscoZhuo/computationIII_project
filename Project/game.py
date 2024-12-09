@@ -65,6 +65,8 @@ def execute_game(player: Player):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+        # Calculate dt (delta time: time between frames)
+        dt = clock.tick(fps) / 1000.0  # dt is in seconds
 
         # Shooting
         player.shoot(bullets)
@@ -103,7 +105,7 @@ def execute_game(player: Player):
 
 
         # Update positions
-        player_group.update()
+        player_group.update(dt)
         bullets.update()
         zombies.update(player)
 

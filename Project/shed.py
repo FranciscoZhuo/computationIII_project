@@ -29,7 +29,7 @@ def shed(player):
                 pygame.quit()
 
         # Update their position
-        player.update()
+        player.update(dt)
 
         # Detect if the user walks in the speacial area (House)
         if special_area.colliderect(player.rect):
