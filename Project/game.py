@@ -3,6 +3,8 @@ import math
 import pygame
 from enemy import *
 from player import Player
+from powerups import PowerUpController
+from monetarysystem import MonetarySystem
 from shed import shed
 
 def game_loop():
@@ -32,8 +34,7 @@ def execute_game(player: Player):
 
 
     # Screen setup
-    screen = pygame.display.set_mode(resolution)
-    pygame.display.set_caption("Endless Wilderness Explorer")
+    pygame.display.set_caption("Surge of the Silence")
 
     # Player Setup
     # player = Player() NO NEEDED ANYMORE
@@ -43,10 +44,16 @@ def execute_game(player: Player):
     # Initialize the bullet group
     bullets = pygame.sprite.Group()
 
-    # Initiaize the enemy group
-    enemies = pygame.sprite.Group()
-    enemy_spawn_timer = 0
+    # Initialize the enemy group
+    zombies = pygame.sprite.Group()
+    zombies_spawn_timer = 0
 
+    #Initialize the PowerUpController
+    power_up_controller = PowerUpController()
+
+    #Initialize Monetary System
+    monetary_system = MonetarySystem() #we can put inside of the MonetarySystem() the initial_balance = amount,
+    # for example initial_balance = 50, which means the player will always start the game with 50€.
 
     running = True
     while running:
@@ -63,33 +70,34 @@ def execute_game(player: Player):
         player.shoot(bullets)
 
         # Spawn timer
-        if enemy_spawn_timer > 0:
-            enemy_spawn_timer -= 1
+        if zombies_spawn_timer > 0:
+            zombies_spawn_timer -= 1
 
         # Spawning the enemies
-        if enemy_spawn_timer <= 0:
+        if zombies_spawn_timer <= 0:
             # Randomly select a zombie type
             zombie_type = random.choice([FastZombie, TankZombie, ExplodingZombie, Enemy])
             new_enemy = zombie_type()  # Instantiate the selected zombie type
-            enemies.add(new_enemy)
-            enemy_spawn_timer = 2 * fps  # Every two seconds
+            zombies.add(new_enemy)
+            zombies_spawn_timer = 2 * fps  # Every two seconds
 
         # Weighted random selection
         zombie_type = random.choices(
-            [FastZombie, TankZombie, ExplodingZombie, Enemy],
-            weights=[0.2, 0.2, 0.1, 0.5],  # 20% Fast, 20% Tank, 10% Exploding, 50% Normal Enemy
-            k=1
-        )[0]
+                [FastZombie, TankZombie, ExplodingZombie, Enemy],
+                weights=[0.2, 0.2, 0.1, 0.5],  # 20% Fast, 20% Tank, 10% Exploding, 50% Normal Enemy
+                k=1
+            )[0]
         new_enemy = zombie_type()
 
         # Checking for collisions between enemies and bullets
         for bullet in bullets:
-            collided_enemies = pygame.sprite.spritecollide(bullet, enemies, False)
-            for enemy in collided_enemies:
-                enemy.health -= 5  # Decrease health by 5
+            collided_zombies = pygame.sprite.spritecollide(bullet, zombies, False)
+            for zombie in collided_zombies:
+                zombie.health -= 5  # Decrease health by 5
                 bullet.kill()  # Destroy the bullet
-                if enemy.health <= 0:
-                    enemy.kill()  # Destroy the enemy
+                if zombie.health <= 0:
+                    zombie.kill()  # Destroy the enemy
+                    monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
 
 
 
@@ -97,7 +105,11 @@ def execute_game(player: Player):
         # Update positions
         player_group.update()
         bullets.update()
-        enemies.update(player)
+        zombies.update(player)
+
+        #Update the draw power-ups
+        power_up_controller.update(player,zombies)
+        power_up_controller.draw(screen)
 
         # Checking if the user goes into the shed area
         if player.rect.right >= width:
@@ -106,9 +118,13 @@ def execute_game(player: Player):
 
         # Drawing the object
         player_group.draw(screen)
-        enemies.draw(screen)
+        zombies.draw(screen)
         for bullet in bullets:
             bullet.draw(screen)
+
+        # Shows monetary balance
+        font = pygame.font.SysFont("Roboto", 30)
+        monetary_system.show_balance(screen,font)
 
         pygame.display.flip()
 
