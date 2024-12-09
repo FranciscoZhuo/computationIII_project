@@ -77,7 +77,7 @@ def execute_game(player: Player):
         # Weighted random selection
         zombie_type = random.choices(
             [FastZombie, TankZombie, ExplodingZombie, Enemy],
-            weights=[0.2, 0.5, 0.1, 0.2],  # 20% Fast, 20% Tank, 10% Exploding, 50% Normal Enemy
+            weights=[0.2, 0.2, 0.1, 0.5],  # 20% Fast, 20% Tank, 10% Exploding, 50% Normal Enemy
             k=1
         )[0]
         new_enemy = zombie_type()
