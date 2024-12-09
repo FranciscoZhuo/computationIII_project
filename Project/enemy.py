@@ -10,6 +10,7 @@ class Enemy(pygame.sprite.Sprite):
         """
         Initializes an enemy instance
         """
+
         super().__init__()
         self.image = pygame.Surface((enemy_size, enemy_size))
         self.image.fill(red)
@@ -23,6 +24,13 @@ class Enemy(pygame.sprite.Sprite):
 
         # Health
         self.health = 10
+
+        # Animations
+        self.animations = {}  # Initialize an empty dictionary for animations
+        self.current_animation = None  # Holds the current animation playing
+        self.current_frame = 0
+        self.animation_speed = 0.01  # Adjust as needed
+        self.animation_timer = 0
 
     def update(self, player):
         """
@@ -46,6 +54,20 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x = int(self.rect.x)
         self.rect.y = int(self.rect.y)
 
+        if self.current_animation:  # Check if animation is defined
+            # Increment frame counter
+            self.current_frame += 1
+
+            # Animation update (frame-rate dependent):
+            if self.current_frame >= len(
+                    self.animations[self.current_animation]):  # Reset current_frame if it reaches end of animation
+                self.current_frame = 0
+
+            self.image = self.animations[self.current_animation][
+                self.current_frame
+            ]
+
+
 class FastZombie(Enemy):
     def __init__(self):
         super().__init__()
@@ -56,12 +78,58 @@ class FastZombie(Enemy):
 class TankZombie(Enemy):
     def __init__(self):
         super().__init__()
-        self.image.fill(grey)  # Grey for tank zombies
+
+
+        # Load animation frames
+        self.animations = {
+            "walk": [
+                pygame.image.load("assets/Tank Zombie/Walk/walk_0.png").convert_alpha(),
+                pygame.image.load("assets/Tank Zombie/Walk/walk_1.png").convert_alpha(),
+                pygame.image.load("assets/Tank Zombie/Walk/walk_2.png").convert_alpha()
+            ],
+            "attack": [  # Animation for attack
+                pygame.image.load("assets/Tank Zombie/Attack/Attack_0.png").convert_alpha(),
+                pygame.image.load("assets/Tank Zombie/Attack/Attack_1.png").convert_alpha(),
+                pygame.image.load("assets/Tank Zombie/Attack/Attack_2.png").convert_alpha(),
+                pygame.image.load("assets/Tank Zombie/Attack/Attack_3.png").convert_alpha()
+            ],
+            "die": [  # Animation for dying
+                pygame.image.load("assets/Tank Zombie/Death/Death_00.png").convert_alpha(),
+                pygame.image.load("assets/Tank Zombie/Death/Death_01.png").convert_alpha(),
+                pygame.image.load("assets/Tank Zombie/Death/Death_02.png").convert_alpha(),
+                pygame.image.load("assets/Tank Zombie/Death/Death_03.png").convert_alpha(),
+                pygame.image.load("assets/Tank Zombie/Death/Death_04.png").convert_alpha(),
+                pygame.image.load("assets/Tank Zombie/Death/Death_05.png").convert_alpha()
+            ]
+
+        }
+        self.current_animation = "walk"  # Set default animation
+        self.image = self.animations[self.current_animation][0]  # Start with first frame
+        self.rect = self.image.get_rect()
+
         self.speed = random.randint(1, 2)  # Slower than normal enemies
         self.health = 20  # Much higher health
 
+    def update(self, player):
+        super().update(player)  # Call base class update for animation and movement
+
+        # Example: Switch to attack animation if close to player
+        distance_to_player = math.hypot(self.rect.centerx - player.rect.centerx,
+                                        self.rect.centery - player.rect.centery)
+        if distance_to_player < 50:  # Adjust attack range as needed
+            self.current_animation = "attack"
+        else:
+            self.current_animation = "walk"
+
+        # Example: start death animation if dead
+        if self.health <= 0:
+            self.current_animation = 'die'
+
+
+
 class ExplodingZombie(Enemy):
     def __init__(self):
+
         super().__init__()
         self.image.fill(yellow)  # yellow for exploding zombies
         self.speed = random.randint(2, 3)
