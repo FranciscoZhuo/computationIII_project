@@ -2,7 +2,6 @@ from config import *
 import pygame
 import math
 from bullets import Bullet
-from health import *
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -17,10 +16,9 @@ class Player(pygame.sprite.Sprite):
 
         # Gameplay variables
         self.speed = 5
+        self.health = 100
         self.bullet_cooldown = 0
 
-        self.last_collision_time = 0  # Initialize collision timer
-        self.collision_cooldown = 1000  # Cooldown in milliseconds
 
     def update(self):
         """
@@ -44,19 +42,6 @@ class Player(pygame.sprite.Sprite):
         # Moving right
         if keys[pygame.K_d] and self.rect.right < width:
             self.rect.x += self.speed
-
-
-    def take_damage(self):
-        """
-        Pass damage to the health bar.
-        """
-        current_time = pygame.time.get_ticks()
-        return current_time - self.last_collision_time > self.collision_cooldown
-
-    def register_collision(self):
-        self.last_collision_time = pygame.time.get_ticks()
-
-
 
     def shoot(self, bullets: pygame.sprite.Group):
         """

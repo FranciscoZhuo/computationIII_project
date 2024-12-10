@@ -1,8 +1,10 @@
 from config import *
 import math
 import pygame
-from enemy import Enemy
+from enemy import *
 from player import Player
+from powerups import PowerUpController
+from monetarysystem import MonetarySystem
 from shed import shed
 from interface import *
 from health import HealthBar
@@ -62,8 +64,7 @@ def execute_game(player: Player):
 
 
     # Screen setup
-    screen = pygame.display.set_mode(resolution)
-    pygame.display.set_caption("Endless Wilderness Explorer")
+    pygame.display.set_caption("Surge of the Silence")
 
     # Player Setup
     # player = Player() NO NEEDED ANYMORE
@@ -73,12 +74,9 @@ def execute_game(player: Player):
     # Initialize the bullet group
     bullets = pygame.sprite.Group()
 
-    # Initialize the enemy group
+    # Initiaize the enemy group
     enemies = pygame.sprite.Group()
     enemy_spawn_timer = 0
-
-    #Initialize the health class
-    health_bar = HealthBar()
 
 
     running = True
@@ -91,28 +89,41 @@ def execute_game(player: Player):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+        # Calculate dt (delta time: time between frames)
+        dt = clock.tick(fps) / 1000.0  # dt is in seconds
 
         # Shooting
         player.shoot(bullets)
 
         # Spawn timer
-        if enemy_spawn_timer > 0:
-            enemy_spawn_timer -= 1
+        if zombies_spawn_timer > 0:
+            zombies_spawn_timer -= 1
 
         # Spawning the enemies
-        if enemy_spawn_timer <= 0:
-            new_enemy = Enemy()
-            enemies.add(new_enemy)
-            enemy_spawn_timer = 2 * fps # Every two seconds
+        if zombies_spawn_timer <= 0:
+            # Randomly select a zombie type
+            zombie_type = random.choice([FastZombie, TankZombie, ExplodingZombie, Enemy])
+            new_enemy = zombie_type()  # Instantiate the selected zombie type
+            zombies.add(new_enemy)
+            zombies_spawn_timer = 2 * fps  # Every two seconds
+
+        # Weighted random selection
+        zombie_type = random.choices(
+                [FastZombie, TankZombie, ExplodingZombie, Enemy],
+                weights=[0.2, 0.2, 0.1, 0.5],  # 20% Fast, 20% Tank, 10% Exploding, 50% Normal Enemy
+                k=1
+            )[0]
+        new_enemy = zombie_type()
 
         # Checking for collisions between enemies and bullets
         for bullet in bullets:
-            collided_enemies = pygame.sprite.spritecollide(bullet, enemies, False)
-            for enemy in collided_enemies:
-                enemy.health -= 5  # Decrease health by 5
+            collided_zombies = pygame.sprite.spritecollide(bullet, zombies, False)
+            for zombie in collided_zombies:
+                zombie.health -= 5  # Decrease health by 5
                 bullet.kill()  # Destroy the bullet
-                if enemy.health <= 0:
-                    enemy.kill()  # Destroy the enemy
+                if zombie.health <= 0:
+                    zombie.kill()  # Destroy the enemy
+                    monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
 
         # Check for collisions between player and enemies
         if pygame.sprite.spritecollide(player, enemies, False):
@@ -125,9 +136,13 @@ def execute_game(player: Player):
                     game_over_screen(screen)
 
         # Update positions
-        player_group.update()
+        player_group.update(dt)
         bullets.update()
-        enemies.update(player)
+        zombies.update(player)
+
+        #Update the draw power-ups
+        power_up_controller.update(player,zombies)
+        power_up_controller.draw(screen)
 
         # Checking if the user goes into the shed area
         if player.rect.right >= width:
@@ -136,15 +151,9 @@ def execute_game(player: Player):
 
         # Drawing the object
         player_group.draw(screen)
-        enemies.draw(screen)
+        zombies.draw(screen)
         for bullet in bullets:
             bullet.draw(screen)
-
-        # Draw the player's health bar
-        health_bar.draw(screen, player.rect)  # Pass player.rect to update method
-
-
-
 
         pygame.display.flip()
 

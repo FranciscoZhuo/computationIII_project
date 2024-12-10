@@ -19,10 +19,10 @@ purple = (161, 52, 118)
 # SCREEN RESOLUTION
 resolution = (1024, 768)
 width, height = resolution[0], resolution[1] # For Calculations
-fps = 60
+fps = 120
 
 # SIZES
-player_size = (50, 100)
+player_size = (100, 120)
 enemy_size = 40
 bullet_size = 10
 
