@@ -4,6 +4,8 @@ import pygame
 from enemy import Enemy
 from player import Player
 from shed import shed
+from interface import *
+from health import HealthBar
 
 def game_loop():
     player = Player()
@@ -15,6 +17,34 @@ def game_loop():
         elif current_state == "shed":
             current_state = shed(player)
 
+def game_over_screen(screen):
+    """
+    Display a game over screen.
+    """
+    bloodcrowfont = pygame.font.Font("assets/bloodcrow.ttf", 35)
+    text = bloodcrowfont.render("Game Over", True, (255, 0, 0))
+    text_rect = text.get_rect(center=(width // 2, height // 2))
+
+    screen.fill((0, 0, 0))  # Fill the screen with black
+    screen.blit(text, text_rect)
+    pygame.display.flip()
+
+    waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:  # Return to main menu on Enter key
+                    from interface import interface
+                    interface()
+                    return
+                elif event.key == pygame.K_ESCAPE:  # Quit game on Escape key
+                    pygame.quit()
+                    return
+
+        pygame.display.flip()
 
 def execute_game(player: Player):
     """
@@ -43,9 +73,12 @@ def execute_game(player: Player):
     # Initialize the bullet group
     bullets = pygame.sprite.Group()
 
-    # Initiaize the enemy group
+    # Initialize the enemy group
     enemies = pygame.sprite.Group()
     enemy_spawn_timer = 0
+
+    #Initialize the health class
+    health_bar = HealthBar()
 
 
     running = True
@@ -81,8 +114,15 @@ def execute_game(player: Player):
                 if enemy.health <= 0:
                     enemy.kill()  # Destroy the enemy
 
-
-
+        # Check for collisions between player and enemies
+        if pygame.sprite.spritecollide(player, enemies, False):
+            if player.take_damage():  # Check cooldown
+                health_bar.decrease_health()
+                player.register_collision()
+                if health_bar.is_empty():
+                    print("Game Over!")
+                    running = False
+                    game_over_screen(screen)
 
         # Update positions
         player_group.update()
@@ -99,6 +139,12 @@ def execute_game(player: Player):
         enemies.draw(screen)
         for bullet in bullets:
             bullet.draw(screen)
+
+        # Draw the player's health bar
+        health_bar.draw(screen, player.rect)  # Pass player.rect to update method
+
+
+
 
         pygame.display.flip()
 
