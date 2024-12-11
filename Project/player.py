@@ -1,9 +1,7 @@
-from Project.utils import scale_animations
+from config import *
 import pygame
 import math
 from bullets import Bullet
-from config import *
-
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -25,14 +23,14 @@ class Player(pygame.sprite.Sprite):
         self.animations = {
             "idle": [pygame.image.load(f"assets/MC Frames/idle/Ellie frame_idle_{i}.png").convert_alpha() for i in range(3)],
             "run_right": [pygame.image.load(f"assets/MC Frames/run/Ellie frame_run_{i}.png").convert_alpha() for i in range(13)],
-            "shoot": [pygame.image.load(f"assets/MC Frames/shoot/Ellie frame_shoot_{i}.png").convert_alpha() for i in range(3)],
-            "death": [pygame.image.load(f"assets/MC Frames/death/Ellie frame_death_{i}.png").convert_alpha() for i in range(7)]
+            "shoot": [pygame.image.load(f"assets/MC Frames/shoot/Ellie frame_shoot_{i}.png").convert_alpha() for i in range(3)],  # Example, change as necessary
+            "death": [pygame.image.load(f"assets/MC Frames/death/Ellie frame_death_{i}.png").convert_alpha() for i in range(7)]  # Example, change as necessary
         }
 
         self.animations["run_left"] = [pygame.transform.flip(image, True, False) for image in self.animations["run_right"]]
 
         # Scale all frames in self.animations
-        scale_animations(self.animations, 100, 120)  # Scales all loaded animations
+        self.scale_animations(100,120)  # Scales all loaded animations
 
         self.current_animation = "idle"
         self.current_frame = 0
@@ -42,7 +40,7 @@ class Player(pygame.sprite.Sprite):
         self.moving = False  # Flag to track movement
         self.dead = False  # Flag for player death
 
-    def update(self, dt, obstacles):
+    def update(self, dt):
         keys = pygame.key.get_pressed()
 
         self.moving = False  # Reset moving flag at the start of each frame
@@ -51,39 +49,18 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_w] and self.rect.top > 0: #UP
             self.rect.y -= self.speed
             self.moving = True
-
-            for obstacle in obstacles:
-                if self.rect.colliderect(obstacle):
-                    if self.rect.top < obstacle.rect.bottom and self.rect.centery > obstacle.rect.centery:
-                        self.rect.top = obstacle.rect.bottom
-
         elif keys[pygame.K_s] and self.rect.bottom < height: #DOWN
             self.rect.y += self.speed
             self.moving = True
-            for obstacle in obstacles:
-                if self.rect.colliderect(obstacle):
-                    if self.rect.bottom > obstacle.rect.top and self.rect.centery < obstacle.rect.centery:
-                        self.rect.bottom = obstacle.rect.top
 
         if keys[pygame.K_a] and self.rect.left > 0: #LEFT
             self.rect.x -= self.speed
             self.current_animation = "run_left"
             self.moving = True
-            # Collision from the right
-            for obstacle in obstacles:
-                if self.rect.colliderect(obstacle):
-                    if self.rect.left < obstacle.rect.right and self.rect.centerx > obstacle.rect.centerx:
-                        self.rect.left = obstacle.rect.right
-
         elif keys[pygame.K_d] and self.rect.right < width: #RIGHT
             self.rect.x += self.speed
             self.current_animation = "run_right"
             self.moving = True
-            # Collision from the left
-            for obstacle in obstacles:
-                if self.rect.colliderect(obstacle):
-                    if self.rect.right > obstacle.rect.left and self.rect.centerx < obstacle.rect.centerx:
-                        self.rect.right = obstacle.rect.left
 
         # Set to idle if not moving
         if not self.moving and not self.dead:  #Check if dead, so it doesn't switch to idle animation
@@ -115,55 +92,29 @@ class Player(pygame.sprite.Sprite):
 
 
 
-    def shoot(self, bullets: pygame.sprite.Group, zombies: pygame.sprite.Group):
+    def shoot(self, bullets: pygame.sprite.Group):
         """
-    Shoot one bullet towards the nearest zombie when the Enter key is pressed.
+        Shoot bullets in 4 direction depending on cooldown.
 
-    Args
-    ----
-    bullets (pygame.sprite.Group): The bullet group to add the new bullet to.
-    zombies (pygame.sprite.Group): The group of zombies to target.
-    """
-        keys = pygame.key.get_pressed()
-
-        # Shoot only when the Enter key is pressed
-        if keys[pygame.K_SPACE] and self.bullet_cooldown <= 0:
-            if zombies:
-                # Find the nearest zombie
-                nearest_zombie = min(zombies, key=lambda z: self.distance_to(z))
-
-                # Calculate the angle to the nearest zombie
-                dx = nearest_zombie.rect.centerx - self.rect.centerx
-
-
-                dy = nearest_zombie.rect.centery - self.rect.centery
-                angle = math.atan2(dy, dx)
-
-                # Spawn a bullet in the direction of the zombie
-                bullet = Bullet(self.rect.centerx, self.rect.centery, angle)
+        Args
+        ----
+        bullets (pygame.spirite.Group):
+            The bullet group that we will add the news ones to
+        """
+        # If you shooting
+        if self.bullet_cooldown <= 0:
+            for angle in [0, math.pi / 2, math.pi, 3 * math.pi / 2]:
+                bullet = Bullet(
+                    self.rect.center[0], self.rect.center[1], angle
+                )
                 bullets.add(bullet)
+            self.bullet_cooldown = fps # MC Frames until the next shot
 
-                # Set cooldown
-                self.bullet_cooldown = fps // 5 # Cooldown for 1 second
+        # If you not
+        self.bullet_cooldown -= 1
 
-        # Reduce cooldown
-        if self.bullet_cooldown > 0:
-            self.bullet_cooldown -= 1
+    def scale_animations(self, width, height):
+        """Scales all animation frames to the desired dimensions."""
 
-    def distance_to(self, zombie):
-        """
-    Calculate the distance to a zombie.
-
-    Args
-    ----
-    zombie (pygame.sprite.Sprite): The zombie to calculate the distance to.
-
-    Returns
-    -------
-    float: The distance to the zombie.
-    """
-        dx = zombie.rect.centerx - self.rect.centerx
-        dy = zombie.rect.centery - self.rect.centery
-        return math.sqrt(dx ** 2 + dy ** 2)
-
-
+        for animation_name, frames in self.animations.items():
+            self.animations[animation_name] = [pygame.transform.scale(frame, (width, height)) for frame in frames]
