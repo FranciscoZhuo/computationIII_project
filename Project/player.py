@@ -14,9 +14,11 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (width // 2, height // 2)
 
+        self.last_collision_time = 0  # Initialize collision timer
+        self.collision_cooldown = 1000  # Cooldown in milliseconds
+
         # Gameplay variables
         self.speed = 5
-        self.health = 100
         self.bullet_cooldown = 0
 
 
@@ -42,6 +44,16 @@ class Player(pygame.sprite.Sprite):
         # Moving right
         if keys[pygame.K_d] and self.rect.right < width:
             self.rect.x += self.speed
+
+    def take_damage(self):
+        """
+        Pass damage to the health bar.
+        """
+        current_time = pygame.time.get_ticks()
+        return current_time - self.last_collision_time > self.collision_cooldown
+
+    def register_collision(self):
+        self.last_collision_time = pygame.time.get_ticks()
 
     def shoot(self, bullets: pygame.sprite.Group):
         """

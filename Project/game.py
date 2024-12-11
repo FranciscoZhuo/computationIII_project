@@ -78,6 +78,8 @@ def execute_game(player: Player):
     enemies = pygame.sprite.Group()
     enemy_spawn_timer = 0
 
+    # Initialize the health class
+    health_bar = HealthBar()
 
     running = True
     while running:
@@ -155,6 +157,8 @@ def execute_game(player: Player):
         for bullet in bullets:
             bullet.draw(screen)
 
+        # Draw the player's health bar
+        health_bar.draw(screen, player.rect)  # Pass player.rect to update method
         pygame.display.flip()
 
 
