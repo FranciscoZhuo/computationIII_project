@@ -9,14 +9,14 @@ def interface():
     pygame.init()
     # creating the screen at the set resolution
     screen = pygame.display.set_mode(resolution)
-    roboto_font = pygame.font.SysFont("Roboto", 40)
-    #creepster_font = pygame.font.Font("assets/fonts/Creepster-Regular.ttf", 50)
+    #roboto_font = pygame.font.SysFont("Roboto", 40)
+    creepster_font = pygame.font.Font("assets/Creepster-Regular.ttf", 50)
 
     # Text
-    start_text = roboto_font.render("START GAME", True, white)
-    rules_text = roboto_font.render("RULES", True, white)
-    credits_text = roboto_font.render("CREDITS", True, white)
-    quit_text = roboto_font.render("QUIT", True, white)
+    start_text = creepster_font.render("START GAME", True, white)
+    rules_text = creepster_font.render("RULES", True, white)
+    credits_text = creepster_font.render("CREDITS", True, white)
+    quit_text = creepster_font.render("QUIT", True, white)
 
     # Background configs
     gif_frame_bg = 0
