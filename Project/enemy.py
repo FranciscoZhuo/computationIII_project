@@ -60,6 +60,7 @@ class TankZombie(Enemy):
         self.speed = random.randint(1, 2)  # Slower than normal enemies
         self.health = 20  # Much higher health
 
+
 class ExplodingZombie(Enemy):
     def __init__(self):
         super().__init__()
