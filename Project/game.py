@@ -170,6 +170,8 @@ def execute_game(player: Player):
         player_group.draw(screen)
         player.draw_debug_rect(screen)
         zombies.draw(screen)
+        for zombie in zombies:
+            zombie.draw_debug_rect(screen)
         for bullet in bullets:
             bullet.draw(screen)
 
