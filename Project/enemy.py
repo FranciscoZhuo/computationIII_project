@@ -287,12 +287,16 @@ class ExplodingZombie(Enemy):
 
         # Load animation frames
         self.animations = {
+            # Adjust range as needed
             "run_left": [pygame.image.load(f"assets/Exploding Zombie/run/run{i}.png").convert_alpha() for i in range(4)],
             "attack": [pygame.image.load(f"assets/Exploding Zombie/attack/attack{i}.png").convert_alpha() for i in range(8)],
-            "explosion": [pygame.image.load(f"assets/Explosion/frame_{i}.png").convert_alpha() for i in range(10)],  # Explosion frames
         }
 
         self.animations["run_right"] = [pygame.transform.flip(image, True, False) for image in self.animations["run_left"]]
+
+        self.explosion_frames = [
+            pygame.image.load(f"assets/Explosion/frame_{i}.png").convert_alpha() for i in range(10)
+        ]
 
         # Scale all frames in self.animations
         scale_animations(self.animations, 80, 80)  # Scales all loaded animations
@@ -303,8 +307,9 @@ class ExplodingZombie(Enemy):
         self.animation_speed = 0.1
         self.frame_time = 0  # Tracks time for frame updates
         self.image = self.animations[self.current_animation][self.current_frame]  # Initial image
-
-        self.damage_radius = 50  # Explosion damage radius
+        self.explosion_frame_index = 0
+        self.explosion_timer = 0
+        self.damage_radius = 40  # Explosion damage radius
 
     def set_animation(self, animation_name):
         """
@@ -325,45 +330,63 @@ class ExplodingZombie(Enemy):
 
             frames = self.animations[self.current_animation]
             if self.current_frame >= len(frames):
-                if self.current_animation == "explosion":
-                    self.kill()  # Remove zombie after explosion animation
-                    return
-                else:
-                    self.current_frame = 0  # Loop non-explosion animations
+                self.current_frame = 0  # Loop the animation
 
             self.image = frames[self.current_frame]
 
+
     def explode(self, player):
         """
-        Triggers the explosion animation and deals damage to the player if in range.
+        Causes the zombie to explode and deal damage to the player.
         """
+        # Example of an explosion effect (reduce player health or spawn particles)
         self.exploding = True
-        self.set_animation("explosion")
+        self.explosion_timer = 0
+        self.current_animation = None  # Stop any current animation
+        self.image = self.explosion_frames[0]  # Start with the first explosion frame
 
         # Apply damage if within range
         if pygame.sprite.collide_rect(self, player):
             player.health -= 10  # Adjust damage value as needed
 
+
+    def animate_explosion(self, dt):
+        """Handle explosion animation."""
+        self.explosion_timer += dt
+        if self.explosion_timer >= self.animation_speed:
+            self.explosion_timer = 0
+            self.explosion_frame_index += 1
+
+            # If animation completes, remove the zombie
+            if self.explosion_frame_index >= len(self.explosion_frames):
+                self.kill()
+            else:
+                self.image = self.explosion_frames[self.explosion_frame_index]
+
     def update(self, player, dt):
         """
         Update the zombie's behavior and animation.
         """
+        # Update position
         if self.exploding:
             # Handle explosion animation
-            self.animate(dt)
+            self.animate_explosion(dt)
         else:
             # Update position and behavior
             super().update(player, dt)
 
-            # Trigger explosion if directly above the player
+            # Check if the zombie is directly above the player
             if abs(self.rect.centerx - player.rect.centerx) < self.rect.width // 2 and self.rect.centery < player.rect.centery:
+                # Trigger explosion if directly above the player
                 self.explode(player)
             else:
                 # Determine movement direction and set run animations
                 if player.rect.x > self.rect.x:  # Player is to the right
-                    self.set_animation("run_right")
+                    if self.current_animation != "run_right":
+                        self.set_animation("run_right")
                 else:  # Player is to the left
-                    self.set_animation("run_left")
+                    if self.current_animation != "run_left":
+                        self.set_animation("run_left")
 
-            # Animate movement or attack
+            # Call parent animation logic
             self.animate(dt)

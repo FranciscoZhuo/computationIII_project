@@ -13,7 +13,9 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.Surface(player_size)
         self.rect = self.image.get_rect()
+        self.rect.inflate_ip(-20, -10)
         self.rect.center = (width // 2, height // 2)
+
 
         # Gameplay variables
         self.speed = 5
@@ -165,5 +167,11 @@ class Player(pygame.sprite.Sprite):
         dx = zombie.rect.centerx - self.rect.centerx
         dy = zombie.rect.centery - self.rect.centery
         return math.sqrt(dx ** 2 + dy ** 2)
+
+    def draw_debug_rect(self, screen):
+        """
+        Draw a red outline around the player's rect for debugging.
+        """
+        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)  # Red color, width=2
 
 
