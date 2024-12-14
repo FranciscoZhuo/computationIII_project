@@ -125,7 +125,7 @@ def execute_game(player: Player):
         # Spawning the enemies
         if zombies_spawn_timer <= 0:
             # Randomly select a zombie type
-            zombie_type = random.choice([FastZombie, TankZombie, ExplodingZombie, Enemy])
+            zombie_type = random.choice([FastZombie, TankZombie, ExplodingZombie, NormalZombie])
             new_enemy = zombie_type()  # Instantiate the selected zombie type
             zombies.add(new_enemy)
             zombies_spawn_timer = fps  # Every two seconds
