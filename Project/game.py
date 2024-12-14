@@ -96,6 +96,17 @@ def execute_game(player: Player):
             if event.type == pygame.QUIT:
                 pygame.quit()
 
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_i:
+                    inventory.toggle_visibility()  # Toggle the inventory visibility
+
+                # Check number key presses (1 to 0)
+                if pygame.K_1 <= event.key <= pygame.K_9:
+                    slot_index = event.key - pygame.K_1  # 1 maps to slot 0, 2 to slot 1, etc.
+                    inventory.change_slot(slot_index)
+                elif event.key == pygame.K_0:
+                    inventory.change_slot(9)  # 0 maps to slot 9
+
         # Handle item pickups
         # for item in items_group:  # Assuming items_group contains spawnable items
         #    if pygame.sprite.collide_rect(player, item):
