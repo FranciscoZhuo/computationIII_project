@@ -10,14 +10,16 @@ def cutscene1():
     screen = pygame.display.set_mode(resolution)
     # Font for the text that fades in
     roboto_font = pygame.font.SysFont("Roboto", 40)
+    creepster_font = pygame.font.Font("assets/Creepster-Regular.ttf", 50)
 
     # Font for the skip button
     roboto_font20 = pygame.font.SysFont("Roboto", 20)
+    creepster_font20 = pygame.font.Font("assets/Creepster-Regular.ttf", 20)
 
 
     # Text setup
     texts = ["Wake up...", "The world needs you again....", "Remember the monkeys...", f"Chapter 1: Echoes of Strength"] # Message from The Great Sage, Heaven's Equal
-    text_surfaces = [roboto_font.render(text, True, white) for text in texts]
+    text_surfaces = [creepster_font.render(text, True, white) for text in texts]
 
 
     # Load the image to display after the texts
@@ -30,7 +32,7 @@ def cutscene1():
     pygame.mixer.music.play()
 
     # Click ENTER to skip text
-    skip_text = roboto_font20.render('Press "ENTER" to skip', True, white)
+    skip_text = creepster_font20.render('Press "ENTER" to skip', True, white)
 
     skip_rect = skip_text.get_rect(
         center=(800 + 60 // 2, 670 + 20 // 2)
@@ -127,14 +129,16 @@ def cutscene2():
 
     # Font for the text that fades in
     roboto_font = pygame.font.SysFont("Roboto", 40)
+    creepster_font = pygame.font.Font("assets/Creepster-Regular.ttf", 50)
 
     # Font for the skip button
     roboto_font20 = pygame.font.SysFont("Roboto", 20)
+    creepster_font20 = pygame.font.Font("assets/Creepster-Regular.ttf", 20)
 
 
     # Text setup
     texts = ["Well Done...", "Keep fighting....", "Are you still worthy?...", f"Chapter 2: Echoes of Devotion"] # Message from The Great Sage, Heaven's Equal
-    text_surfaces = [roboto_font.render(text, True, white) for text in texts]
+    text_surfaces = [creepster_font.render(text, True, white) for text in texts]
 
 
     # Load the image to display after the texts
@@ -147,7 +151,7 @@ def cutscene2():
     pygame.mixer.music.play()
 
     # Click ENTER to skip text
-    skip_text = roboto_font20.render('Press "ENTER" to skip', True, white)
+    skip_text = creepster_font20.render('Press "ENTER" to skip', True, white)
 
     skip_rect = skip_text.get_rect(
         center=(800 + 60 // 2, 670 + 20 // 2)

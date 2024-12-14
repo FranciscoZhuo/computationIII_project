@@ -106,3 +106,12 @@ def under_construction():
         pygame.display.update()
 
     pass
+
+
+def scale_animations(animations, width, height):
+    """
+    Scales all animation frames to the desired dimensions.
+    """
+
+    for animation_name, frames in animations.items():
+        animations[animation_name] = [pygame.transform.scale(frame, (width, height)) for frame in frames]
