@@ -2,7 +2,6 @@ import pygame
 from utils import * # no need to import pygame because the import is in utils
 from game import *
 from cutscene import *
-import sys
 
 
 def interface():
@@ -13,12 +12,6 @@ def interface():
     screen = pygame.display.set_mode(resolution)
     #roboto_font = pygame.font.SysFont("Roboto", 40)
     creepster_font = pygame.font.Font("assets/Creepster-Regular.ttf", 50)
-
-    # Text
-    start_text = creepster_font.render("START GAME", True, white)
-    rules_text = creepster_font.render("RULES", True, white)
-    credits_text = creepster_font.render("CREDITS", True, white)
-    quit_text = creepster_font.render("QUIT", True, white)
 
     # Background configs
     gif_frame_bg = 0
@@ -57,7 +50,6 @@ def interface():
         # Show sound bar if the flag is set
         if volume_bar_visible:
             draw_sound_bar()
-
 
         # Event Handling
         for ev in pygame.event.get():
@@ -146,6 +138,14 @@ def interface():
         credits_color = light_blue_green if 475 < mouse[1] < 537 and 362 < mouse[0] < 662 else purple
         quit_color = light_blue_green if 550 < mouse[1] < 610 and 362 < mouse[0] < 662 else purple
 
+        #text colors
+        black = (0, 0, 0)
+        wilderness_text_color = black if 325 < mouse[1] < 385 and 362 < mouse[0] < 662 else white
+        rules_text_color = black if 400 < mouse[1] < 460 and 362 < mouse[0] < 662 else white
+        credits_text_color = black if 475 < mouse[1] < 537 and 362 < mouse[0] < 662 else white
+        quit_text_color = black if 550 < mouse[1] < 610 and 362 < mouse[0] < 662 else white
+
+
         #Centralizing the buttons
         width_button = 300
         height_button = 60
@@ -158,6 +158,14 @@ def interface():
         pygame.draw.rect(screen, rules_color, [x_button, 400, width_button, height_button], border_radius=15)
         pygame.draw.rect(screen, credits_color, [x_button, 475, width_button, height_button], border_radius=15)
         pygame.draw.rect(screen, quit_color, [x_button, 550, width_button, height_button], border_radius=15)
+
+        # text
+        start_text = creepster_font.render("START GAME", True, wilderness_text_color)
+        rules_text = creepster_font.render("RULES", True, rules_text_color)
+        credits_text = creepster_font.render("CREDITS", True, credits_text_color)
+        quit_text = creepster_font.render("QUIT", True, quit_text_color)
+
+
 
         # Text
         start_rect = start_text.get_rect(
@@ -290,7 +298,8 @@ def rules_():
     current_page = 0
 
     creepster_font = pygame.font.Font("assets/Creepster-Regular.ttf", 30)
-
+    white = (255, 255, 255)
+    black = (0, 0, 0)
 
     while True:
         mouse = pygame.mouse.get_pos()
@@ -314,24 +323,49 @@ def rules_():
                     if current_page > 0:
                         current_page -= 1
 
-        screen.blit(resized_pages[current_page], (0,0)) #ajustável
+        screen.blit(resized_pages[current_page], (0,0))
+
 
         #"Back"  button
-        pygame.draw.rect(screen, (150, 0, 0), [450, 600, 140, 60])
-        back_text = creepster_font.render("BACK", True, (255, 255, 255))
-        screen.blit(back_text, (470, 660))
+        if 450 <= mouse[0] <= 590 and 600 <=mouse[1] <= 660:
+            back_color = light_blue_green
+            back_text_color = black
+        else:
+            back_color = purple
+            back_text_color = white
+
+        pygame.draw.rect(screen, back_color, [450, 600, 140, 60], border_radius=15)
+        back_text = creepster_font.render("BACK", True, back_text_color)
+        back_rect=back_text.get_rect(center=(520, 630))
+        screen.blit(back_text, back_rect)
 
         #"Next" button
         if current_page < len(pages) - 1:
-            pygame.draw.rect(screen, (50,50,50), [720, 600, 130, 60])
-            next_text = creepster_font.render("NEXT", True, (255, 255, 255))
-            screen.blit(next_text,(740, 660))
+            if 720 < mouse[0] < 850 and 600 <=mouse[1] <= 660:
+                next_color = light_blue_green
+                next_text_color = black
+            else:
+                next_color = white
+                next_text_color = black
+
+            pygame.draw.rect(screen, next_color, [720, 600, 130, 60], border_radius=15)
+            next_text = creepster_font.render("NEXT", True, next_text_color)
+            next_rect= next_text.get_rect(center=(785, 630))
+            screen.blit(next_text,next_rect)
 
         #previous button
         if current_page > 0:
-            pygame.draw.rect(screen, (50, 50, 50), [180, 600, 130, 60])
-            previous_text = creepster_font.render("PREVIOUS", True, (255, 255, 255))
-            screen.blit(previous_text,(190, 660))
+            if 180 < mouse[0] < 310 and 600 <=mouse[1] <= 660:
+                previous_color = light_blue_green
+                previous_text_color = black
+            else:
+                previous_color = white
+                previous_text_color = black
+
+            pygame.draw.rect(screen, previous_color, [180, 600, 130, 60], border_radius=15)
+            previous_text = creepster_font.render("PREVIOUS", True, previous_text_color)
+            previous_rect = previous_text.get_rect(center=(245, 630))
+            screen.blit(previous_text,previous_rect)
 
         pygame.display.update()
 def load_pages():
