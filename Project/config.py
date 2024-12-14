@@ -22,7 +22,7 @@ fps = 120
 
 # SIZES
 player_size = (100, 120)
-enemy_size = 40
+enemy_size = 80
 bullet_size = 10
 
 
