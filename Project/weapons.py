@@ -10,7 +10,7 @@ class Weapon:
         Args:
         ----
         damage (int): The damage dealt by each shot.
-        fire_rate (float): Time (in seconds) between consecutive shots.
+        fire_rate (float): Time between consecutive shots.
         """
         self.damage = damage
         self.fire_rate = fire_rate

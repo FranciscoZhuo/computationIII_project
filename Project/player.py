@@ -37,7 +37,7 @@ class Player(pygame.sprite.Sprite):
         self.current_animation = "idle"
         self.current_frame = 0
         self.image = self.animations[self.current_animation][self.current_frame]  # Start with the first frame
-        self.animation_speed = 0.15  # Adjust as needed
+        self.animation_speed = 0.15  #
         self.animation_timer = 0
         self.moving = False  # Flag to track movement
         self.dead = False  # Flag for player death

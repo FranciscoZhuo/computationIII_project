@@ -153,7 +153,9 @@ def execute_game(player: Player):
         # Update positions
         player_group.update(dt, obstacles)
         bullets.update()
-        zombies.update(player)
+        # Update zombies with animation
+        for zombie in zombies:
+            zombie.update(player, dt)
 
 
         # Update the draw power-ups
