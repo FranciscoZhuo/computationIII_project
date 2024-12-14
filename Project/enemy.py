@@ -68,8 +68,8 @@ class NormalZombie(Enemy):
         # Load animation frames
         self.animations = {
             # Adjust range as needed
-            "run_right": [pygame.image.load(f"assets/NormalZombie/run/run{i}.png").convert_alpha() for i in range(8)],
-            "attack": [pygame.image.load(f"assets/NormalZombie/attack/attack{i}.png").convert_alpha() for i in range(7)],
+            "run_right": [pygame.image.load(f"assets/ZombieNormal/run/run{i}.png").convert_alpha() for i in range(8)],
+            "attack": [pygame.image.load(f"assets/ZombieNormal/attack/attack{i}.png").convert_alpha() for i in range(7)],
         }
 
         self.animations["run_left"] = [pygame.transform.flip(image, True, False) for image in
@@ -143,8 +143,8 @@ class FastZombie(Enemy):
         # Load animation frames
         self.animations = {
             # Adjust range as needed
-            "run_right": [pygame.image.load(f"assets/Fast Zombie/run/run{i}.png").convert_alpha() for i in range(8)],
-            "attack": [pygame.image.load(f"assets/Fast Zombie/attack/attack{i}.png").convert_alpha() for i in range(6)],
+            "run_right": [pygame.image.load(f"assets/ZombieFast/run/run{i}.png").convert_alpha() for i in range(8)],
+            "attack": [pygame.image.load(f"assets/ZombieFast/attack/attack{i}.png").convert_alpha() for i in range(6)],
         }
 
         self.animations["run_left"] = [pygame.transform.flip(image, True, False) for image in
@@ -218,8 +218,8 @@ class TankZombie(Enemy):
         # Load animation frames
         self.animations = {
             # Adjust range as needed
-            "run_right": [pygame.image.load(f"assets/Tank Zombie/Walk/walk{i}.png").convert_alpha() for i in range(3)],
-            "attack": [pygame.image.load(f"assets/Tank Zombie/Attack/Attack{i}.png").convert_alpha() for i in range(4)],
+            "run_right": [pygame.image.load(f"assets/ZombieTank/Walk/walk{i}.png").convert_alpha() for i in range(3)],
+            "attack": [pygame.image.load(f"assets/ZombieTank/Attack/Attack{i}.png").convert_alpha() for i in range(4)],
         }
 
         self.animations["run_left"] = [pygame.transform.flip(image, True, False) for image in self.animations["run_right"]]
@@ -295,8 +295,8 @@ class ExplodingZombie(Enemy):
 
         # Load animation frames
         self.animations = {
-            "run_left": [pygame.image.load(f"assets/Exploding Zombie/run/run{i}.png").convert_alpha() for i in range(4)],
-            "attack": [pygame.image.load(f"assets/Exploding Zombie/attack/attack{i}.png").convert_alpha() for i in range(8)],
+            "run_left": [pygame.image.load(f"assets/ZombieExploding/run/run{i}.png").convert_alpha() for i in range(4)],
+            "attack": [pygame.image.load(f"assets/ZombieExploding/attack/attack{i}.png").convert_alpha() for i in range(8)],
             "explosion": [pygame.image.load(f"assets/Explosion/frame_{i}.png").convert_alpha() for i in range(10)],  # Explosion frames
         }
 
