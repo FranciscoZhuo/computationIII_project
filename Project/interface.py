@@ -2,6 +2,8 @@ import pygame
 from utils import * # no need to import pygame because the import is in utils
 from game import *
 from cutscene import *
+import sys
+
 
 def interface():
 
@@ -9,14 +11,14 @@ def interface():
     pygame.init()
     # creating the screen at the set resolution
     screen = pygame.display.set_mode(resolution)
-    roboto_font = pygame.font.SysFont("Roboto", 40)
-    #creepster_font = pygame.font.Font("assets/fonts/Creepster-Regular.ttf", 50)
+    #roboto_font = pygame.font.SysFont("Roboto", 40)
+    creepster_font = pygame.font.Font("assets/Creepster-Regular.ttf", 50)
 
     # Text
-    start_text = roboto_font.render("START GAME", True, white)
-    rules_text = roboto_font.render("RULES", True, white)
-    credits_text = roboto_font.render("CREDITS", True, white)
-    quit_text = roboto_font.render("QUIT", True, white)
+    start_text = creepster_font.render("START GAME", True, white)
+    rules_text = creepster_font.render("RULES", True, white)
+    credits_text = creepster_font.render("CREDITS", True, white)
+    quit_text = creepster_font.render("QUIT", True, white)
 
     # Background configs
     gif_frame_bg = 0
@@ -237,7 +239,68 @@ def credits_():
         pygame.display.update()
 
 def rules_():
-    print("Displaying rules...")
+    screen = pygame.display.set_mode((1024, 768))
+    pygame.display.set_caption("Game Instructions")
+
+    #Put the images of the pages created in Canva with rules
+    pages = load_pages()
+    resized_pages = [pygame.transform.scale(page, (1024, 768)) for page in pages]
+
+    #Variable controls the current page
+    current_page = 0
+
+    creepster_font = pygame.font.Font("assets/Creepster-Regular.ttf", 30)
+
+
+    while True:
+        mouse = pygame.mouse.get_pos()
+
+        # Event Handling
+        for ev in pygame.event.get():
+            # Quitting the game with the close button on the window (x)
+            if ev.type == pygame.QUIT:
+                pygame.quit()
+
+            # to avoid redundancy:
+            if ev.type == pygame.MOUSEBUTTONDOWN:
+                if 450 <= mouse[0] <= 590 and 600 <=mouse[1] <= 660: #returns to the main page
+                    return
+                #Next page
+                elif 720 < mouse[0] < 850 and 600 <=mouse[1] <= 660: #Next page
+                        if current_page < len(pages) - 1:
+                            current_page += 1
+                #Previous page
+                elif 180 < mouse[0] < 310 and 600 <=mouse[1] <= 660: #Previous page
+                    if current_page > 0:
+                        current_page -= 1
+
+        screen.blit(resized_pages[current_page], (0,0)) #ajustável
+
+        #"Back"  button
+        pygame.draw.rect(screen, (150, 0, 0), [450, 600, 140, 60])
+        back_text = creepster_font.render("BACK", True, (255, 255, 255))
+        screen.blit(back_text, (470, 660))
+
+        #"Next" button
+        if current_page < len(pages) - 1:
+            pygame.draw.rect(screen, (50,50,50), [720, 600, 130, 60])
+            next_text = creepster_font.render("NEXT", True, (255, 255, 255))
+            screen.blit(next_text,(740, 660))
+
+        #previous button
+        if current_page > 0:
+            pygame.draw.rect(screen, (50, 50, 50), [180, 600, 130, 60])
+            previous_text = creepster_font.render("PREVIOUS", True, (255, 255, 255))
+            screen.blit(previous_text,(190, 660))
+
+        pygame.display.update()
+def load_pages():
+    pages = []
+    pages.append(pygame.transform.scale(pygame.image.load("assets/pag1.png"), (1024, 768)))
+    pages.append(pygame.transform.scale(pygame.image.load("assets/pag2.png"), (1024, 768)))
+    pages.append(pygame.transform.scale(pygame.image.load("assets/pag3.png"), (1024, 768)))
+    pages.append(pygame.transform.scale(pygame.image.load("assets/pag4.png"), (1024, 768)))
+    return pages
 
 
 def wilderness_explorer():
