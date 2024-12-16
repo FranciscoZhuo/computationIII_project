@@ -300,6 +300,7 @@ def rules_():
     creepster_font = pygame.font.Font("assets/Creepster-Regular.ttf", 30)
     white = (255, 255, 255)
     black = (0, 0, 0)
+    baby_pink=(255, 204, 255)
 
     while True:
         mouse = pygame.mouse.get_pos()
@@ -312,14 +313,14 @@ def rules_():
 
             # to avoid redundancy:
             if ev.type == pygame.MOUSEBUTTONDOWN:
-                if 450 <= mouse[0] <= 590 and 600 <=mouse[1] <= 660: #returns to the main page
+                if 450 <= mouse[0] <= 590 and 600 <= mouse[1] <= 660: #returns to the main page
                     return
                 #Next page
-                elif 720 < mouse[0] < 850 and 600 <=mouse[1] <= 660: #Next page
+                elif 720 < mouse[0] < 850 and 600 <= mouse[1] <= 660: #Next page
                         if current_page < len(pages) - 1:
                             current_page += 1
                 #Previous page
-                elif 180 < mouse[0] < 310 and 600 <=mouse[1] <= 660: #Previous page
+                elif 180 < mouse[0] < 310 and 600 <= mouse[1] <= 660: #Previous page
                     if current_page > 0:
                         current_page -= 1
 
@@ -327,7 +328,7 @@ def rules_():
 
 
         #"Back"  button
-        if 450 <= mouse[0] <= 590 and 600 <=mouse[1] <= 660:
+        if 450 <= mouse[0] <= 590 and 600 <= mouse[1] <= 660:
             back_color = light_blue_green
             back_text_color = black
         else:
@@ -341,8 +342,8 @@ def rules_():
 
         #"Next" button
         if current_page < len(pages) - 1:
-            if 720 < mouse[0] < 850 and 600 <=mouse[1] <= 660:
-                next_color = light_blue_green
+            if 720 < mouse[0] < 850 and 600 <= mouse[1] <= 660:
+                next_color = baby_pink
                 next_text_color = black
             else:
                 next_color = white
@@ -356,7 +357,7 @@ def rules_():
         #previous button
         if current_page > 0:
             if 180 < mouse[0] < 310 and 600 <=mouse[1] <= 660:
-                previous_color = light_blue_green
+                previous_color = baby_pink
                 previous_text_color = black
             else:
                 previous_color = white
