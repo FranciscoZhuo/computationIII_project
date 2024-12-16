@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b01a6e04-67da-48af-afd1-59626e59c860" name="Changes" comment="Ajusted Iventory Bar (Just falta ajust the outline)">
+      <change afterPath="$PROJECT_DIR$/Project/assets/pistol.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/inventory.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/inventory.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

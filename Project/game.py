@@ -40,6 +40,14 @@ def execute_game(player: Player):
     background = pygame.image.load("assets/lvl2.jpg").convert()
     background = pygame.transform.scale(background, (width, height))
 
+    # Setting up Background Music
+    pygame.mixer.music.load('assets/BGMusic.mp3')
+    pygame.mixer.music.play(-1)
+
+    # Timer Setup
+    level_duration = 300  # Level duration in seconds (e.g., 5 minutes)
+    start_time = pygame.time.get_ticks()  # Record the start time
+
     # Screen setup
     pygame.display.set_caption("Surge of the Silence")
 
@@ -90,6 +98,15 @@ def execute_game(player: Player):
 
         # Calculate dt (delta time: time between frames)
         dt = clock.tick(fps) / 1000.0  # dt is in seconds
+
+        # Calculate elapsed time
+        elapsed_time = (pygame.time.get_ticks() - start_time) / 1000  # Convert to seconds
+        remaining_time = max(level_duration - elapsed_time, 0)  # Remaining time in seconds
+
+        # End the level when time runs out
+        if remaining_time <= 0:
+            print("Level Complete!")
+            return "main"  # Return to main menu or next level
 
         # Event Handling
         for event in pygame.event.get():
@@ -189,6 +206,10 @@ def execute_game(player: Player):
         # Shows monetary balance
         font = pygame.font.SysFont("Roboto", 30)
         monetary_system.show_balance(screen,font)
+
+        # Draw timer on the screen
+        timer_text = font.render(f"Time Left: {int(remaining_time)}s", True, (128, 0, 128))
+        screen.blit(timer_text, (10, 30))
 
         inventory.render(screen)
 
