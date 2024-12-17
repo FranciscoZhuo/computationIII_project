@@ -33,6 +33,7 @@ class Player(pygame.sprite.Sprite):
         }
 
         self.animations["run_left"] = [pygame.transform.flip(image, True, False) for image in self.animations["run_right"]]
+
         # Scale all frames in self.animations
         scale_animations(self.animations, 100, 120)  # Scales all loaded animations
 
@@ -50,6 +51,7 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, dt, obstacles):
         keys = pygame.key.get_pressed()
+
         self.moving = False  # Reset moving flag at the start of each frame
 
         # Movement and animation updates
@@ -189,4 +191,13 @@ class Player(pygame.sprite.Sprite):
         """
         pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)  # Red color, width=2
 
+    def take_damage(self):
+        """
+        Pass damage to the health bar.
+        """
+        current_time = pygame.time.get_ticks()
+        return current_time - self.last_collision_time > self.collision_cooldown
+
+    def register_collision(self):
+        self.last_collision_time = pygame.time.get_ticks()
 

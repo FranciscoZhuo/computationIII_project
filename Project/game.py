@@ -8,11 +8,12 @@ from monetarysystem import MonetarySystem
 from shed import shed
 from inventory import *
 from obstacle import *
-
+from health import *
 
 
 def game_loop():
     player = Player()
+    pygame.mixer.music.stop()
     current_state = "main"
 
     while True:
@@ -21,6 +22,34 @@ def game_loop():
         elif current_state == "shed":
             current_state = shed(player)
 
+def game_over_screen(screen):
+    """
+    Display a game over screen.
+    """
+    bloodcrowfont = pygame.font.Font("assets/bloodcrow.ttf", 35)
+    text = bloodcrowfont.render("Game Over", True, (255, 0, 0))
+    text_rect = text.get_rect(center=(width // 2, height // 2))
+
+    screen.fill((0, 0, 0))  # Fill the screen with black
+    screen.blit(text, text_rect)
+    pygame.display.flip()
+
+    waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:  # Return to main menu on Enter key
+                    from interface import interface
+                    interface()
+                    return
+                elif event.key == pygame.K_ESCAPE:  # Quit game on Escape key
+                    pygame.quit()
+                    return
+
+        pygame.display.flip()
 
 def execute_game(player: Player):
     """
@@ -87,7 +116,8 @@ def execute_game(player: Player):
     obstacles.add(house_main)
     obstacles.add(house_side)
 
-
+    # Initialize the health class
+    health_bar = HealthBar()
 
     # ==== GAME LOOP ====
     running = True
@@ -172,8 +202,15 @@ def execute_game(player: Player):
                     zombie.kill()  # Destroy the enemy
                     monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
 
-
-
+        # Check for collisions between player and enemies
+        if pygame.sprite.spritecollide(player, zombies, False):
+            if player.take_damage():  # Check cooldown
+                health_bar.decrease_health()
+                player.register_collision()
+                if health_bar.is_empty():
+                    print("Game Over!")
+                    running = False
+                    game_over_screen(screen)
 
         # ==== UPDATES ====
 
@@ -201,6 +238,9 @@ def execute_game(player: Player):
             zombie.draw_debug_rect(screen)
         for bullet in bullets:
             bullet.draw(screen)
+
+        # Draw the player's health bar
+        health_bar.draw(screen, player.rect)  # Pass player.rect to update method
 
         # Shows monetary balance
         font = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 30)
