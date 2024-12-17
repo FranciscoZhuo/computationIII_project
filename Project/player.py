@@ -4,6 +4,7 @@ import math
 from bullets import Bullet
 from config import *
 from weapons import Pistol, MachineGun, ShotGun
+from health import *
 
 
 class Player(pygame.sprite.Sprite):
@@ -23,6 +24,7 @@ class Player(pygame.sprite.Sprite):
         self.health = 100
         self.max_health = 100
         self.bullet_cooldown = 0
+        self.health_bar = HealthBar(self.max_health)  # Add health bar
 
         # Load animation frames
         self.animations = {
@@ -143,13 +145,11 @@ class Player(pygame.sprite.Sprite):
 
                 # Calculate the angle to the nearest zombie
                 dx = nearest_zombie.rect.centerx - self.rect.centerx
-
-
                 dy = nearest_zombie.rect.centery - self.rect.centery
                 angle = math.atan2(dy, dx)
 
                 # Spawn a bullet in the direction of the zombie
-                bullet = Bullet(self.rect.centerx, self.rect.centery, angle)
+                bullet = Bullet(self.rect.centerx, self.rect.centery, angle, self.weapon.damage)
                 bullets.add(bullet)
 
                 # Set cooldown
@@ -191,13 +191,7 @@ class Player(pygame.sprite.Sprite):
         """
         pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)  # Red color, width=2
 
-    def take_damage(self):
-        """
-        Pass damage to the health bar.
-        """
-        current_time = pygame.time.get_ticks()
-        return current_time - self.last_collision_time > self.collision_cooldown
-
-    def register_collision(self):
-        self.last_collision_time = pygame.time.get_ticks()
+    def draw(self, screen):
+        # Draw the player's health bar
+        self.health_bar.draw(screen, self.rect)
 

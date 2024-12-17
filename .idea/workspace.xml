@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b01a6e04-67da-48af-afd1-59626e59c860" name="Changes" comment="Ajusted Iventory Bar (Just falta ajust the outline)">
-      <change afterPath="$PROJECT_DIR$/Project/assets/pistol.png" afterDir="false" />
+    <list default="true" id="b01a6e04-67da-48af-afd1-59626e59c860" name="Changes" comment="Corrected the cutscene">
+      <change afterPath="$PROJECT_DIR$/Project/assets/BGMusic.mp3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -119,7 +119,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Ajusted Iventory Bar (Just falta ajust the outline)" />
-    <MESSAGE value="Changed the buttons colors in rules + updated the pages in rules" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed the buttons colors in rules + updated the pages in rules" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajusted Iventory Bar (Just falta ajust the outline)" />
   </component>
 </project>

@@ -1,42 +1,44 @@
 import pygame
 
 class HealthBar:
-    def __init__(self):
+    def __init__(self, max_health):
         """
         Initialize the HealthBar.
 
         Args:
         ----
-        max_health (int): Maximum health the player can have.
+        max_health (int): Maximum health of the entity.
         """
-        self.health = 6
-        # Load health bar images
-        self.health_bar_images = [pygame.image.load(f"assets/healthbar/bar{i}.png") for i in range(1, 7)]
-        # Resize images
-        self.health_bar_images = [
-            pygame.transform.scale(img, (160, 50)) for img in self.health_bar_images
-        ]
+        self.health = max_health
+        self.max_health = max_health
 
-
-    def draw(self, screen,player_rect):
+    def draw(self, screen, rect):
         """
-        Draw the current health bar on the screen at the given position.
+        Draw the health bar above the entity.
+
+        Args:
+        ----
+        screen (Surface): Pygame screen to draw the health bar on.
+        rect (Rect): The entity's rectangle for positioning.
         """
+        # Dimensions for the health bar
+        bar_width = 50
+        bar_height = 5
+        x = rect.centerx - bar_width // 2
+        y = rect.top - 10
 
+        # Health bar background
+        pygame.draw.rect(screen, (50, 50, 50), (x, y, bar_width, bar_height))
 
-        # Adjust position relative to player's rect
-        bar_x = player_rect.centerx - 75
-        bar_y = player_rect.top - 50
+        # Health bar foreground (red)
+        current_width = int(bar_width * (self.health / self.max_health))
+        pygame.draw.rect(screen, (255, 0, 0), (x, y, current_width, bar_height))
 
-        # Display the correct health bar image
-        index = 6-self.health  # Calculate the correct image index
-        current_image = self.health_bar_images[index]
-        # Draw the health bar image
-        screen.blit(current_image, (bar_x, bar_y))
-
-    def decrease_health(self):
-        if self.health > 0:
-            self.health -= 1
+    def decrease_health(self, amount):
+        """
+        Decrease health by a specified amount.
+        """
+        self.health = max(self.health - amount, 0)
 
     def is_empty(self):
         return self.health <= 0

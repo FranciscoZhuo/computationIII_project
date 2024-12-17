@@ -5,7 +5,7 @@ from enemy import *
 from player import Player
 from powerups import PowerUpController
 from monetarysystem import MonetarySystem
-from shed import shed
+from shed import *
 from inventory import *
 from obstacle import *
 from health import *
@@ -19,8 +19,8 @@ def game_loop():
     while True:
         if current_state == "main":
             current_state = execute_game(player)
-        elif current_state == "shed":
-            current_state = shed(player)
+        elif current_state == "shop":
+            current_state = shop_ui()
 
 def game_over_screen(screen):
     """
@@ -116,8 +116,6 @@ def execute_game(player: Player):
     obstacles.add(house_main)
     obstacles.add(house_side)
 
-    # Initialize the health class
-    health_bar = HealthBar()
 
     # ==== GAME LOOP ====
     running = True
@@ -196,21 +194,13 @@ def execute_game(player: Player):
         for bullet in bullets:
             collided_zombies = pygame.sprite.spritecollide(bullet, zombies, False)
             for zombie in collided_zombies:
-                zombie.health -= 5  # Decrease health by 5
+                zombie.take_damage(bullet.damage)
                 bullet.kill()  # Destroy the bullet
                 if zombie.health <= 0:
                     zombie.kill()  # Destroy the enemy
                     monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
 
-        # Check for collisions between player and enemies
-        if pygame.sprite.spritecollide(player, zombies, False):
-            if player.take_damage():  # Check cooldown
-                health_bar.decrease_health()
-                player.register_collision()
-                if health_bar.is_empty():
-                    print("Game Over!")
-                    running = False
-                    game_over_screen(screen)
+
 
         # ==== UPDATES ====
 
@@ -232,15 +222,14 @@ def execute_game(player: Player):
 
         # Drawing the object
         player_group.draw(screen)
+        player.draw(screen)
         player.draw_debug_rect(screen)
         zombies.draw(screen)
         for zombie in zombies:
-            zombie.draw_debug_rect(screen)
+            zombie.draw(screen)
         for bullet in bullets:
             bullet.draw(screen)
 
-        # Draw the player's health bar
-        health_bar.draw(screen, player.rect)  # Pass player.rect to update method
 
         # Shows monetary balance
         font = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 30)
