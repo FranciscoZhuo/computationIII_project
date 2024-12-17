@@ -227,6 +227,10 @@ def execute_game(player: Player):
         power_up_controller.update(player,zombies)
         power_up_controller.draw(screen)
 
+        # Update player state (handles invisibility expiration)
+        player.update(dt, obstacles)
+        # Render the player
+        player.render(screen)
 
 
         # ==== DRAWS ====

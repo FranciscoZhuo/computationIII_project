@@ -71,6 +71,22 @@ class SlowZombiesPowerUp(PowerUp):
         for zombie in zombies:
             zombie.speed = max(1, zombie.speed // 2)
 
+class InvisibilityPowerUP(PowerUp):
+    def __init__(self, x, y):
+        super().__init__(x, y, effect_duration=15000)
+        self.image = pygame.image.load("assets/potion.png")
+        self.image = pygame.transform.scale(self.image,(40, 40))
+        self.rect = self.image.get_rect(topleft=(x, y))
+
+    def apply_powerup(self, player, zombies=None):
+        """
+        Applies invisibility effect to the player.
+        """
+        player.invisible = True
+        player.invisibility_start = pygame.time.get_ticks()
+        print("Player is now invisible!")
+
+
 #It´s important now to create a class, called PowerUpController, because we will implement more than the 2 power-ups that are mandatory
 #which makes the code more easy to expand but also makes the code more organized and separated by responsabilities.
 
@@ -101,7 +117,7 @@ class PowerUpController:
         if current_time - self.last_spawn > self.interval_spawn:
             x = random.randint (50, 750)
             y = random.randint(50, 550)
-            type_powerup = random.choice([LifePowerUp, SlowZombiesPowerUp]) #basically, we want the power-up to spawn randomly
+            type_powerup = random.choice([LifePowerUp, SlowZombiesPowerUp, InvisibilityPowerUP]) #basically, we want the power-up to spawn randomly
             power_up = type_powerup(x,y)
             self.power_ups.add(power_up)
             self.last_spawn = current_time

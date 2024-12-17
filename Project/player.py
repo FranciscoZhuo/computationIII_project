@@ -4,6 +4,7 @@ import math
 from bullets import Bullet
 from config import *
 from health import *
+from powerups import *
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -19,7 +20,9 @@ class Player(pygame.sprite.Sprite):
 
         self.last_collision_time = 0  # Initialize collision timer
         self.collision_cooldown = 1000  # Cooldown in milliseconds
-
+        # Invisibility attributes
+        self.invisible = False
+        self.invisibility_start = None
         # Gameplay variables
         self.speed = 5
         #self.health = 100
@@ -118,6 +121,10 @@ class Player(pygame.sprite.Sprite):
         if self.dead and self.current_frame == len(self.animations["death"]) - 1:
             self.kill()
 
+        # Check if invisibility has expired
+        if self.invisible and pygame.time.get_ticks() - self.invisibility_start > 15000:  # Lasts 15 seconds
+            self.invisible = False
+            print("Invisibility expired!")
 
 
     def shoot(self, bullets: pygame.sprite.Group, zombies: pygame.sprite.Group):
@@ -176,6 +183,14 @@ class Player(pygame.sprite.Sprite):
         Draw a red outline around the player's rect for debugging.
         """
         pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)  # Red color, width=2
+
+    def render(self, screen):
+        if not self.invisible:
+            screen.blit(self.image, self.rect)
+        else:
+            temp_image = self.image.copy()
+            temp_image.set_alpha(128)  # Semi-transparent
+            screen.blit(temp_image, self.rect)
 
     def take_damage(self):
         """
