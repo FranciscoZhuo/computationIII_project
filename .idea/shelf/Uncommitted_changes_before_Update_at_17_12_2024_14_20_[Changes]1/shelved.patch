@@ -1,0 +1,78 @@
+Index: Project/bullets.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from utils import *\r\nfrom config import *\r\nimport math\r\nimport pygame\r\n\r\nclass Bullet(pygame.sprite.Sprite):\r\n    def __init__(self, x: int, y: int, direction: float):\r\n        \"\"\"\r\n        Initialize a bullet instance:\r\n\r\n        Args\r\n        ----\r\n        x: int\r\n            Position of the bullet in the x-axis\r\n        y: int\r\n            Position of the bullet in the y-axis\r\n            Direction in which it is fired, in radions.\r\n        \"\"\"\r\n        super().__init__()\r\n        self.radius = bullet_size\r\n        self.color = yellow\r\n        self.rect = pygame.Rect(x - self.radius,\r\n                                y - self.radius,\r\n                                self.radius * 2,\r\n                                self.radius * 2)\r\n\r\n        self.speed = 7\r\n        self.direction = direction\r\n\r\n    def update(self):\r\n        \"\"\"\r\n        Update the bullet's position and check if it goes offscreen.\r\n        \"\"\"\r\n        # Coordinate update\r\n        self.rect.x += int(self.speed * math.cos(self.direction))\r\n        self.rect.y += int(self.speed * math.sin(self.direction))\r\n\r\n        # Check if out of bounds\r\n        if self.rect.x < 0 or self.rect.x > width or \\\r\n            self.rect.y < 0 or self.rect.y > height:\r\n            self.kill()\r\n\r\n    def draw(self, screen):\r\n        \"\"\"\r\n        Draw the bullet on the screen\r\n\r\n        Args\r\n        ----\r\n        screen (pygame.Surface):\r\n            The screen on which to draw the bullet\r\n        \"\"\"\r\n\r\n        # Draw the bullet as a circle\r\n        pygame.draw.circle(\r\n            screen, self.color, self.rect.center, self.radius\r\n        )\r\n\r\n#testing!\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Project/bullets.py b/Project/bullets.py
+--- a/Project/bullets.py	
++++ b/Project/bullets.py	
+@@ -4,17 +4,18 @@
+ import pygame
+ 
+ class Bullet(pygame.sprite.Sprite):
+-    def __init__(self, x: int, y: int, direction: float):
++    def __init__(self, x: int, y: int, direction: float, damage: int):
+         """
+         Initialize a bullet instance:
+ 
+-        Args
+-        ----
+-        x: int
+-            Position of the bullet in the x-axis
+-        y: int
+-            Position of the bullet in the y-axis
+-            Direction in which it is fired, in radions.
++        Args:
++             x: int
++                Position of the bullet in the x-axis
++             y: int
++                Position of the bullet in the y-axis
++             Direction: in which it is fired, in radions.
++             damage: bullet damage for each weapon
++
+         """
+         super().__init__()
+         self.radius = bullet_size
+@@ -26,6 +27,7 @@
+ 
+         self.speed = 7
+         self.direction = direction
++        self.damage = damage
+ 
+     def update(self):
+         """
+@@ -55,5 +57,5 @@
+             screen, self.color, self.rect.center, self.radius
+         )
+ 
+-#testing!
++
+ 
+Index: Project/player.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from utils import scale_animations\r\nimport pygame\r\nimport math\r\nfrom bullets import Bullet\r\nfrom config import *\r\nfrom weapons import Pistol, MachineGun, ShotGun\r\n\r\n\r\nclass Player(pygame.sprite.Sprite):\r\n    def __init__(self):\r\n        \"\"\"\r\n        Initialize a PLayer instance\r\n        \"\"\"\r\n        super().__init__()\r\n        self.image = pygame.Surface(player_size)\r\n        self.rect = self.image.get_rect()\r\n        self.rect.inflate_ip(-20, -10)\r\n        self.rect.center = (width // 2, height // 2)\r\n\r\n\r\n        # Gameplay variables\r\n        self.speed = 5\r\n        self.health = 100\r\n        self.max_health = 100\r\n        self.bullet_cooldown = 0\r\n\r\n        # Load animation frames\r\n        self.animations = {\r\n            \"idle\": [pygame.image.load(f\"assets/MC Frames/idle/Ellie frame_idle_{i}.png\").convert_alpha() for i in range(3)],\r\n            \"run_right\": [pygame.image.load(f\"assets/MC Frames/run/Ellie frame_run_{i}.png\").convert_alpha() for i in range(13)],\r\n            \"shoot\": [pygame.image.load(f\"assets/MC Frames/shoot/Ellie frame_shoot_{i}.png\").convert_alpha() for i in range(3)],\r\n            \"death\": [pygame.image.load(f\"assets/MC Frames/death/Ellie frame_death_{i}.png\").convert_alpha() for i in range(7)]\r\n        }\r\n\r\n        self.animations[\"run_left\"] = [pygame.transform.flip(image, True, False) for image in self.animations[\"run_right\"]]\r\n        # Scale all frames in self.animations\r\n        scale_animations(self.animations, 100, 120)  # Scales all loaded animations\r\n\r\n        self.current_animation = \"idle\"\r\n        self.current_frame = 0\r\n        self.image = self.animations[self.current_animation][self.current_frame]  # Start with the first frame\r\n        self.animation_speed = 0.15  #\r\n        self.animation_timer = 0\r\n        self.moving = False  # Flag to track movement\r\n        self.dead = False  # Flag for player death\r\n\r\n        #Inventory system\r\n        self.inventory = {\"Pistol\": Pistol(), \"Machine Gun\": MachineGun(), \"Shot Gun\": ShotGun()}\r\n        self.weapon =self.inventory[\"Pistol\"] #To make pistol the default weapon\r\n\r\n    def update(self, dt, obstacles):\r\n        keys = pygame.key.get_pressed()\r\n        self.moving = False  # Reset moving flag at the start of each frame\r\n\r\n        # Movement and animation updates\r\n        if keys[pygame.K_w] and self.rect.top > 0: #UP\r\n            self.rect.y -= self.speed\r\n            self.moving = True\r\n\r\n            for obstacle in obstacles:\r\n                if self.rect.colliderect(obstacle):\r\n                    if self.rect.top < obstacle.rect.bottom and self.rect.centery > obstacle.rect.centery:\r\n                        self.rect.top = obstacle.rect.bottom\r\n\r\n        elif keys[pygame.K_s] and self.rect.bottom < height: #DOWN\r\n            self.rect.y += self.speed\r\n            self.moving = True\r\n            for obstacle in obstacles:\r\n                if self.rect.colliderect(obstacle):\r\n                    if self.rect.bottom > obstacle.rect.top and self.rect.centery < obstacle.rect.centery:\r\n                        self.rect.bottom = obstacle.rect.top\r\n\r\n        if keys[pygame.K_a] and self.rect.left > 0: #LEFT\r\n            self.rect.x -= self.speed\r\n            self.current_animation = \"run_left\"\r\n            self.moving = True\r\n            # Collision from the right\r\n            for obstacle in obstacles:\r\n                if self.rect.colliderect(obstacle):\r\n                    if self.rect.left < obstacle.rect.right and self.rect.centerx > obstacle.rect.centerx:\r\n                        self.rect.left = obstacle.rect.right\r\n\r\n        elif keys[pygame.K_d] and self.rect.right < width: #RIGHT\r\n            self.rect.x += self.speed\r\n            self.current_animation = \"run_right\"\r\n            self.moving = True\r\n            # Collision from the left\r\n            for obstacle in obstacles:\r\n                if self.rect.colliderect(obstacle):\r\n                    if self.rect.right > obstacle.rect.left and self.rect.centerx < obstacle.rect.centerx:\r\n                        self.rect.right = obstacle.rect.left\r\n\r\n        # Set to idle if not moving\r\n        if not self.moving and not self.dead:  #Check if dead, so it doesn't switch to idle animation\r\n            self.current_animation = \"idle\"\r\n\r\n\r\n\r\n        #Animation Update\r\n        if not self.dead: #Animate only if not dead\r\n            self.animation_timer += dt\r\n            if self.animation_timer >= self.animation_speed:\r\n                self.animation_timer = 0\r\n                self.current_frame = (self.current_frame + 1) % len(self.animations[self.current_animation])\r\n                self.image = self.animations[self.current_animation][self.current_frame]\r\n\r\n\r\n        # Shooting animation\r\n        if self.bullet_cooldown > 0 and not self.dead:\r\n            self.current_animation = \"shoot\"\r\n\r\n\r\n        #Death Animation\r\n        if self.health <= 0:\r\n            self.current_animation = \"death\"\r\n            self.dead = True\r\n\r\n        if self.dead and self.current_frame == len(self.animations[\"death\"]) - 1:\r\n            self.kill()\r\n\r\n        #Weapon\r\n        self.weapon.update(dt)\r\n\r\n\r\n    def shoot(self, bullets: pygame.sprite.Group, zombies: pygame.sprite.Group):\r\n        \"\"\"\r\n    Shoot one bullet towards the nearest zombie when the Enter key is pressed.\r\n\r\n    Args\r\n    ----\r\n    bullets (pygame.sprite.Group): The bullet group to add the new bullet to.\r\n    zombies (pygame.sprite.Group): The group of zombies to target.\r\n    \"\"\"\r\n        keys = pygame.key.get_pressed()\r\n\r\n        # Shoot only when the Enter key is pressed\r\n        if keys[pygame.K_SPACE] and self.bullet_cooldown <= 0:\r\n            if zombies:\r\n                # Find the nearest zombie\r\n                nearest_zombie = min(zombies, key=lambda z: self.distance_to(z))\r\n\r\n                # Calculate the angle to the nearest zombie\r\n                dx = nearest_zombie.rect.centerx - self.rect.centerx\r\n\r\n\r\n                dy = nearest_zombie.rect.centery - self.rect.centery\r\n                angle = math.atan2(dy, dx)\r\n\r\n                # Spawn a bullet in the direction of the zombie\r\n                bullet = Bullet(self.rect.centerx, self.rect.centery, angle)\r\n                bullets.add(bullet)\r\n\r\n                # Set cooldown\r\n                self.bullet_cooldown = fps // 5 # Cooldown for 1 second\r\n\r\n        # Reduce cooldown\r\n        if self.bullet_cooldown > 0:\r\n            self.bullet_cooldown -= 1\r\n\r\n    def distance_to(self, zombie):\r\n        \"\"\"\r\n    Calculate the distance to a zombie.\r\n\r\n    Args\r\n    ----\r\n    zombie (pygame.sprite.Sprite): The zombie to calculate the distance to.\r\n\r\n    Returns\r\n    -------\r\n    float: The distance to the zombie.\r\n    \"\"\"\r\n        dx = zombie.rect.centerx - self.rect.centerx\r\n        dy = zombie.rect.centery - self.rect.centery\r\n        return math.sqrt(dx ** 2 + dy ** 2)\r\n\r\n    def weapon_switching(self, name_weapon):\r\n        \"\"\"\r\n        When the player is fighing, it´s possible to switch the weapons he has\r\n\r\n        Args:\r\n            name_weapon(str): The name of the weapon we want to switch to\r\n        \"\"\"\r\n        if name_weapon in self.inventory:\r\n            self.weapon = self.inventory[name_weapon]\r\n\r\n    def draw_debug_rect(self, screen):\r\n        \"\"\"\r\n        Draw a red outline around the player's rect for debugging.\r\n        \"\"\"\r\n        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)  # Red color, width=2\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Project/player.py b/Project/player.py
+--- a/Project/player.py	
++++ b/Project/player.py	
+@@ -141,13 +141,11 @@
+ 
+                 # Calculate the angle to the nearest zombie
+                 dx = nearest_zombie.rect.centerx - self.rect.centerx
+-
+-
+                 dy = nearest_zombie.rect.centery - self.rect.centery
+                 angle = math.atan2(dy, dx)
+ 
+-                # Spawn a bullet in the direction of the zombie
+-                bullet = Bullet(self.rect.centerx, self.rect.centery, angle)
++                # Spawn a bullet in the direction of the zombie using different weaponss
++                bullet = Bullet(self.rect.centerx, self.rect.centery, angle, self.weapon.damage)
+                 bullets.add(bullet)
+ 
+                 # Set cooldown

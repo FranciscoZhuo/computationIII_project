@@ -1,0 +1,50 @@
+Index: .idea/.gitignore
+===================================================================
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+deleted file mode 100644
+--- a/.idea/.gitignore	(revision ba4735ef5a2cfc665165c958eed34fe60a29d6c1)
++++ /dev/null	(revision ba4735ef5a2cfc665165c958eed34fe60a29d6c1)
+@@ -1,3 +0,0 @@
+-# Default ignored files
+-/shelf/
+-/workspace.xml
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"Black\">\r\n    <option name=\"sdkName\" value=\"C:\\Users\\fzhuo\\anaconda3\" />\r\n  </component>\r\n  <component name=\"ProjectRootManager\" version=\"2\" project-jdk-name=\"C:\\Users\\fzhuo\\anaconda3\" project-jdk-type=\"Python SDK\" />\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision ba4735ef5a2cfc665165c958eed34fe60a29d6c1)
++++ b/.idea/misc.xml	(date 1734218083524)
+@@ -1,7 +1,7 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="Black">
+-    <option name="sdkName" value="C:\Users\fzhuo\anaconda3" />
++    <option name="sdkName" value="ComputacaoIII" />
+   </component>
+-  <component name="ProjectRootManager" version="2" project-jdk-name="C:\Users\fzhuo\anaconda3" project-jdk-type="Python SDK" />
++  <component name="ProjectRootManager" version="2" project-jdk-name="ComputacaoIII" project-jdk-type="Python SDK" />
+ </project>
+\ No newline at end of file
+Index: .idea/computationIII_project.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<module type=\"PYTHON_MODULE\" version=\"4\">\r\n  <component name=\"NewModuleRootManager\">\r\n    <content url=\"file://$MODULE_DIR$\" />\r\n    <orderEntry type=\"jdk\" jdkName=\"C:\\Users\\fzhuo\\anaconda3\" jdkType=\"Python SDK\" />\r\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\r\n  </component>\r\n  <component name=\"PyDocumentationSettings\">\r\n    <option name=\"format\" value=\"PLAIN\" />\r\n    <option name=\"myDocStringFormat\" value=\"Plain\" />\r\n  </component>\r\n</module>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/computationIII_project.iml b/.idea/computationIII_project.iml
+--- a/.idea/computationIII_project.iml	(revision ba4735ef5a2cfc665165c958eed34fe60a29d6c1)
++++ b/.idea/computationIII_project.iml	(date 1734217532422)
+@@ -2,7 +2,7 @@
+ <module type="PYTHON_MODULE" version="4">
+   <component name="NewModuleRootManager">
+     <content url="file://$MODULE_DIR$" />
+-    <orderEntry type="jdk" jdkName="C:\Users\fzhuo\anaconda3" jdkType="Python SDK" />
++    <orderEntry type="jdk" jdkName="ComputacaoIII" jdkType="Python SDK" />
+     <orderEntry type="sourceFolder" forTests="false" />
+   </component>
+   <component name="PyDocumentationSettings">
