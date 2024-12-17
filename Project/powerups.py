@@ -74,7 +74,7 @@ class SlowZombiesPowerUp(PowerUp):
 class DeSpawnerPowerUp(PowerUp):
     def __init__(self, x, y):
         super().__init__(x, y, effect_duration= 15000)
-        self.image = pygame.image.load("assets/despawner.png"). convert_alpha()
+        self.image = pygame.image.load("assets/thunder.png"). convert_alpha()
         self.image = pygame.transform.scale(self.image, (40,40))
         self.rect = self.image.get_rect(topleft= (x,y))
 
@@ -92,7 +92,7 @@ class DeSpawnerPowerUp(PowerUp):
 class InvisibilityPowerUp():
     def __init__(self, x, y):
         super().__init__(x, y, effect_duration= 10000)
-        self.image = pygame.image.load("assets/invisibility.png"). convert_alpha()
+        self.image = pygame.image.load("assets/ghost.png"). convert_alpha()
         self.image = pygame.transform.scale(self.image, (40,40))
         self.rect = self.image.get_rect(topleft= (x,y))
 
