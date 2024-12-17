@@ -24,6 +24,9 @@ class Player(pygame.sprite.Sprite):
         self.max_health = 100
         self.bullet_cooldown = 0
 
+        self.last_collision_time=0
+        self.collision_cooldown =1000
+
         # Load animation frames
         self.animations = {
             "idle": [pygame.image.load(f"assets/MC Frames/idle/Ellie frame_idle_{i}.png").convert_alpha() for i in range(3)],
@@ -149,7 +152,7 @@ class Player(pygame.sprite.Sprite):
                 angle = math.atan2(dy, dx)
 
                 # Spawn a bullet in the direction of the zombie
-                bullet = Bullet(self.rect.centerx, self.rect.centery, angle)
+                bullet = Bullet(self.rect.centerx, self.rect.centery, angle, self.weapon.damage)
                 bullets.add(bullet)
 
                 # Set cooldown
@@ -196,6 +199,9 @@ class Player(pygame.sprite.Sprite):
         Pass damage to the health bar.
         """
         current_time = pygame.time.get_ticks()
+        if current_time - self.last_collision_time > self.collision_cooldown:
+            self.health -= 10 # we can cahnge if you want
+
         return current_time - self.last_collision_time > self.collision_cooldown
 
     def register_collision(self):

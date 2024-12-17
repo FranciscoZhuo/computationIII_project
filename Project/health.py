@@ -1,7 +1,7 @@
 import pygame
 
 class HealthBar:
-    def __init__(self):
+    def __init__(self, max_health):
         """
         Initialize the HealthBar.
 
@@ -9,14 +9,14 @@ class HealthBar:
         ----
         max_health (int): Maximum health the player can have.
         """
-        self.health = 6
+        self.max_health = max_health
+        self.current_health=max_health #players life need to start full
         # Load health bar images
         self.health_bar_images = [pygame.image.load(f"assets/healthbar/bar{i}.png") for i in range(1, 7)]
         # Resize images
         self.health_bar_images = [
             pygame.transform.scale(img, (160, 50)) for img in self.health_bar_images
         ]
-
 
     def draw(self, screen,player_rect):
         """

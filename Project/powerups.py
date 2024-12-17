@@ -54,7 +54,7 @@ class LifePowerUp(PowerUp):
 
 class SlowZombiesPowerUp(PowerUp):
     def __init__(self, x, y):
-        super().__init__(x,y,effect_duration=15000)
+        super().__init__(x,y,effect_duration=15000) #15 sec
         self.image = pygame.image.load("assets/snail.png")
         self.image = pygame.transform.scale(self.image,(40, 40))
         self.rect = self.image.get_rect(topleft = (x,y))
@@ -70,6 +70,49 @@ class SlowZombiesPowerUp(PowerUp):
         """
         for zombie in zombies:
             zombie.speed = max(1, zombie.speed // 2)
+
+class DeSpawnerPowerUp(PowerUp):
+    def __init__(self, x, y):
+        super().__init__(x, y, effect_duration= 15000)
+        self.image = pygame.image.load("assets/despawner.png"). convert_alpha()
+        self.image = pygame.transform.scale(self.image, (40,40))
+        self.rect = self.image.get_rect(topleft= (x,y))
+
+    def apply_powerup(self, player, zombies = None):
+        """
+        Removes all the enemies
+        Args:
+            player(Player): Player object
+            zombies(list): List of zombie objects
+        """
+        if zombies:
+            for zombie in zombies:
+                zombie.kill()
+
+class InvisibilityPowerUp():
+    def __init__(self, x, y):
+        super().__init__(x, y, effect_duration= 10000)
+        self.image = pygame.image.load("assets/invisibility.png"). convert_alpha()
+        self.image = pygame.transform.scale(self.image, (40,40))
+        self.rect = self.image.get_rect(topleft= (x,y))
+
+    def apply_powerup(self, player, zombies = None):
+        """
+        The player it´s invisible
+        Args:
+            player(Player): Player object
+            zombies(list): List of zombie objects
+        """
+        player.invisibility = True
+
+    def finish_powerup(self):
+        """
+        When the time is up, the player is visible again
+        """
+        if pygame.time.get_ticks() - self.spawn_time > self.effect_duration:
+            player.invisibility = False
+            return True
+        return False
 
 #It´s important now to create a class, called PowerUpController, because we will implement more than the 2 power-ups that are mandatory
 #which makes the code more easy to expand but also makes the code more organized and separated by responsabilities.
@@ -101,7 +144,7 @@ class PowerUpController:
         if current_time - self.last_spawn > self.interval_spawn:
             x = random.randint (50, 750)
             y = random.randint(50, 550)
-            type_powerup = random.choice([LifePowerUp, SlowZombiesPowerUp]) #basically, we want the power-up to spawn randomly
+            type_powerup = random.choice([LifePowerUp, SlowZombiesPowerUp, DeSpawnerPowerUp, InvisibilityPowerUp]) #basically, we want the power-up to spawn randomly
             power_up = type_powerup(x,y)
             self.power_ups.add(power_up)
             self.last_spawn = current_time
