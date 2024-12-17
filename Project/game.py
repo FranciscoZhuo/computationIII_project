@@ -13,6 +13,7 @@ from obstacle import *
 
 def game_loop():
     player = Player()
+    pygame.mixer.music.stop()
     current_state = "main"
 
     while True:
