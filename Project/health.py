@@ -1,4 +1,5 @@
 import pygame
+from config import *
 
 class HealthBar:
     def __init__(self, max_health):
@@ -27,12 +28,24 @@ class HealthBar:
         x = rect.centerx - bar_width // 2
         y = rect.top - 10
 
-        # Health bar background
-        pygame.draw.rect(screen, (50, 50, 50), (x, y, bar_width, bar_height))
+        # Draw the background of the health bar (grey)
+        pygame.draw.rect(screen, grey, (x, y, bar_width, bar_height))
 
-        # Health bar foreground (red)
-        current_width = int(bar_width * (self.health / self.max_health))
-        pygame.draw.rect(screen, (255, 0, 0), (x, y, current_width, bar_height))
+        # Calculate the current red bar width based on health percentage
+        health_percentage = self.health / self.max_health
+        current_width = max(0, int(bar_width * health_percentage))
+        
+        pygame.draw.rect(screen, red, (x, y, current_width, bar_height))
+
+    def update(self, new_health):
+        """
+        Update the health bar based on the new health.
+
+        Args:
+        ----
+        new_health (int): Current health of the entity.
+        """
+        self.health = max(new_health, 0)  # Ensure health never goes below zero
 
     def decrease_health(self, amount):
         """

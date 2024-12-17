@@ -24,7 +24,7 @@ class Player(pygame.sprite.Sprite):
         self.health = 100
         self.max_health = 100
         self.bullet_cooldown = 0
-        self.health_bar = HealthBar(self.max_health)  # Add health bar
+        self.health_bar = HealthBar(self.health)  # Add health bar
 
         # Load animation frames
         self.animations = {

@@ -60,7 +60,7 @@ class Enemy(pygame.sprite.Sprite):
         Reduces the enemy's health based on the bullet's damage and updates the health bar.
         """
         self.health -= amount
-        self.health_bar.decrease_health(amount)
+        self.health_bar.update(self.health)
         if self.health <= 0:
             self.kill()  # Remove enemy when health reaches zero
 
@@ -72,7 +72,9 @@ class NormalZombie(Enemy):
         super().__init__()
 
         self.speed = random.randint(2, 3)  # Same speed as Enemy
-        self.health = 10  # Same health as Enemy
+        self.health = 50  # Same health as Enemy
+        self.health_bar = HealthBar(self.health)  # Add health bar
+
 
         # Load animation frames
         self.animations = {
@@ -147,7 +149,8 @@ class FastZombie(Enemy):
     def __init__(self):
         super().__init__()
         self.speed = random.randint(4, 6)  # Faster than normal enemies
-        self.health = 5  # Lower health since they're faster
+        self.health = 35  # Lower health since they're faster
+        self.health_bar = HealthBar(self.health)  # Add health bar
 
         # Load animation frames
         self.animations = {
@@ -222,7 +225,8 @@ class TankZombie(Enemy):
     def __init__(self):
         super().__init__()
         self.speed = 1
-        self.health = 30  # Much higher health
+        self.health = 70  # Much higher health
+        self.health_bar = HealthBar(self.health)  # Add health bar
 
         # Load animation frames
         self.animations = {
@@ -299,7 +303,9 @@ class ExplodingZombie(Enemy):
         super().__init__()
 
         self.speed = random.randint(2, 3)
-        self.health = 8  # Normal health
+        self.health = 50  # Normal health
+        self.health_bar = HealthBar(self.health)  # Add health bar
+
         self.exploding = False
 
         # Load animation frames
