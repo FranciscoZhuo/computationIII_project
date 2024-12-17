@@ -89,7 +89,7 @@ class DeSpawnerPowerUp(PowerUp):
             for zombie in zombies:
                 zombie.kill()
 
-class InvisibilityPowerUp():
+class InvisibilityPowerUp(PowerUp):
     def __init__(self, x, y):
         super().__init__(x, y, effect_duration= 10000)
         self.image = pygame.image.load("assets/ghost.png"). convert_alpha()
@@ -105,7 +105,7 @@ class InvisibilityPowerUp():
         """
         player.invisibility = True
 
-    def finish_powerup(self):
+    def finish_powerup(self,player):
         """
         When the time is up, the player is visible again
         """
