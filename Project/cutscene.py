@@ -44,7 +44,7 @@ def cutscene1():
     current_item_index = 0
     alpha = 0
     fade_in = True
-    fade_duration = 90  # Controls how fast the fade happens
+    fade_duration = 200  # Controls how fast the fade happens
     clock3 = pygame.time.Clock()
     loop_count = 0  # Counter for the number of cycles
     max_loops = 1  # Maximum number of full cycles
