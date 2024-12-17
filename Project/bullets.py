@@ -4,7 +4,7 @@ import math
 import pygame
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int, direction: float):
+    def __init__(self, x: int, y: int, direction: float, damage: int):
         """
         Initialize a bullet instance:
 
@@ -26,6 +26,8 @@ class Bullet(pygame.sprite.Sprite):
 
         self.speed = 7
         self.direction = direction
+        self.damage = damage
+
 
     def update(self):
         """

@@ -4,6 +4,7 @@ import math
 from bullets import Bullet
 from config import *
 from weapons import Pistol, MachineGun, ShotGun
+from health import *
 
 
 class Player(pygame.sprite.Sprite):
@@ -23,9 +24,7 @@ class Player(pygame.sprite.Sprite):
         self.health = 100
         self.max_health = 100
         self.bullet_cooldown = 0
-
-        self.last_collision_time=0
-        self.collision_cooldown =1000
+        self.health_bar = HealthBar(self.max_health)  # Add health bar
 
         # Load animation frames
         self.animations = {
@@ -194,16 +193,7 @@ class Player(pygame.sprite.Sprite):
         """
         pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)  # Red color, width=2
 
-    def take_damage(self):
-        """
-        Pass damage to the health bar.
-        """
-        current_time = pygame.time.get_ticks()
-        if current_time - self.last_collision_time > self.collision_cooldown:
-            self.health -= 10 # we can cahnge if you want
-
-        return current_time - self.last_collision_time > self.collision_cooldown
-
-    def register_collision(self):
-        self.last_collision_time = pygame.time.get_ticks()
+    def draw(self, screen):
+        # Draw the player's health bar
+        self.health_bar.draw(screen, self.rect)
 

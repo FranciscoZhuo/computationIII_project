@@ -4,6 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+    <list default="true" id="b01a6e04-67da-48af-afd1-59626e59c860" name="Changes" comment="Corrected the cutscene">
+      <change afterPath="$PROJECT_DIR$/Project/assets/BGMusic.mp3" afterDir="false" />
     <list default="true" id="b01a6e04-67da-48af-afd1-59626e59c860" name="Changes" comment="Ajusted Iventory Bar (Just falta ajust the outline)">
       <change beforePath="$PROJECT_DIR$/.idea/computationIII_project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/computationIII_project.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
@@ -59,6 +61,7 @@
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="computationIII_project" />
+      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -124,7 +127,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Ajusted Iventory Bar (Just falta ajust the outline)" />
-    <MESSAGE value="Changed the buttons colors in rules + updated the pages in rules" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed the buttons colors in rules + updated the pages in rules" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajusted Iventory Bar (Just falta ajust the outline)" />
   </component>
 </project>

@@ -4,7 +4,7 @@ from utils import *
 from utils import under_construction
 
 
-def shed(player):
+def shop(player):
     # Setup of the background and screen
     background = pygame.image.load("img/farm.png")
     background = pygame.transform.scale(background, resolution)

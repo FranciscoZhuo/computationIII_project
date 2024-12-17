@@ -1,5 +1,6 @@
 from utils import *
 from config import *
+from health import *
 import pygame
 import random
 import math
@@ -14,6 +15,8 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.Surface((enemy_size, enemy_size))
         self.image.fill(red)
         self.rect = self.image.get_rect()
+
+
         # Positioning
         self.rect.x = random.randint(0, width - enemy_size)
         self.rect.y = random.randint(0, width - enemy_size)
@@ -23,6 +26,7 @@ class Enemy(pygame.sprite.Sprite):
 
         # Health
         self.health = 10
+        self.health_bar = HealthBar(self.health)  # Add health bar
 
 
 
@@ -48,12 +52,17 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x = int(self.rect.x)
         self.rect.y = int(self.rect.y)
 
-    def draw_debug_rect(self, screen):
-        """
-        Draw a red outline around the player's rect for debugging.
-        """
-        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)  # Red color, width=2
+    def draw(self, screen):
+        self.health_bar.draw(screen, self.rect)  # Draw health bar above the enemy
 
+    def take_damage(self, amount):
+        """
+        Reduces the enemy's health based on the bullet's damage and updates the health bar.
+        """
+        self.health -= amount
+        self.health_bar.decrease_health(amount)
+        if self.health <= 0:
+            self.kill()  # Remove enemy when health reaches zero
 
 
 # ==== NORMAL ZOMBIE ====
