@@ -71,6 +71,8 @@ def execute_game(player: Player):
 
     # Initialize Inventory
     inventory = Inventory()
+    for weapon in player.inventory.values():
+        inventory.add_item(weapon) # adding weapons to the inventory
 
     #Initialize the PowerUpController
     power_up_controller = PowerUpController()
@@ -121,20 +123,17 @@ def execute_game(player: Player):
                 if pygame.K_1 <= event.key <= pygame.K_9:
                     slot_index = event.key - pygame.K_1  # 1 maps to slot 0, 2 to slot 1, etc.
                     inventory.change_slot(slot_index)
-                elif event.key == pygame.K_0:
-                    inventory.change_slot(9)  # 0 maps to slot 9
-
-        # Handle item pickups
-        # for item in items_group:  # Assuming items_group contains spawnable items
-        #    if pygame.sprite.collide_rect(player, item):
-        #       inventory.add_item({"name": item.name, "icon": item.icon_path})  # Add item with its details
-        #       item.kill()  # Remove the item from the game
-
-
+                    selected_weapon = inventory.get_selected_item()
+                    if selected_weapon:
+                        player.weapon_switching(selected_weapon.name)
         # Shooting
         player.shoot(bullets, zombies)
 
-
+        # Handle item pickups
+        for item in items_group:  # Assuming items_group contains spawnable items
+            if pygame.sprite.collide_rect(player, item):
+                inventory.add_item({"name": item.name, "icon": item.icon_path})  # Add item with its details
+                item.kill()  # Remove the item from the game
 
 
         # ==== SPAWN ====
@@ -204,7 +203,7 @@ def execute_game(player: Player):
             bullet.draw(screen)
 
         # Shows monetary balance
-        font = pygame.font.SysFont("Roboto", 30)
+        font = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 30)
         monetary_system.show_balance(screen,font)
 
         # Draw timer on the screen

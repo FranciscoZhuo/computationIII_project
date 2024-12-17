@@ -3,6 +3,7 @@ import pygame
 import math
 from bullets import Bullet
 from config import *
+from weapons import Pistol, MachineGun, ShotGun
 
 
 class Player(pygame.sprite.Sprite):
@@ -32,7 +33,6 @@ class Player(pygame.sprite.Sprite):
         }
 
         self.animations["run_left"] = [pygame.transform.flip(image, True, False) for image in self.animations["run_right"]]
-
         # Scale all frames in self.animations
         scale_animations(self.animations, 100, 120)  # Scales all loaded animations
 
@@ -44,9 +44,12 @@ class Player(pygame.sprite.Sprite):
         self.moving = False  # Flag to track movement
         self.dead = False  # Flag for player death
 
+        #Inventory system
+        self.inventory = {"Pistol": Pistol(), "Machine Gun": MachineGun(), "Shot Gun": ShotGun()}
+        self.weapon =self.inventory["Pistol"] #To make pistol the default weapon
+
     def update(self, dt, obstacles):
         keys = pygame.key.get_pressed()
-
         self.moving = False  # Reset moving flag at the start of each frame
 
         # Movement and animation updates
@@ -115,6 +118,8 @@ class Player(pygame.sprite.Sprite):
         if self.dead and self.current_frame == len(self.animations["death"]) - 1:
             self.kill()
 
+        #Weapon
+        self.weapon.update(dt)
 
 
     def shoot(self, bullets: pygame.sprite.Group, zombies: pygame.sprite.Group):
@@ -167,6 +172,16 @@ class Player(pygame.sprite.Sprite):
         dx = zombie.rect.centerx - self.rect.centerx
         dy = zombie.rect.centery - self.rect.centery
         return math.sqrt(dx ** 2 + dy ** 2)
+
+    def weapon_switching(self, name_weapon):
+        """
+        When the player is fighing, it´s possible to switch the weapons he has
+
+        Args:
+            name_weapon(str): The name of the weapon we want to switch to
+        """
+        if name_weapon in self.inventory:
+            self.weapon = self.inventory[name_weapon]
 
     def draw_debug_rect(self, screen):
         """

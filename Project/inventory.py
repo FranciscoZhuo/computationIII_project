@@ -25,6 +25,14 @@ class Inventory:
             return True  # Indicate success
         return False  # Indicate failure (inventory full)
 
+    def get_selected_item(self):
+        """
+        returns the current selected item
+        """
+        if self.selected_slot < len(self.items):
+            return self.items[self.selected_slot]
+        return None
+
     def render(self, screen):
         if not self.visible:
             return
@@ -57,7 +65,7 @@ class Inventory:
 
         # Draw items in the inventory
         for index, item in enumerate(self.items):
-            item_icon = pygame.image.load(item['icon']).convert_alpha()
+            item_icon = pygame.image.load(item.icon).convert_alpha()
             item_icon = pygame.transform.scale(item_icon, (32, 32))  # Fit the item into the slot
             icon_x = calculate_slot_x(index) + (slot_width - 32) // 2
             icon_y = bar_y + (slot_height - 32) // 2

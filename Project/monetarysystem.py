@@ -50,5 +50,5 @@ class MonetarySystem:
             x(int): Coordinate x to show the balance
             y(int): Coordinate y to show the balance
         """
-        text_balance = font.render(f"Cash: {self.balance}€", True, (128, 0, 128))
+        text_balance = font.render(f"Cash: {self.balance} coins", True, (128, 0, 128))
         screen.blit(text_balance,(x,y))

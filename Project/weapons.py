@@ -3,7 +3,7 @@ import math
 from bullets import Bullet
 
 class Weapon:
-    def __init__(self, damage, fire_rate):
+    def __init__(self, damage, fire_rate, name, icon):
         """
         Initialize the Weapon class.
 
@@ -15,6 +15,8 @@ class Weapon:
         self.damage = damage
         self.fire_rate = fire_rate
         self.cooldown = 0
+        self.name = name
+        self.icon = icon
 
     def shoot(self, player, bullets, target):
         """
@@ -26,7 +28,7 @@ class Weapon:
         bullets (pygame.sprite.Group): The group to add the bullet to.
         target (pygame.sprite.Sprite): The target to aim at (e.g., nearest zombie).
         """
-        if self.cooldown <= 0:
+        if self.cooldown <= 0 and target:
             dx = target.rect.centerx - player.rect.centerx
             dy = target.rect.centery - player.rect.centery
             angle = math.atan2(dy, dx)
@@ -47,3 +49,18 @@ class Weapon:
         """
         if self.cooldown > 0:
             self.cooldown -= dt
+
+#Subclasses for the weapons
+class Pistol(Weapon):
+    def __init__(self):
+        super().__init__(damage=10, fire_rate=0.5, name="Pistol", icon="assets/pistol.png")
+        #more weak/standard damage and shooting time
+
+class MachineGun(Weapon):
+    def __init__(self):
+        super().__init__(damage=30, fire_rate=0.1, name="Machine Gun", icon="assets/machinegun.png")
+        #strong damage but slower fire rate
+
+class ShotGun(Weapon):
+    def __init__(self):
+        super().__init__(damage=50, fire_rate=1.5, name="Shot Gun", icon="assets/shotgun.png")
