@@ -64,18 +64,13 @@ class Inventory:
         pygame.draw.rect(screen, light_grey, highlight_rect, 3)  # Draw the yellow outline
 
         # Draw items in the inventory
+
+
         for index, item in enumerate(self.items):
-            item_icon = pygame.image.load(item.icon).convert_alpha()
-            item_icon = pygame.transform.scale(item_icon, (32, 32))  # Fit the item into the slot
+            item_icon = item.image  # Usa a imagem já carregada
             icon_x = calculate_slot_x(index) + (slot_width - 32) // 2
             icon_y = bar_y + (slot_height - 32) // 2
             screen.blit(item_icon, (icon_x, icon_y))
-
-        #for index, item in enumerate(self.items):
-        #    item_icon = item.image  # Usa a imagem já carregada
-        #    icon_x = calculate_slot_x(index) + (slot_width - 32) // 2
-        #    icon_y = bar_y + (slot_height - 32) // 2
-        #    screen.blit(item_icon, (icon_x, icon_y))
 
     def add_ability(self, ability):
         """

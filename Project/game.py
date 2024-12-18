@@ -76,7 +76,7 @@ def execute_game(player: Player):
     pygame.mixer.music.play(-1)
 
     # Timer Setup
-    level_duration = 10  # Level duration in seconds (e.g., 5 minutes)
+    level_duration = 300  # Level duration in seconds (e.g., 5 minutes)
     start_time = pygame.time.get_ticks()  # Record the start time
 
     # Screen setup
@@ -248,7 +248,7 @@ def execute_game(player: Player):
 
         # Shows monetary balance
         font1 = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 25)
-        monetary_system.show_balance(screen, font1, 115, 45)
+        monetary_system.show_balance(screen, font1, 135, 40)
 
         # Draw timer on the screen
         font = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 30)

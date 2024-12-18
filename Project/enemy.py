@@ -299,7 +299,7 @@ class TankZombie(Enemy):
 
 
 
-# ==== EXPLODING ZOMBIE ====
+# ==== EXPLODING ZOMBIE (TO BE FIXED) ====
 
 class ExplodingZombie(Enemy):
     def __init__(self):
@@ -370,18 +370,17 @@ class ExplodingZombie(Enemy):
             self.exploding = True
             self.set_animation("explosion")
 
-        if not self.has_damaged and pygame.sprite.collide_rect(self, player):
-            player.take_damage(self.damage)  # Apply explosion damage
-            self.has_damaged = True  # Mark damage as applied
 
-            # Immediately remove the zombie after explosion
-            self.kill()
 
     def update(self, player, dt):
         """
         Update the zombie's behavior and animation.
         """
         if self.exploding:
+            # Apply damage if in range and damage hasn't been dealt yet
+            if not self.has_damaged and pygame.sprite.collide_rect(self, player):
+                player.take_damage(self.damage)  # Apply explosion damage
+                self.has_damaged = True  # Mark damage as applied
             # Handle explosion animation
             self.animate(dt)
         else:

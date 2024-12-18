@@ -18,6 +18,10 @@ class Weapon:
         self.name = name
         self.icon = icon
 
+        # Load the icon as an image
+        self.image = pygame.image.load(icon).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (30, 30))  # Scale to fit inventory slots
+
     def shoot(self, player, bullets, target):
         """
         Shoot a bullet towards the specified target.
