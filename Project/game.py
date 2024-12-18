@@ -205,16 +205,23 @@ def execute_game(player: Player):
                     zombie.kill()  # Destroy the enemy
                     monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
 
+        # Check for collisions between player and enemies
+        for zombie in zombies:
+            if pygame.sprite.collide_rect(player, zombie):
+                player.take_damage(zombie.damage)  # Player takes 10 damage
+
 
 
         # ==== UPDATES ====
 
         # Update positions
         player_group.update(dt, obstacles)
+        player_health_bar.update(player.health)
         bullets.update()
         # Update zombies with animation
         for zombie in zombies:
             zombie.update(player, dt)
+
 
 
         # Update the draw power-ups
@@ -227,7 +234,6 @@ def execute_game(player: Player):
 
         # Drawing the object
         player_group.draw(screen)
-        player.draw(screen)
         player.draw_debug_rect(screen)
         zombies.draw(screen)
         for zombie in zombies:
@@ -239,6 +245,7 @@ def execute_game(player: Player):
         inventory.render(screen)
         screen.blit(profile, (0, 0))
 
+
         # Shows monetary balance
         font1 = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 25)
         monetary_system.show_balance(screen, font1, 115, 45)
@@ -247,6 +254,9 @@ def execute_game(player: Player):
         font = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 30)
         timer_text = font.render(f"Time Left: {int(remaining_time)}s", True, (128, 0, 128))
         screen.blit(timer_text, (860, 30))
+
+        # Draw the health bar inside the profile
+        player_health_bar.draw_in_profile(screen, profile)
 
 
         pygame.display.flip()

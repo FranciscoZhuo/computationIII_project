@@ -21,9 +21,11 @@ class Player(pygame.sprite.Sprite):
 
         # Gameplay variables
         self.speed = 5
-        self.health = 100
-        self.max_health = 100
+        self.health = 200
+        self.max_health = 200
         self.bullet_cooldown = 0
+        self.damage_cooldown = 500  # Cooldown in milliseconds
+        self.last_damage_time = pygame.time.get_ticks()  # Track last damage time
         self.health_bar = HealthBar(self.health)  # Add health bar
 
         # Load animation frames
@@ -125,6 +127,14 @@ class Player(pygame.sprite.Sprite):
         #Weapon
         self.weapon.update(dt)
 
+    def take_damage(self, amount):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_damage_time >= self.damage_cooldown:
+            self.health = max(self.health - amount, 0)  # Apply damage
+            self.health_bar.update(self.health)  # Update health bar
+            self.last_damage_time = current_time
+            if self.health <= 0:
+                self.dead = True
 
     def shoot(self, bullets: pygame.sprite.Group, zombies: pygame.sprite.Group):
         """
@@ -193,7 +203,5 @@ class Player(pygame.sprite.Sprite):
         """
         pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)  # Red color, width=2
 
-    def draw(self, screen):
-        # Draw the player's health bar
-        self.health_bar.draw(screen, self.rect)
+
 
