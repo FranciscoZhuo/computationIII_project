@@ -69,6 +69,8 @@ def execute_game(player: Player):
     background = pygame.image.load("assets/lvl2.jpg").convert()
     background = pygame.transform.scale(background, (width, height))
 
+    profile = pygame.image.load("assets/Profile.png")
+
     # Setting up Background Music
     #pygame.mixer.music.load('assets/BGMusic.mp3')
     #pygame.mixer.music.play(-1)
@@ -115,6 +117,9 @@ def execute_game(player: Player):
     house_side = Obstacle(780, 247, 203, 178)
     obstacles.add(house_main)
     obstacles.add(house_side)
+
+    # Initialize health bar
+    player_health_bar = HealthBar(player.max_health)
 
 
     # ==== GAME LOOP ====
@@ -231,14 +236,17 @@ def execute_game(player: Player):
             bullet.draw(screen)
 
 
+        inventory.render(screen)
+        screen.blit(profile, (0, 0))
+
         # Shows monetary balance
-        font = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 30)
-        monetary_system.show_balance(screen,font)
+        font1 = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 25)
+        monetary_system.show_balance(screen, font1, 115, 45)
 
         # Draw timer on the screen
+        font = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 30)
         timer_text = font.render(f"Time Left: {int(remaining_time)}s", True, (128, 0, 128))
-        screen.blit(timer_text, (10, 30))
+        screen.blit(timer_text, (860, 30))
 
-        inventory.render(screen)
 
         pygame.display.flip()

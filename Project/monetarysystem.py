@@ -1,3 +1,6 @@
+from Project.config import white
+
+
 class MonetarySystem:
     def __init__(self, initial_balance = 0):
         """
@@ -50,5 +53,5 @@ class MonetarySystem:
             x(int): Coordinate x to show the balance
             y(int): Coordinate y to show the balance
         """
-        text_balance = font.render(f"Cash: {self.balance} coins", True, (128, 0, 128))
+        text_balance = font.render(f"Cash: {self.balance} coins", True, white)
         screen.blit(text_balance,(x,y))
