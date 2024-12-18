@@ -5,7 +5,7 @@ from enemy import *
 from player import Player
 from powerups import PowerUpController
 from monetarysystem import MonetarySystem
-from shed import *
+from shop import *
 from inventory import *
 from obstacle import *
 from health import *

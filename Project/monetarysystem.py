@@ -1,4 +1,5 @@
 from Project.config import white
+import pygame
 
 
 class MonetarySystem:
@@ -53,5 +54,6 @@ class MonetarySystem:
             x(int): Coordinate x to show the balance
             y(int): Coordinate y to show the balance
         """
-        text_balance = font.render(f"Cash: {self.balance} coins", True, white)
+        creepster_font = pygame.font.Font("assets/Creepster-Regular.ttf", 20)
+        text_balance = creepster_font.render(f"Cash: {self.balance} coins", True, white)
         screen.blit(text_balance,(x,y))

@@ -71,7 +71,31 @@ class Inventory:
             icon_y = bar_y + (slot_height - 32) // 2
             screen.blit(item_icon, (icon_x, icon_y))
 
+        #for index, item in enumerate(self.items):
+        #    item_icon = item.image  # Usa a imagem já carregada
+        #    icon_x = calculate_slot_x(index) + (slot_width - 32) // 2
+        #    icon_y = bar_y + (slot_height - 32) // 2
+        #    screen.blit(item_icon, (icon_x, icon_y))
 
+    def add_ability(self, ability):
+        """
+        Add the abilities bought on store
+        """
+        self.items.append(ability)
+
+    def use_ability(self, index, player):
+        """
+        Use it when the player is playing
+        """
+        if 0 <=index< len(self.items):
+            ability = self.items[index]
+            if ability.active:
+                return None #ativar
+            self.items.pop(index) #the ability dessapears depending on how much abilities we buy on store
+            ability.apply_ability(player)
+            return ability
+        else:
+            return None
 class Item(pygame.sprite.Sprite):
     def __init__(self, name, icon_path, x, y):
         super().__init__()
