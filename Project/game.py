@@ -5,7 +5,7 @@ from enemy import *
 from player import Player
 from powerups import PowerUpController
 from monetarysystem import MonetarySystem
-from shed import *
+from shop import *
 from inventory import *
 from obstacle import *
 from health import *
@@ -20,7 +20,7 @@ def game_loop():
         if current_state == "main":
             current_state = execute_game(player)
         elif current_state == "shop":
-            current_state = shop_ui()
+            current_state = shop()
 
 def game_over_screen(screen):
     """
@@ -76,7 +76,7 @@ def execute_game(player: Player):
     pygame.mixer.music.play(-1)
 
     # Timer Setup
-    level_duration = 300  # Level duration in seconds (e.g., 5 minutes)
+    level_duration = 10  # Level duration in seconds (e.g., 5 minutes)
     start_time = pygame.time.get_ticks()  # Record the start time
 
     # Screen setup
