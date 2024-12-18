@@ -2,52 +2,59 @@ import pygame
 from config import *
 from utils import *
 from utils import under_construction
+from weapons import Pistol, ShotGun, MachineGun
+from abilities import ExtraSpeed, Shield
+from inventory import Inventory
+from monetarysystem import MonetarySystem
 
+pygame.init()
 
-def shop(player):
-    # Setup of the background and screen
-    background = pygame.image.load("img/farm.png")
-    background = pygame.transform.scale(background, resolution)
-    screen = pygame.display.set_mode(resolution)
-    clock = pygame.time.Clock()
+resolution = (1024, 768)
+screen = pygame.display.set_mode(resolution)
+pygame.display.set_caption("Loja")
+creepster_font = pygame.font.Font("assets/Creepster-Regular.ttf", 30)
 
-    # Set the player's position to the left of the screen
-    player.rect.left = 0
-    player_group = pygame.sprite.Group()
-    player_group.add(player)
+#Shop background
+shop_background = pygame.image.load("assets/Fundo_shop.png")
+shop_background = pygame.transform.scale(shop_background, resolution)
 
-    special_area = pygame.Rect(530,30,140,140)
-
+items = [
+    {"name": "Shield", "price": 50, "ability": Shield(), "pos": (280, 200)},
+    {"name": "Extra Speed", "price": 50, "ability": ExtraSpeed(), "pos": (480, 200)},
+]
+def shop(player, monetary_system, inventory):
     running = True
+    clock = pygame.time.Clock()
     while running:
-        clock.tick(fps)
-        screen.blit(background, (0, 0))
+        screen.blit(shop_background, (0,0))
+        monetary_system.show_balance(screen, creepster_font, 20, 20) #shows the amount of money
+        for item in items:
+            image = pygame.transform.scale(item["ability"].image, (80,80))
+            screen.blit(image, item["pos"])
+            text = creepster_font.render(f"{item['price']} coins", True, (255, 255, 255))
+            screen.blit(text, (item["pos"][0], item["pos"][1] + 90))
+        pygame.display.flip()
 
-        # Event handling
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
 
-        # Update their position
-        player.update(dt)
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # Clique esquerdo
+                mouse_pos = pygame.mouse.get_pos()
+                for item in items:
+                    item_rect = pygame.Rect(item["pos"][0], item["pos"][1], 80, 80)
+                    if item_rect.collidepoint(mouse_pos):
+                        if monetary_system.spend_money(item["price"]):
+                            inventory.add_ability(item["ability"])
+                            print("Done!")
+                        else:
+                            print("Not enough money!")
 
-        # Detect if the user walks in the speacial area (House)
-        if special_area.colliderect(player.rect):
-            under_construction()
-            # Change player postion to avoind infinite loop
-            player.rect.top = 200
-            player.rect.left =560
+            if event.type==pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                running = False
+        clock.tick(30)
 
-        # Allow a player to return to the previous screen
-        if player.rect.left <= 0:
-            # Position the player to the right of the screen
-            player.rect.left = width - player.rect.width
-            return "main"
 
-        # Draw player
-        player_group.draw(screen)
-
-        pygame.display.flip()
 
 #Cada uso da habilidade consome uma unidade que o jogador comprou.
 #Se o jogador tiver 3 escudos, ele pode usar o escudo 3 vezes antes de precisar comprar mais.
