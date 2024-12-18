@@ -72,8 +72,8 @@ def execute_game(player: Player):
     profile = pygame.image.load("assets/Profile.png")
 
     # Setting up Background Music
-    #pygame.mixer.music.load('assets/BGMusic.mp3')
-    #pygame.mixer.music.play(-1)
+    pygame.mixer.music.load('assets/BGMusic.mp3')
+    pygame.mixer.music.play(-1)
 
     # Timer Setup
     level_duration = 300  # Level duration in seconds (e.g., 5 minutes)

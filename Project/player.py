@@ -28,10 +28,10 @@ class Player(pygame.sprite.Sprite):
 
         # Load animation frames
         self.animations = {
-            "idle": [pygame.image.load(f"assets/MC Frames/idle/Ellie frame_idle_{i}.png").convert_alpha() for i in range(3)],
-            "run_right": [pygame.image.load(f"assets/MC Frames/run/Ellie frame_run_{i}.png").convert_alpha() for i in range(13)],
-            "shoot": [pygame.image.load(f"assets/MC Frames/shoot/Ellie frame_shoot_{i}.png").convert_alpha() for i in range(3)],
-            "death": [pygame.image.load(f"assets/MC Frames/death/Ellie frame_death_{i}.png").convert_alpha() for i in range(7)]
+            "idle": [pygame.image.load(f"assets/MC Frames/idle/Ellie frame_idle_{i}.png").convert_alpha() for i in range(4)],
+            "run_right": [pygame.image.load(f"assets/MC Frames/run/Ellie frame_run_{i}.png").convert_alpha() for i in range(14)],
+            "shoot": [pygame.image.load(f"assets/MC Frames/shoot/Ellie frame_shoot_{i}.png").convert_alpha() for i in range(4)],
+            "death": [pygame.image.load(f"assets/MC Frames/death/Ellie frame_death_{i}.png").convert_alpha() for i in range(8)]
         }
 
         self.animations["run_left"] = [pygame.transform.flip(image, True, False) for image in self.animations["run_right"]]
@@ -42,7 +42,7 @@ class Player(pygame.sprite.Sprite):
         self.current_animation = "idle"
         self.current_frame = 0
         self.image = self.animations[self.current_animation][self.current_frame]  # Start with the first frame
-        self.animation_speed = 0.15  #
+        self.animation_speed = 0.05  #
         self.animation_timer = 0
         self.moving = False  # Flag to track movement
         self.dead = False  # Flag for player death
