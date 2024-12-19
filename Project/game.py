@@ -20,7 +20,7 @@ def game_loop():
         if current_state == "main":
             current_state = execute_game(player)
         elif current_state == "shop":
-            current_state = shop()
+            current_state = Shop(player)
 
 def game_over_screen(screen):
     """
@@ -141,7 +141,7 @@ def execute_game(player: Player):
         # End the level when time runs out
         if remaining_time <= 0:
             print("Level Complete!")
-            return "main"  # Return to main menu or next level
+            return "shop"  # Return to main menu or next level
 
         # Event Handling
         for event in pygame.event.get():

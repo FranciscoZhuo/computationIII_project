@@ -3,8 +3,10 @@ import pygame
 import math
 from bullets import Bullet
 from config import *
-from weapons import Pistol, MachineGun, ShotGun
+from weapons import Pistol, MachineGun, ShotGun, SniperRifle, Flamethrower
 from health import *
+from monetarysystem import MonetarySystem
+
 
 
 class Player(pygame.sprite.Sprite):
@@ -42,14 +44,16 @@ class Player(pygame.sprite.Sprite):
         self.current_animation = "idle"
         self.current_frame = 0
         self.image = self.animations[self.current_animation][self.current_frame]  # Start with the first frame
-        self.animation_speed = 0.05  #
+        self.animation_speed = 0.05
         self.animation_timer = 0
         self.moving = False  # Flag to track movement
         self.dead = False  # Flag for player death
 
         #Inventory system
-        self.inventory = {"Pistol": Pistol(), "Machine Gun": MachineGun(), "Shot Gun": ShotGun()}
+        self.inventory = {"Pistol": Pistol()}
         self.weapon =self.inventory["Pistol"] #To make pistol the default weapon
+
+        self.monetary_system = MonetarySystem(initial_balance=0)
 
     def update(self, dt, obstacles):
         keys = pygame.key.get_pressed()

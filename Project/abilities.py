@@ -70,4 +70,20 @@ class ExtraSpeed(Ability):
             player.speed /= 2
             # Deactivates the Extra Speed for the player
 
+#This ability will regenerate by 100% the player´s life
+class NewLife(Ability):
+    def __init__(self):
+        super().__init__(name="New Life", duration=0, image="assets/health_pack.png")
+
+    def apply_ability(self, player):
+        """
+        REstores 100% of the player´s health.
+        """
+        self.active = True
+        player.health_bar.update(player.health_bar.max_health)
+        self.active = False
+
+    def end_ability(self, player):
+        pass #no need
+
 
