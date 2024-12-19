@@ -1,3 +1,4 @@
+from Project.cutscene import cutscene2
 from config import *
 import math
 import pygame
@@ -28,6 +29,8 @@ def game_loop():
             current_state = shop_instance.shop()
         elif current_state == "gameover":
             current_state == game_over()
+        elif current_state == "cutscene2":
+            current_state == cutscene2()
 
 
 # ==== INTRO 1 ====
@@ -46,6 +49,8 @@ def intro1(player: Player):
     profile = pygame.image.load("assets/Profile.png").convert_alpha() # Use convert_alpha() if it has transparency
     font = pygame.font.SysFont("assets/Creepster-Regular.ttf", 25)  # Load font once
 
+    pygame.mixer.music.load('assets/Monologue Tay.mp3')
+    pygame.mixer.music.play(1)
 
     # ============ Initialize ================
 
@@ -273,7 +278,7 @@ def level1(player: Player):
                 pygame.display.flip()
                 clock.tick(fps)
 
-            return "shop"  # Transition to shop
+            return "cutscene2"  # Transition to shop
 
         # Event Handling
         for event in pygame.event.get():
