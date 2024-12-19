@@ -117,6 +117,10 @@ class PowerUpController:
         self.power_ups = pygame.sprite.Group()
         self.interval_spawn = 10000 #10 sec
         self.last_spawn = pygame.time.get_ticks() #keeps tracking of the last time that a power-up appeared
+        self.allowed_powerups = [LifePowerUp, SlowZombiesPowerUp]  # Default power-ups
+
+    def set_allowed_powerups(self, allowed_powerups):
+        self.allowed_powerups = allowed_powerups
 
     def update(self, player, zombies):
         """
@@ -150,7 +154,7 @@ class PowerUpController:
 
         Args:
             player(Player): player object
-            zombies(list): list of zombies
+            zombies(list): lsssssist of zombies
         """
         for power_up in list(self.power_ups): #It´s suposed to create a copy to avoid redundancy
             if pygame.sprite.collide_rect(player, power_up):
