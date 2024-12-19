@@ -20,10 +20,10 @@ def game_loop():
         if current_state == "main":
             current_state = execute_game(player)
         elif current_state == "shop":
-            current_state = shop()
+            current_state = Shop(player)
         elif current_state == "gameover":
             current_state == game_over(screen)
-            current_state = Shop(player)
+
 
 def game_over(screen):
     """
@@ -258,8 +258,8 @@ def execute_game(player: Player):
 
         # Drawing the object
         player_group.draw(screen)
-        player.draw(screen)
-        player.draw_debug_rect(screen)
+
+
         zombies.draw(screen)
         for zombie in zombies:
             zombie.draw(screen)
