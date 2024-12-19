@@ -4,8 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+    <list default="true" id="b01a6e04-67da-48af-afd1-59626e59c860" name="Changes" comment="Added a monologo to intro 1 and created cutscene 2">
+      <change afterPath="$PROJECT_DIR$/Project/assets/intro2.png" afterDir="false" />
+    <list default="true" id="b01a6e04-67da-48af-afd1-59626e59c860" name="Changes" comment="Design level 1" />
+    <list default="true" id="b01a6e04-67da-48af-afd1-59626e59c860" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Project/assets/Monologue Tay.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/computationIII_project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/computationIII_project.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_17_12_2024_20_37__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_17_12_2024_20_37__Changes_.xml" afterDir="false" />
     <list default="true" id="b01a6e04-67da-48af-afd1-59626e59c860" name="Changes" comment="self.galo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/cutscene.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/cutscene.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/player.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/powerups.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/powerups.py" afterDir="false" />
@@ -56,14 +65,16 @@
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="computationIII_project" />
+      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="C:\Users\fzhuo\anaconda3" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Project" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Project/main.py" />
@@ -130,6 +141,12 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Ajusted Iventory Bar (Just falta ajust the outline)" />
     <MESSAGE value="added a bit of code for health bar" />
+    <MESSAGE value="Corrected few issues" />
+    <MESSAGE value="Design level 1" />
+    <option name="LAST_COMMIT_MESSAGE" value="Design level 1" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="Added a monologo to intro 1 and created cutscene 2" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added a monologo to intro 1 and created cutscene 2" />
     <MESSAGE value="self.galo" />
     <option name="LAST_COMMIT_MESSAGE" value="self.galo" />
   </component>
