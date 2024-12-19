@@ -20,12 +20,20 @@ def game_loop():
         if current_state == "main":
             current_state = execute_game(player)
         elif current_state == "shop":
+            current_state = shop()
+        elif current_state == "gameover":
+            current_state == game_over(screen)
             current_state = Shop(player)
 
-def game_over_screen(screen):
+def game_over(screen):
     """
     Display a game over screen.
     """
+
+    # Background configs
+    gif_frame_bg = 0
+    clock_bg = pygame.time.Clock()
+
     bloodcrowfont = pygame.font.Font("assets/bloodcrow.ttf", 35)
     text = bloodcrowfont.render("Game Over", True, (255, 0, 0))
     text_rect = text.get_rect(center=(width // 2, height // 2))
@@ -34,8 +42,8 @@ def game_over_screen(screen):
     screen.blit(text, text_rect)
     pygame.display.flip()
 
-    waiting = True
-    while waiting:
+    running = True
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -48,6 +56,17 @@ def game_over_screen(screen):
                 elif event.key == pygame.K_ESCAPE:  # Quit game on Escape key
                     pygame.quit()
                     return
+
+        # Background
+        clock_bg.tick(20)
+        if gif_frame_bg != 125:
+            screen.blit(pygame.image.load(f'assets/gameover/frame_{gif_frame_bg}.png'), (0, 0))
+            screen.blit(text, text_rect)
+            gif_frame_bg += 1
+        else:
+            from interface import interface
+            interface()
+            return
 
         pygame.display.flip()
 
@@ -205,16 +224,28 @@ def execute_game(player: Player):
                     zombie.kill()  # Destroy the enemy
                     monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
 
+        # Check for collisions between player and enemies
+        for zombie in zombies:
+            if pygame.sprite.collide_rect(player, zombie):
+                player.take_damage(zombie.damage)  # Player takes 10 damage
+
+        # Check if player's health is zero or less
+        if player.health <= 0:
+            pygame.mixer.music.stop()
+            return "gameover"
+
 
 
         # ==== UPDATES ====
 
         # Update positions
         player_group.update(dt, obstacles)
+        player_health_bar.update(player.health)
         bullets.update()
         # Update zombies with animation
         for zombie in zombies:
             zombie.update(player, dt)
+
 
 
         # Update the draw power-ups
@@ -239,14 +270,18 @@ def execute_game(player: Player):
         inventory.render(screen)
         screen.blit(profile, (0, 0))
 
+
         # Shows monetary balance
         font1 = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 25)
-        monetary_system.show_balance(screen, font1, 115, 45)
+        monetary_system.show_balance(screen, font1, 135, 40)
 
         # Draw timer on the screen
         font = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 30)
         timer_text = font.render(f"Time Left: {int(remaining_time)}s", True, (128, 0, 128))
         screen.blit(timer_text, (860, 30))
+
+        # Draw the health bar inside the profile
+        player_health_bar.draw_in_profile(screen, profile)
 
 
         pygame.display.flip()
