@@ -9,7 +9,7 @@ from shed import shed
 from inventory import *
 from obstacle import *
 from health import *
-
+from treasurechest import *
 
 def game_loop():
     player = Player()
@@ -104,6 +104,11 @@ def execute_game(player: Player):
     #Initialize the PowerUpController
     power_up_controller = PowerUpController()
 
+    # Initialize the chest
+    treasure_chest = TreasureChest()
+    chest_group = pygame.sprite.Group()  # Group for the chest
+    chest_group.add(treasure_chest)
+
     #Initialize Monetary System
     monetary_system = MonetarySystem() #we can put inside of the MonetarySystem() the initial_balance = amount,
     # for example initial_balance = 50, which means the player will always start the game with 50€.
@@ -188,7 +193,11 @@ def execute_game(player: Player):
             zombies.add(new_enemy)
             zombies_spawn_timer = fps  # Every two seconds
 
-
+        #Spawning the chest
+        treasure_chest.update()
+        if treasure_chest.spawned:
+            chest_group.add(treasure_chest)
+            print("Chest added to group.")
 
 
         # ==== CHECKERS ====
@@ -204,14 +213,30 @@ def execute_game(player: Player):
                     monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
 
         # Check for collisions between player and enemies
-        if pygame.sprite.spritecollide(player, zombies, False):
-            if player.take_damage():  # Check cooldown
-                health_bar.decrease_health()
-                player.register_collision()
-                if health_bar.is_empty():
-                    print("Game Over!")
-                    running = False
-                    game_over_screen(screen)
+        for enemy in zombies:
+            if pygame.sprite.collide_rect(player, enemy):
+                current_time = pygame.time.get_ticks()
+                if player.invulnerable:
+                    # Player is invulnerable, ignore damage
+                    print("Player is invulnerable. Collision ignored!")
+                elif current_time - player.last_collision_time > player.collision_cooldown:
+                    # Player takes damage only after cooldown
+                    player.last_collision_time = current_time
+                    health_bar.decrease_health()
+                    print("Player hit! Health decreased.")
+                    if health_bar.is_empty():
+                        print("Game Over!")
+                        running = False
+                        game_over_screen(screen)
+
+        # Check for collisions between player and treasure chest
+        if pygame.sprite.spritecollide(player, chest_group, True):  # Remove chest after collection
+            treasure_chest.spawned = False  # Mark the chest as inactive
+            running = False  # Pause the game
+            treasure_chest.display_reward_screen(screen)
+            running=True
+
+
 
         # ==== UPDATES ====
 
@@ -225,12 +250,14 @@ def execute_game(player: Player):
 
         # Update the draw power-ups
         power_up_controller.update(player,zombies)
-        power_up_controller.draw(screen)
-
         # Update player state (handles invisibility expiration)
         player.update(dt, obstacles)
         # Render the player
         player.render(screen)
+        #draw powerups
+        power_up_controller.draw(screen)
+
+
 
 
         # ==== DRAWS ====
@@ -254,6 +281,10 @@ def execute_game(player: Player):
         # Draw timer on the screen
         timer_text = font.render(f"Time Left: {int(remaining_time)}s", True, (128, 0, 128))
         screen.blit(timer_text, (10, 30))
+
+        # Draw the treasure chest
+        chest_group.draw(screen)
+
 
         inventory.render(screen)
 

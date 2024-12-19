@@ -16,13 +16,17 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.inflate_ip(-20, -10)
         self.rect.center = (width // 2, height // 2)
-        self.health_bar = HealthBar()  # Create a HealthBar instance
 
+        #healthbar attributes
+        self.health_bar = HealthBar()  # Create a HealthBar instance
         self.last_collision_time = 0  # Initialize collision timer
         self.collision_cooldown = 1000  # Cooldown in milliseconds
+
         # Invisibility attributes
         self.invisible = False
         self.invisibility_start = None
+        self.invulnerable = False  # Tracks if the player is immune to enemy attacks
+
         # Gameplay variables
         self.speed = 5
         #self.health = 100
@@ -124,7 +128,8 @@ class Player(pygame.sprite.Sprite):
         # Check if invisibility has expired
         if self.invisible and pygame.time.get_ticks() - self.invisibility_start > 15000:  # Lasts 15 seconds
             self.invisible = False
-            print("Invisibility expired!")
+            self.invulnerable = False  # Reset immunity
+            print("Invisibility and invulnerability expired!")
 
 
     def shoot(self, bullets: pygame.sprite.Group, zombies: pygame.sprite.Group):

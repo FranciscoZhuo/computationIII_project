@@ -29,13 +29,12 @@ class Enemy(pygame.sprite.Sprite):
     def update(self, player, dt):
         """
         Update the enemy's position according to the player's.
-
+        and Avoid damaging the player if they are invulnerable.
         Args
         ---
         player (Player):
             The player to move towards.
         """
-
         # Calculation the direction in which the player is (angle)
         direction = math.atan2(
             player.rect.y - self.rect.y, player.rect.x - self.rect.x
@@ -112,6 +111,7 @@ class NormalZombie(Enemy):
         """
         Update the zombie's behavior and animation.
         """
+
         # Update position
         super().update(player, dt)
 
@@ -187,6 +187,7 @@ class FastZombie(Enemy):
         """
         Update the zombie's behavior and animation.
         """
+
         # Update position
         super().update(player, dt)
 
@@ -262,6 +263,7 @@ class TankZombie(Enemy):
         """
         Update the zombie's behavior and animation.
         """
+
         # Update position
         super().update(player, dt)
 
@@ -348,9 +350,10 @@ class ExplodingZombie(Enemy):
         self.exploding = True
         self.set_animation("explosion")
 
+
         # Apply damage if within range
         if pygame.sprite.collide_rect(self, player):
-            player.health -= 10  # Adjust damage value as needed
+            player.health_bar.health -= 1  # Adjust damage value as needed
 
     def update(self, player, dt):
         """

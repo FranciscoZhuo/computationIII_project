@@ -83,8 +83,10 @@ class InvisibilityPowerUP(PowerUp):
         Applies invisibility effect to the player.
         """
         player.invisible = True
+        player.invulnerable=True
         player.invisibility_start = pygame.time.get_ticks()
-        print("Player is now invisible!")
+        print("Player is now invisible and invulnerable!")
+        print(f"Player invisibility status: {player.invisible}")  # Check if player becomes invisible
 
 
 #It´s important now to create a class, called PowerUpController, because we will implement more than the 2 power-ups that are mandatory
