@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b01a6e04-67da-48af-afd1-59626e59c860" name="Changes" comment="Ajusted Iventory Bar (Just falta ajust the outline)">
+    <list default="true" id="b01a6e04-67da-48af-afd1-59626e59c860" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Project/assets/Monologue Tay.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/computationIII_project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/computationIII_project.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_17_12_2024_20_37__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_17_12_2024_20_37__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/cutscene.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/cutscene.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/game.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/player.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/powerups.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/powerups.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,8 +65,9 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="C:\Users\fzhuo\anaconda3" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Project" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Project/main.py" />
@@ -130,6 +134,6 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Ajusted Iventory Bar (Just falta ajust the outline)" />
     <MESSAGE value="added a bit of code for health bar" />
-    <option name="LAST_COMMIT_MESSAGE" value="added a bit of code for health bar" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>
