@@ -22,7 +22,7 @@ def game_loop():
         elif current_state == "level1":
             current_state = level1(player)
         elif current_state == "shop":
-            current_state = shop()
+            current_state = Shop(player)
         elif current_state == "gameover":
             current_state == game_over(screen)
 
@@ -189,7 +189,7 @@ def level1(player: Player):
     pygame.mixer.music.play(-1)
 
     # Timer Setup
-    level_duration = 300  # Level duration in seconds (e.g., 5 minutes)
+    level_duration = 10  # Level duration in seconds (e.g., 5 minutes)
     start_time = pygame.time.get_ticks()  # Record the start time
 
     # Screen setup
@@ -255,7 +255,7 @@ def level1(player: Player):
         # End the level when time runs out
         if remaining_time <= 0:
             print("Level Complete!")
-            return "main"  # Return to main menu or next level
+            return "shop"  # Return to main menu or next level
 
         # Event Handling
         for event in pygame.event.get():
@@ -289,6 +289,12 @@ def level1(player: Player):
         if zombies_spawn_timer > 0:
             zombies_spawn_timer -= 1
 
+        # Weighted random selection
+        zombie_type = random.choices(
+                [FastZombie, TankZombie, ExplodingZombie, Enemy],
+                weights=[0.2, 0.2, 0.1, 0.5],  # 20% Fast, 20% Tank, 10% Exploding, 50% Normal Enemy
+                k=1
+            )[0]
 
         # Spawn
         if zombies_spawn_timer <= 0:
@@ -297,6 +303,7 @@ def level1(player: Player):
             new_enemy = zombie_type()  # Instantiate the selected zombie type
             zombies.add(new_enemy)
             zombies_spawn_timer = fps  # Every two seconds
+
 
 
 
@@ -346,7 +353,8 @@ def level1(player: Player):
 
         # Drawing the object
         player_group.draw(screen)
-        player.draw_debug_rect(screen)
+
+
         zombies.draw(screen)
         for zombie in zombies:
             zombie.draw(screen)

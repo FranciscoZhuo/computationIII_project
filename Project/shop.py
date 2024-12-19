@@ -1,61 +1,68 @@
+from utils import * #acho que não é preciso
+from utils import under_construction #acho que não é preciso
 import pygame
-from config import *
-from utils import *
-from utils import under_construction
-from weapons import Pistol, ShotGun, MachineGun
-from abilities import ExtraSpeed, Shield
+from config import resolution, width, height
+from weapons import MachineGun, ShotGun, SniperRifle, Flamethrower
+from abilities import ExtraSpeed, Shield, NewLife
 from inventory import Inventory
 from monetarysystem import MonetarySystem
 
-pygame.init()
+white=(255, 255, 255)
+dark = (50, 50, 50)
+class Shop():
+    def __init__(self, player):
+        pygame.init()
+        self.player=player
+        self.inventory = player.inventory
+        self.monetary_system = player.monetary_system
+        self.screen = pygame.display.set_mode(resolution)
+        self.shop_background = pygame.image.load("assets/Fundo_shop.png").convert()
+        self.shop_background = pygame.transform.scale(self.shop_background, resolution)
+        self.font = pygame.font.Font("assets/Creepster-Regular.ttf", 30)
+        self.clock=pygame.time.Clock()
 
-resolution = (1024, 768)
-screen = pygame.display.set_mode(resolution)
-pygame.display.set_caption("Loja")
-creepster_font = pygame.font.Font("assets/Creepster-Regular.ttf", 30)
+        self.items = [
+            {"name": "Machine Gun", "type": "weapon", "price": 100, "object": MachineGun()},
+            {"name": "Shot Gun", "type": "weapon", "price": 150, "object": ShotGun()},
+            {"name": "Sniper Rifle", "type": "weapon", "price": 200, "object": SniperRifle()},
+            {"name": "Flamethrower", "type": "weapon", "price": 250, "object": Flamethrower()},
+            {"name": "Extra Speed", "type": "ability", "price": 100, "object": ExtraSpeed()},
+            {"name": "Shield", "type": "ability", "price": 150, "object": Shield()},
+            {"name": "New Life", "type": "ability", "price": 200, "object": NewLife()},
+            {"name": "New Life", "type": "ability", "price": 200, "object": NewLife()}, #repetida porqie falta 1
 
-#Shop background
-shop_background = pygame.image.load("assets/Fundo_shop.png")
-shop_background = pygame.transform.scale(shop_background, resolution)
+        ]
 
-items = [
-    {"name": "Shield", "price": 50, "ability": Shield(), "pos": (280, 200)},
-    {"name": "Extra Speed", "price": 50, "ability": ExtraSpeed(), "pos": (480, 200)},
-]
-def shop(player, monetary_system, inventory):
-    running = True
-    clock = pygame.time.Clock()
-    while running:
-        screen.blit(shop_background, (0,0))
-        monetary_system.show_balance(screen, creepster_font, 20, 20) #shows the amount of money
-        for item in items:
-            image = pygame.transform.scale(item["ability"].image, (80,80))
-            screen.blit(image, item["pos"])
-            text = creepster_font.render(f"{item['price']} coins", True, (255, 255, 255))
-            screen.blit(text, (item["pos"][0], item["pos"][1] + 90))
-        pygame.display.flip()
+        self.selected_item= None #For now
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
+    def shop(self):
+        self.screen.blit(self.shop_background, (0,0)) #Drawing the background of the shop
 
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # Clique esquerdo
-                mouse_pos = pygame.mouse.get_pos()
-                for item in items:
-                    item_rect = pygame.Rect(item["pos"][0], item["pos"][1], 80, 80)
-                    if item_rect.collidepoint(mouse_pos):
-                        if monetary_system.spend_money(item["price"]):
-                            inventory.add_ability(item["ability"])
-                            print("Done!")
-                        else:
-                            print("Not enough money!")
+        x_start = 120 #Where x starts, initial position
+        y_start = 200 #Where y starts, initial position
+        x_gap = 200 #Gap between squares horizontal
+        y_gap = 150 #Gap between squares vertically
 
-            if event.type==pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                running = False
-        clock.tick(30)
+        for index, item in enumerate(self.items):
+             #Square position
+            row = index // 4 #Divide by 4
+            col = index % 4  #Divide by 4
 
+            x = x_start + (col*x_gap)
+            y = y_start +(row * y_gap)
 
+            #Draw the squares (we need to have 8 aquares)
+            pygame.draw.rect(self.screen, dark, (x, y, 100, 100), 0) #going to be the dark square
+            pygame.draw.rect(self.screen, white, (x, y, 100, 100), 2) #going to be the white square borda(?)
 
-#Cada uso da habilidade consome uma unidade que o jogador comprou.
-#Se o jogador tiver 3 escudos, ele pode usar o escudo 3 vezes antes de precisar comprar mais.
-# o uso é limitado ao número de unidades no inventário.
+            #Item name
+            text_item = self.font.render(item["name"], True, white)
+            self.screen.blit(text_item, (x+5, y+110)) #just ajustments to text appears above the sqaure (em cima do quadrado)
+
+            #price
+            price_item = self.font.render(f"{item['price']} coins", True, (0,255,0))
+            self.screen.blit(price_item, (x+20, y+130))
+
+        if self.player.monetary_system.spend_money(item["price"]):
+            #if we have enough balance:
+            self.player.inventory[item["name"]] = item["object"]
