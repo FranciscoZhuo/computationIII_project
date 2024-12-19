@@ -1,5 +1,6 @@
 from utils import *
 from config import *
+from health import *
 import pygame
 import random
 import math
@@ -14,6 +15,8 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.Surface((enemy_size, enemy_size))
         self.image.fill(red)
         self.rect = self.image.get_rect()
+
+
         # Positioning
         self.rect.x = random.randint(0, width - enemy_size)
         self.rect.y = random.randint(0, width - enemy_size)
@@ -23,6 +26,7 @@ class Enemy(pygame.sprite.Sprite):
 
         # Health
         self.health = 10
+        self.health_bar = HealthBar(self.health)  # Add health bar
 
 
 
@@ -35,6 +39,7 @@ class Enemy(pygame.sprite.Sprite):
         player (Player):
             The player to move towards.
         """
+
         # Calculation the direction in which the player is (angle)
         direction = math.atan2(
             player.rect.y - self.rect.y, player.rect.x - self.rect.x
@@ -47,12 +52,17 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x = int(self.rect.x)
         self.rect.y = int(self.rect.y)
 
-    def draw_debug_rect(self, screen):
-        """
-        Draw a red outline around the player's rect for debugging.
-        """
-        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)  # Red color, width=2
+    def draw(self, screen):
+        self.health_bar.draw(screen, self.rect)  # Draw health bar above the enemy
 
+    def take_damage(self, amount):
+        """
+        Reduces the enemy's health based on the bullet's damage and updates the health bar.
+        """
+        self.health -= amount
+        self.health_bar.update(self.health)
+        if self.health <= 0:
+            self.kill()  # Remove enemy when health reaches zero
 
 
 # ==== NORMAL ZOMBIE ====
@@ -62,7 +72,10 @@ class NormalZombie(Enemy):
         super().__init__()
 
         self.speed = random.randint(2, 3)  # Same speed as Enemy
-        self.health = 10  # Same health as Enemy
+        self.health = 50  # Same health as Enemy
+        self.health_bar = HealthBar(self.health)  # Add health bar
+        self.damage = 10
+
 
         # Load animation frames
         self.animations = {
@@ -138,7 +151,9 @@ class FastZombie(Enemy):
     def __init__(self):
         super().__init__()
         self.speed = random.randint(4, 6)  # Faster than normal enemies
-        self.health = 5  # Lower health since they're faster
+        self.health = 35  # Lower health since they're faster
+        self.health_bar = HealthBar(self.health)  # Add health bar
+        self.damage = 5
 
         # Load animation frames
         self.animations = {
@@ -214,7 +229,9 @@ class TankZombie(Enemy):
     def __init__(self):
         super().__init__()
         self.speed = 1
-        self.health = 30  # Much higher health
+        self.health = 70  # Much higher health
+        self.health_bar = HealthBar(self.health)  # Add health bar
+        self.damage = 7
 
         # Load animation frames
         self.animations = {
@@ -263,7 +280,6 @@ class TankZombie(Enemy):
         """
         Update the zombie's behavior and animation.
         """
-
         # Update position
         super().update(player, dt)
 
@@ -285,14 +301,20 @@ class TankZombie(Enemy):
 
 
 
-# ==== EXPLODING ZOMBIE ====
+# ==== EXPLODING ZOMBIE (TO BE FIXED) ====
 
 class ExplodingZombie(Enemy):
     def __init__(self):
         super().__init__()
 
         self.speed = random.randint(2, 3)
-        self.health = 8  # Normal health
+        self.health = 50  # Normal health
+        self.health_bar = HealthBar(self.health)  # Add health bar
+        self.exploding = False
+        self.has_damaged = False  # Track if damage has been dealt
+        self.damage = 50  # Explosion damage
+        self.damage_radius = 50  # Explosion radius
+
         self.exploding = False
 
         # Load animation frames
@@ -314,7 +336,6 @@ class ExplodingZombie(Enemy):
         self.frame_time = 0  # Tracks time for frame updates
         self.image = self.animations[self.current_animation][self.current_frame]  # Initial image
 
-        self.damage_radius = 50  # Explosion damage radius
 
     def set_animation(self, animation_name):
         """
@@ -347,19 +368,21 @@ class ExplodingZombie(Enemy):
         """
         Triggers the explosion animation and deals damage to the player if in range.
         """
-        self.exploding = True
-        self.set_animation("explosion")
+        if not self.exploding:  # Start explosion
+            self.exploding = True
+            self.set_animation("explosion")
 
 
-        # Apply damage if within range
-        if pygame.sprite.collide_rect(self, player):
-            player.health_bar.health -= 1  # Adjust damage value as needed
 
     def update(self, player, dt):
         """
         Update the zombie's behavior and animation.
         """
         if self.exploding:
+            # Apply damage if in range and damage hasn't been dealt yet
+            if not self.has_damaged and pygame.sprite.collide_rect(self, player):
+                player.take_damage(self.damage)  # Apply explosion damage
+                self.has_damaged = True  # Mark damage as applied
             # Handle explosion animation
             self.animate(dt)
         else:
@@ -376,5 +399,5 @@ class ExplodingZombie(Enemy):
                 else:  # Player is to the left
                     self.set_animation("run_left")
 
-            # Animate movement or attack
-            self.animate(dt)
+         # Animate movement or attack
+        self.animate(dt)

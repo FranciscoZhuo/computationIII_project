@@ -5,7 +5,7 @@ from enemy import *
 from player import Player
 from powerups import PowerUpController
 from monetarysystem import MonetarySystem
-from shed import shed
+from shop import *
 from inventory import *
 from obstacle import *
 from health import *
@@ -19,23 +19,28 @@ def game_loop():
     while True:
         if current_state == "main":
             current_state = execute_game(player)
-        elif current_state == "shed":
-            current_state = shed(player)
+        elif current_state == "shop":
+            current_state = shop()
+        elif current_state == "gameover":
+            current_state == game_over(screen)
 
-def game_over_screen(screen):
+def game_over(screen):
     """
     Display a game over screen.
     """
+
+    # Background configs
+    gif_frame_bg = 0
+    clock_bg = pygame.time.Clock()
+
     bloodcrowfont = pygame.font.Font("assets/bloodcrow.ttf", 35)
     text = bloodcrowfont.render("Game Over", True, (255, 0, 0))
     text_rect = text.get_rect(center=(width // 2, height // 2))
 
-    screen.fill((0, 0, 0))  # Fill the screen with black
-    screen.blit(text, text_rect)
     pygame.display.flip()
 
-    waiting = True
-    while waiting:
+    running = True
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -48,6 +53,17 @@ def game_over_screen(screen):
                 elif event.key == pygame.K_ESCAPE:  # Quit game on Escape key
                     pygame.quit()
                     return
+
+        # Background
+        clock_bg.tick(20)
+        if gif_frame_bg != 125:
+            screen.blit(pygame.image.load(f'assets/gameover/frame_{gif_frame_bg}.png'), (0, 0))
+            screen.blit(text, text_rect)
+            gif_frame_bg += 1
+        else:
+            from interface import interface
+            interface()
+            return
 
         pygame.display.flip()
 
@@ -69,9 +85,11 @@ def execute_game(player: Player):
     background = pygame.image.load("assets/lvl2.jpg").convert()
     background = pygame.transform.scale(background, (width, height))
 
+    profile = pygame.image.load("assets/Profile.png")
+
     # Setting up Background Music
-    #pygame.mixer.music.load('assets/BGMusic.mp3')
-    #pygame.mixer.music.play(-1)
+    pygame.mixer.music.load('assets/BGMusic.mp3')
+    pygame.mixer.music.play(-1)
 
     # Timer Setup
     level_duration = 300  # Level duration in seconds (e.g., 5 minutes)
@@ -100,6 +118,8 @@ def execute_game(player: Player):
 
     # Initialize Inventory
     inventory = Inventory()
+    for weapon in player.inventory.values():
+        inventory.add_item(weapon) # adding weapons to the inventory
 
     #Initialize the PowerUpController
     power_up_controller = PowerUpController()
@@ -113,14 +133,22 @@ def execute_game(player: Player):
     monetary_system = MonetarySystem() #we can put inside of the MonetarySystem() the initial_balance = amount,
     # for example initial_balance = 50, which means the player will always start the game with 50€.
 
-    # Initialize House obstacle
-    house_main = Obstacle(550, 140, 230, 285)
-    house_side = Obstacle(780, 247, 203, 178)
-    obstacles.add(house_main)
-    obstacles.add(house_side)
+    # Initialize House obstacles using a list and a loop
+    house_definitions = [
+        (495, 254, 45, 125),
+        (542, 185, 28, 195),
+        (570, 172, 179, 235),
+        (749, 187, 29, 195),
+        (778, 249, 81, 135),
+        (859, 249, 115, 125)
+    ]
 
-    # Initialize the health class
-    health_bar = HealthBar()
+    for x, y, hwidth, hheight in house_definitions:
+        obstacles.add(Obstacle(x, y, hwidth, hheight))
+
+    # Initialize health bar
+    player_health_bar = HealthBar(player.max_health)
+
 
     # ==== GAME LOOP ====
     running = True
@@ -156,20 +184,17 @@ def execute_game(player: Player):
                 if pygame.K_1 <= event.key <= pygame.K_9:
                     slot_index = event.key - pygame.K_1  # 1 maps to slot 0, 2 to slot 1, etc.
                     inventory.change_slot(slot_index)
-                elif event.key == pygame.K_0:
-                    inventory.change_slot(9)  # 0 maps to slot 9
-
-        # Handle item pickups
-        # for item in items_group:  # Assuming items_group contains spawnable items
-        #    if pygame.sprite.collide_rect(player, item):
-        #       inventory.add_item({"name": item.name, "icon": item.icon_path})  # Add item with its details
-        #       item.kill()  # Remove the item from the game
-
-
+                    selected_weapon = inventory.get_selected_item()
+                    if selected_weapon:
+                        player.weapon_switching(selected_weapon.name)
         # Shooting
         player.shoot(bullets, zombies)
 
-
+        # Handle item pickups
+        for item in items_group:  # Assuming items_group contains spawnable items
+            if pygame.sprite.collide_rect(player, item):
+                inventory.add_item({"name": item.name, "icon": item.icon_path})  # Add item with its details
+                item.kill()  # Remove the item from the game
 
 
         # ==== SPAWN ====
@@ -206,28 +231,23 @@ def execute_game(player: Player):
         for bullet in bullets:
             collided_zombies = pygame.sprite.spritecollide(bullet, zombies, False)
             for zombie in collided_zombies:
-                zombie.health -= 5  # Decrease health by 5
+                zombie.take_damage(bullet.damage)
                 bullet.kill()  # Destroy the bullet
                 if zombie.health <= 0:
                     zombie.kill()  # Destroy the enemy
                     monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
 
         # Check for collisions between player and enemies
-        for enemy in zombies:
-            if pygame.sprite.collide_rect(player, enemy):
-                current_time = pygame.time.get_ticks()
-                if player.invulnerable:
-                    # Player is invulnerable, ignore damage
-                    print("Player is invulnerable. Collision ignored!")
-                elif current_time - player.last_collision_time > player.collision_cooldown:
-                    # Player takes damage only after cooldown
-                    player.last_collision_time = current_time
-                    health_bar.decrease_health()
-                    print("Player hit! Health decreased.")
-                    if health_bar.is_empty():
-                        print("Game Over!")
-                        running = False
-                        game_over_screen(screen)
+        for zombie in zombies:
+            if pygame.sprite.collide_rect(player, zombie):
+                player.take_damage(zombie.damage)  # Player takes 10 damage
+
+        # Check if player's health is zero or less
+        if player.health <= 0:
+            pygame.mixer.music.stop()
+            return "gameover"
+
+
 
         # Check for collisions between player and treasure chest
         if pygame.sprite.spritecollide(player, chest_group, True):  # Remove chest after collection
@@ -242,10 +262,12 @@ def execute_game(player: Player):
 
         # Update positions
         player_group.update(dt, obstacles)
+        player_health_bar.update(player.health)
         bullets.update()
         # Update zombies with animation
         for zombie in zombies:
             zombie.update(player, dt)
+
 
 
         # Update the draw power-ups
@@ -267,20 +289,26 @@ def execute_game(player: Player):
         player.draw_debug_rect(screen)
         zombies.draw(screen)
         for zombie in zombies:
-            zombie.draw_debug_rect(screen)
+            zombie.draw(screen)
         for bullet in bullets:
             bullet.draw(screen)
 
-        # Draw the player's health bar
-        health_bar.draw(screen, player.rect)  # Pass player.rect to update method
+
+        inventory.render(screen)
+        screen.blit(profile, (0, 0))
+
 
         # Shows monetary balance
-        font = pygame.font.SysFont("Roboto", 30)
-        monetary_system.show_balance(screen,font)
+        font1 = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 25)
+        monetary_system.show_balance(screen, font1, 135, 40)
 
         # Draw timer on the screen
+        font = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 30)
         timer_text = font.render(f"Time Left: {int(remaining_time)}s", True, (128, 0, 128))
-        screen.blit(timer_text, (10, 30))
+        screen.blit(timer_text, (860, 30))
+
+        # Draw the health bar inside the profile
+        player_health_bar.draw_in_profile(screen, profile)
 
         # Draw the treasure chest
         chest_group.draw(screen)

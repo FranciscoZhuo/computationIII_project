@@ -3,8 +3,10 @@ import pygame
 import math
 from bullets import Bullet
 from config import *
+from weapons import Pistol, MachineGun, ShotGun
 from health import *
 from powerups import *
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -17,10 +19,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.inflate_ip(-20, -10)
         self.rect.center = (width // 2, height // 2)
 
-        #healthbar attributes
-        self.health_bar = HealthBar()  # Create a HealthBar instance
-        self.last_collision_time = 0  # Initialize collision timer
-        self.collision_cooldown = 1000  # Cooldown in milliseconds
 
         # Invisibility attributes
         self.invisible = False
@@ -29,16 +27,19 @@ class Player(pygame.sprite.Sprite):
 
         # Gameplay variables
         self.speed = 5
-        #self.health = 100
-        #self.max_health = 100
+        self.health = 200
+        self.max_health = 200
         self.bullet_cooldown = 0
+        self.damage_cooldown = 500  # Cooldown in milliseconds
+        self.last_damage_time = pygame.time.get_ticks()  # Track last damage time
+        self.health_bar = HealthBar(self.health)  # Add health bar
 
         # Load animation frames
         self.animations = {
-            "idle": [pygame.image.load(f"assets/MC Frames/idle/Ellie frame_idle_{i}.png").convert_alpha() for i in range(3)],
-            "run_right": [pygame.image.load(f"assets/MC Frames/run/Ellie frame_run_{i}.png").convert_alpha() for i in range(13)],
-            "shoot": [pygame.image.load(f"assets/MC Frames/shoot/Ellie frame_shoot_{i}.png").convert_alpha() for i in range(3)],
-            "death": [pygame.image.load(f"assets/MC Frames/death/Ellie frame_death_{i}.png").convert_alpha() for i in range(7)]
+            "idle": [pygame.image.load(f"assets/MC Frames/idle/Ellie frame_idle_{i}.png").convert_alpha() for i in range(4)],
+            "run_right": [pygame.image.load(f"assets/MC Frames/run/Ellie frame_run_{i}.png").convert_alpha() for i in range(14)],
+            "shoot": [pygame.image.load(f"assets/MC Frames/shoot/Ellie frame_shoot_{i}.png").convert_alpha() for i in range(4)],
+            "death": [pygame.image.load(f"assets/MC Frames/death/Ellie frame_death_{i}.png").convert_alpha() for i in range(8)]
         }
 
         self.animations["run_left"] = [pygame.transform.flip(image, True, False) for image in self.animations["run_right"]]
@@ -49,10 +50,14 @@ class Player(pygame.sprite.Sprite):
         self.current_animation = "idle"
         self.current_frame = 0
         self.image = self.animations[self.current_animation][self.current_frame]  # Start with the first frame
-        self.animation_speed = 0.15  #
+        self.animation_speed = 0.05  #
         self.animation_timer = 0
         self.moving = False  # Flag to track movement
         self.dead = False  # Flag for player death
+
+        #Inventory system
+        self.inventory = {"Pistol": Pistol(), "Machine Gun": MachineGun(), "Shot Gun": ShotGun()}
+        self.weapon =self.inventory["Pistol"] #To make pistol the default weapon
 
     def update(self, dt, obstacles):
         keys = pygame.key.get_pressed()
@@ -118,19 +123,29 @@ class Player(pygame.sprite.Sprite):
 
 
         #Death Animation
-        if self.health_bar.health <= 0:
+        if self.health <= 0:
             self.current_animation = "death"
             self.dead = True
 
         if self.dead and self.current_frame == len(self.animations["death"]) - 1:
             self.kill()
 
+        #Weapon
+        self.weapon.update(dt)
         # Check if invisibility has expired
         if self.invisible and pygame.time.get_ticks() - self.invisibility_start > 15000:  # Lasts 15 seconds
             self.invisible = False
             self.invulnerable = False  # Reset immunity
             print("Invisibility and invulnerability expired!")
 
+    def take_damage(self, amount):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_damage_time >= self.damage_cooldown:
+            self.health = max(self.health - amount, 0)  # Apply damage
+            self.health_bar.update(self.health)  # Update health bar
+            self.last_damage_time = current_time
+            if self.health <= 0:
+                self.dead = True
 
     def shoot(self, bullets: pygame.sprite.Group, zombies: pygame.sprite.Group):
         """
@@ -157,7 +172,7 @@ class Player(pygame.sprite.Sprite):
                 angle = math.atan2(dy, dx)
 
                 # Spawn a bullet in the direction of the zombie
-                bullet = Bullet(self.rect.centerx, self.rect.centery, angle)
+                bullet = Bullet(self.rect.centerx, self.rect.centery, angle, self.weapon.damage)
                 bullets.add(bullet)
 
                 # Set cooldown
@@ -183,27 +198,21 @@ class Player(pygame.sprite.Sprite):
         dy = zombie.rect.centery - self.rect.centery
         return math.sqrt(dx ** 2 + dy ** 2)
 
+    def weapon_switching(self, name_weapon):
+        """
+        When the player is fighing, it´s possible to switch the weapons he has
+
+        Args:
+            name_weapon(str): The name of the weapon we want to switch to
+        """
+        if name_weapon in self.inventory:
+            self.weapon = self.inventory[name_weapon]
+
     def draw_debug_rect(self, screen):
         """
         Draw a red outline around the player's rect for debugging.
         """
         pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)  # Red color, width=2
 
-    def render(self, screen):
-        if not self.invisible:
-            screen.blit(self.image, self.rect)
-        else:
-            temp_image = self.image.copy()
-            temp_image.set_alpha(128)  # Semi-transparent
-            screen.blit(temp_image, self.rect)
 
-    def take_damage(self):
-        """
-        Pass damage to the health bar.
-        """
-        current_time = pygame.time.get_ticks()
-        return current_time - self.last_collision_time > self.collision_cooldown
-
-    def register_collision(self):
-        self.last_collision_time = pygame.time.get_ticks()
 

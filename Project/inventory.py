@@ -25,6 +25,14 @@ class Inventory:
             return True  # Indicate success
         return False  # Indicate failure (inventory full)
 
+    def get_selected_item(self):
+        """
+        returns the current selected item
+        """
+        if self.selected_slot < len(self.items):
+            return self.items[self.selected_slot]
+        return None
+
     def render(self, screen):
         if not self.visible:
             return
@@ -56,14 +64,33 @@ class Inventory:
         pygame.draw.rect(screen, light_grey, highlight_rect, 3)  # Draw the yellow outline
 
         # Draw items in the inventory
+
+
         for index, item in enumerate(self.items):
-            item_icon = pygame.image.load(item['icon']).convert_alpha()
-            item_icon = pygame.transform.scale(item_icon, (32, 32))  # Fit the item into the slot
+            item_icon = item.image  # Usa a imagem já carregada
             icon_x = calculate_slot_x(index) + (slot_width - 32) // 2
             icon_y = bar_y + (slot_height - 32) // 2
             screen.blit(item_icon, (icon_x, icon_y))
 
+    def add_ability(self, ability):
+        """
+        Add the abilities bought on store
+        """
+        self.items.append(ability)
 
+    def use_ability(self, index, player):
+        """
+        Use it when the player is playing
+        """
+        if 0 <=index< len(self.items):
+            ability = self.items[index]
+            if ability.active:
+                return None #ativar
+            self.items.pop(index) #the ability dessapears depending on how much abilities we buy on store
+            ability.apply_ability(player)
+            return ability
+        else:
+            return None
 class Item(pygame.sprite.Sprite):
     def __init__(self, name, icon_path, x, y):
         super().__init__()

@@ -99,7 +99,7 @@ def interface():
                         pygame.mixer.music.set_volume(volume)  # Unmute sound
 
         # Background
-        clock_bg.tick(fps)
+        clock_bg.tick(fps//2)
         if gif_frame_bg != 7:
             screen.blit(pygame.image.load(f'assets/MainBG/frame_{gif_frame_bg}.png'), (0, 0))
             gif_frame_bg += 1

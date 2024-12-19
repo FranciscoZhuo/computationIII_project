@@ -54,7 +54,7 @@ class LifePowerUp(PowerUp):
 
 class SlowZombiesPowerUp(PowerUp):
     def __init__(self, x, y):
-        super().__init__(x,y,effect_duration=15000)
+        super().__init__(x,y,effect_duration=15000) #15 sec
         self.image = pygame.image.load("assets/snail.png")
         self.image = pygame.transform.scale(self.image,(40, 40))
         self.rect = self.image.get_rect(topleft = (x,y))
@@ -70,6 +70,26 @@ class SlowZombiesPowerUp(PowerUp):
         """
         for zombie in zombies:
             zombie.speed = max(1, zombie.speed // 2)
+
+class DeSpawnerPowerUp(PowerUp):
+    def __init__(self, x, y):
+        super().__init__(x, y, effect_duration= 15000)
+        self.image = pygame.image.load("assets/thunder.png"). convert_alpha()
+        self.image = pygame.transform.scale(self.image, (40,40))
+        self.rect = self.image.get_rect(topleft= (x,y))
+
+    def apply_powerup(self, player, zombies = None):
+        """
+        Removes all the enemies
+        Args:
+            player(Player): Player object
+            zombies(list): List of zombie objects
+        """
+        if zombies:
+            for zombie in zombies:
+                zombie.kill()
+
+
 
 class InvisibilityPowerUP(PowerUp):
     def __init__(self, x, y):
@@ -119,7 +139,7 @@ class PowerUpController:
         if current_time - self.last_spawn > self.interval_spawn:
             x = random.randint (50, 750)
             y = random.randint(50, 550)
-            type_powerup = random.choice([LifePowerUp, SlowZombiesPowerUp, InvisibilityPowerUP]) #basically, we want the power-up to spawn randomly
+            type_powerup = random.choice([LifePowerUp, SlowZombiesPowerUp, DeSpawnerPowerUp]) #basically, we want the power-up to spawn randomly
             power_up = type_powerup(x,y)
             self.power_ups.add(power_up)
             self.last_spawn = current_time
@@ -152,4 +172,5 @@ class PowerUpController:
         Args:
             screen(Surface): Game screen
         """
-        self.power_ups.draw(screen)
+        for power_up in self.power_ups:
+            screen.blit(power_up.image, power_up.rect.topleft)
