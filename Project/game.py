@@ -10,7 +10,7 @@ from inventory import *
 from obstacle import *
 from health import *
 
-# ==== GAME LOOP ====
+
 def game_loop():
     player = Player()
     pygame.mixer.music.stop()
@@ -21,10 +21,8 @@ def game_loop():
             current_state = execute_game(player)
         elif current_state == "shop":
             current_state = shop()
-        elif current_state == "interface":
-            current_state = interface()
         elif current_state == "gameover":
-            current_state = game_over(screen)
+            current_state == game_over(screen)
 
 def game_over(screen):
     """
@@ -49,7 +47,9 @@ def game_over(screen):
                 return
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:  # Return to main menu on Enter key
-                    return "interface"
+                    from interface import interface
+                    interface()
+                    return
                 elif event.key == pygame.K_ESCAPE:  # Quit game on Escape key
                     pygame.quit()
                     return
@@ -58,12 +58,12 @@ def game_over(screen):
         clock_bg.tick(20)
         if gif_frame_bg != 125:
             screen.blit(pygame.image.load(f'assets/gameover/frame_{gif_frame_bg}.png'), (0, 0))
-
+            screen.blit(text, text_rect)
             gif_frame_bg += 1
         else:
-            return "interface"
-
-        screen.blit(text, text_rect)
+            from interface import interface
+            interface()
+            return
 
         pygame.display.flip()
 
