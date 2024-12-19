@@ -139,7 +139,7 @@ class PowerUpController:
         if current_time - self.last_spawn > self.interval_spawn:
             x = random.randint (50, 750)
             y = random.randint(50, 550)
-            type_powerup = random.choice([LifePowerUp, SlowZombiesPowerUp, DeSpawnerPowerUp]) #basically, we want the power-up to spawn randomly
+            type_powerup = random.choice([LifePowerUp, SlowZombiesPowerUp, DeSpawnerPowerUp,InvisibilityPowerUP]) #basically, we want the power-up to spawn randomly
             power_up = type_powerup(x,y)
             self.power_ups.add(power_up)
             self.last_spawn = current_time

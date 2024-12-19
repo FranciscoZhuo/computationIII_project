@@ -274,10 +274,8 @@ def execute_game(player: Player):
         power_up_controller.update(player,zombies)
         # Update player state (handles invisibility expiration)
         player.update(dt, obstacles)
-        # Render the player
-        player.render(screen)
-        #draw powerups
-        power_up_controller.draw(screen)
+
+
 
 
 
@@ -293,6 +291,11 @@ def execute_game(player: Player):
         for bullet in bullets:
             bullet.draw(screen)
 
+        # draw powerups
+        power_up_controller.draw(screen)
+
+        # Render the player
+        player.render(screen)
 
         inventory.render(screen)
         screen.blit(profile, (0, 0))

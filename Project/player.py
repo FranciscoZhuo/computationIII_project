@@ -132,6 +132,7 @@ class Player(pygame.sprite.Sprite):
 
         #Weapon
         self.weapon.update(dt)
+
         # Check if invisibility has expired
         if self.invisible and pygame.time.get_ticks() - self.invisibility_start > 15000:  # Lasts 15 seconds
             self.invisible = False
@@ -139,13 +140,34 @@ class Player(pygame.sprite.Sprite):
             print("Invisibility and invulnerability expired!")
 
     def take_damage(self, amount):
+        """
+           Decrease health unless the player is invulnerable.
+           """
+        if self.invulnerable:
+            print("Player is invulnerable. No damage taken!")
+            return  # Skip damage if invulnerable
+
         current_time = pygame.time.get_ticks()
         if current_time - self.last_damage_time >= self.damage_cooldown:
             self.health = max(self.health - amount, 0)  # Apply damage
             self.health_bar.update(self.health)  # Update health bar
             self.last_damage_time = current_time
+            print(f"Player took {amount} damage. Current health: {self.health}.")
             if self.health <= 0:
                 self.dead = True
+
+
+    def render(self, screen):
+        """
+        Render the player with transparency if invisible.
+        """
+        if self.invisible:
+            temp_image = self.image.copy()
+            temp_image.set_alpha(128)  # Semi-transparent
+            screen.blit(temp_image, self.rect.topleft)
+        else:
+            screen.blit(self.image, self.rect.topleft)
+
 
     def shoot(self, bullets: pygame.sprite.Group, zombies: pygame.sprite.Group):
         """
