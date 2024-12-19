@@ -27,7 +27,7 @@ def game_loop():
             shop_instance = Shop(player)
             current_state = shop_instance.shop()
         elif current_state == "gameover":
-            current_state == game_over(screen)
+            current_state == game_over()
 
 
 # ==== INTRO 1 ====
@@ -121,18 +121,18 @@ def intro1(player: Player):
 
 
 # ==== GAME OVER ====
-def game_over(screen):
+def game_over():
     """
     Display a game over screen.
 
     """
-
+    screen = pygame.display.set_mode(resolution)
     # Background configs
     gif_frame_bg = 0
     clock_bg = pygame.time.Clock()
 
-    bloodcrowfont = pygame.font.Font("assets/bloodcrow.ttf", 35)
-    text = bloodcrowfont.render("Game Over", True, (255, 0, 0))
+    bloodcrowfont = pygame.font.Font("assets/bloodcrow.ttf", 80)
+    text = bloodcrowfont.render("Game Over", True, red)
     text_rect = text.get_rect(center=(width // 2, height // 2))
 
     pygame.display.flip()
@@ -212,9 +212,6 @@ def level1(player: Player):
     zombies = pygame.sprite.Group()
     zombies_spawn_timer = 0
 
-    #Initialize the item group
-    items_group = pygame.sprite.Group()
-    item_spawn_timer = 0
 
     # Initialize Inventory
     inventory = Inventory()
@@ -262,8 +259,21 @@ def level1(player: Player):
 
         # End the level when time runs out
         if remaining_time <= 0:
-            print("Level Complete!")
-            return "shop"  # Return to main menu or next level
+            # Display the transition message
+            fontc = pygame.font.SysFont("assets/Creepster-Regular.ttf", 40)
+            message = ("Congratulations for surviving!"
+                       " Now entering the shop....")
+            start_time = pygame.time.get_ticks()
+
+            while (pygame.time.get_ticks() - start_time) / 1000 < 5:
+                screen.fill(deep_black)  # Clear screen with black
+                text_surface = fontc.render(message, True, red)
+                text_rect = text_surface.get_rect(center=(width // 2, height // 2))
+                screen.blit(text_surface, text_rect)
+                pygame.display.flip()
+                clock.tick(fps)
+
+            return "shop"  # Transition to shop
 
         # Event Handling
         for event in pygame.event.get():
@@ -284,11 +294,6 @@ def level1(player: Player):
         # Shooting
         player.shoot(bullets, zombies)
 
-        # Handle item pickups
-        for item in items_group:  # Assuming items_group contains spawnable items
-            if pygame.sprite.collide_rect(player, item):
-                inventory.add_item({"name": item.name, "icon": item.icon_path})  # Add item with its details
-                item.kill()  # Remove the item from the game
 
 
         # ==== SPAWN ====
@@ -297,12 +302,6 @@ def level1(player: Player):
         if zombies_spawn_timer > 0:
             zombies_spawn_timer -= 1
 
-        # Weighted random selection
-        zombie_type = random.choices(
-                [FastZombie, TankZombie, ExplodingZombie, Enemy],
-                weights=[0.2, 0.2, 0.1, 0.5],  # 20% Fast, 20% Tank, 10% Exploding, 50% Normal Enemy
-                k=1
-            )[0]
 
         # Spawn
         if zombies_spawn_timer <= 0:
@@ -366,11 +365,6 @@ def level1(player: Player):
 
         # Update the draw power-ups
         power_up_controller.update(player,zombies)
-        # Update player state (handles invisibility expiration)
-        player.update(dt, obstacles)
-
-
-
 
 
 

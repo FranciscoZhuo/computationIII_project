@@ -94,7 +94,7 @@ class DeSpawnerPowerUp(PowerUp):
 class InvisibilityPowerUP(PowerUp):
     def __init__(self, x, y):
         super().__init__(x, y, effect_duration=15000)
-        self.image = pygame.image.load("assets/potion.png")
+        self.image = pygame.image.load("assets/ghost.png")
         self.image = pygame.transform.scale(self.image,(40, 40))
         self.rect = self.image.get_rect(topleft=(x, y))
 
