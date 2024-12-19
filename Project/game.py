@@ -112,11 +112,18 @@ def execute_game(player: Player):
     monetary_system = MonetarySystem() #we can put inside of the MonetarySystem() the initial_balance = amount,
     # for example initial_balance = 50, which means the player will always start the game with 50€.
 
-    # Initialize House obstacle
-    house_main = Obstacle(550, 140, 230, 285)
-    house_side = Obstacle(780, 247, 203, 178)
-    obstacles.add(house_main)
-    obstacles.add(house_side)
+    # Initialize House obstacles using a list and a loop
+    house_definitions = [
+        (495, 254, 45, 125),
+        (542, 185, 28, 195),
+        (570, 172, 179, 235),
+        (749, 187, 29, 195),
+        (778, 249, 81, 135),
+        (859, 249, 115, 125)
+    ]
+
+    for x, y, hwidth, hheight in house_definitions:
+        obstacles.add(Obstacle(x, y, hwidth, hheight))
 
     # Initialize health bar
     player_health_bar = HealthBar(player.max_health)
