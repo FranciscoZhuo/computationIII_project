@@ -387,7 +387,7 @@ def level1(player: Player):
             bullet.draw(screen)
 
         # draw powerups
-        power_up_controller.draw(screen)
+        power_up_controller.draw(screen, player)
 
         # Render the player
         player.render(screen)

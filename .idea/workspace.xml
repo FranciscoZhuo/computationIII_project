@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b01a6e04-67da-48af-afd1-59626e59c860" name="Changes" comment="Ajusted Iventory Bar (Just falta ajust the outline)">
+    <list default="true" id="b01a6e04-67da-48af-afd1-59626e59c860" name="Changes" comment="self.galo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/player.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/powerups.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/powerups.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/shop.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/shop.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +56,6 @@
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="computationIII_project" />
-      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -130,6 +130,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Ajusted Iventory Bar (Just falta ajust the outline)" />
     <MESSAGE value="added a bit of code for health bar" />
-    <option name="LAST_COMMIT_MESSAGE" value="added a bit of code for health bar" />
+    <MESSAGE value="self.galo" />
+    <option name="LAST_COMMIT_MESSAGE" value="self.galo" />
   </component>
 </project>

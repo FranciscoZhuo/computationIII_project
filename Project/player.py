@@ -20,6 +20,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.inflate_ip(-20, -10)
         self.rect.center = (width // 2, height // 2)
+        self.active_powerups={} #Dictionary for the active powerups. This allows monitorization of all the powerups effects
 
 
         # Invisibility attributes
@@ -141,7 +142,14 @@ class Player(pygame.sprite.Sprite):
         if self.invisible and pygame.time.get_ticks() - self.invisibility_start > 15000:  # Lasts 15 seconds
             self.invisible = False
             self.invulnerable = False  # Reset immunity
-            print("Invisibility and invulnerability expired!")
+        # making sure that the powerups effect are applied while active
+        for powerup, start_time in list(self.active_powerups.items()):
+            if pygame.time.get_ticks() - start_time > powerup.effect_duration:
+                #Removes the powerup effect when its expired
+                del self.active_powerups[powerup] #del=delete
+                powerup.remove_effect(self) #New powerup method
+            else:
+                powerup.apply_visual_effect(self)
 
     def take_damage(self, amount):
         """
@@ -171,6 +179,9 @@ class Player(pygame.sprite.Sprite):
             screen.blit(temp_image, self.rect.topleft)
         else:
             screen.blit(self.image, self.rect.topleft)
+        # drawing the visual effects
+        for powerup in self.active_powerups:
+            powerup.render_visual_effect(screen, self.rect)
 
 
     def shoot(self, bullets: pygame.sprite.Group, zombies: pygame.sprite.Group):
