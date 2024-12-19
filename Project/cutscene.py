@@ -90,6 +90,7 @@ def cutscene1():
         clock.tick(fps)  # Control the frame rate
 
 
+
 def cutscene2():
     # Screen setup
     screen = pygame.display.set_mode(resolution)
@@ -128,8 +129,7 @@ def cutscene2():
     fade_in_speed = 0.5
     e_alpha = 0
 
-    running = True
-    while running:
+    while True:  # Continue until explicitly returned
         screen.fill(deep_black)
 
         # Display the current text
@@ -139,7 +139,8 @@ def cutscene2():
             current_rect = current_surface.get_rect(center=(screen.get_width() / 2, screen.get_height() / 2))
             screen.blit(current_surface, current_rect)
         else:
-            running = False  # Exit after displaying all texts
+            pygame.mixer.music.stop()
+            return "intro2"  # Return explicitly when all texts are displayed
 
         # Fade logic
         if fade_in:
@@ -168,13 +169,14 @@ def cutscene2():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.mixer.music.stop()
-                running = False
+                pygame.quit()
+                return  # Ensure quit exits the loop completely
 
         # Skip the cutscene by pressing ENTER
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
             pygame.mixer.music.stop()
-            running = False
+            return "intro2"
 
         pygame.display.flip()
         clock.tick(fps)  # Control the frame rate

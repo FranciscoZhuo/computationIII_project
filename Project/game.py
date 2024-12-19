@@ -22,15 +22,22 @@ def game_loop():
     while True:
         if current_state == "intro1":
             current_state = intro1(player)
+
         elif current_state == "level1":
             current_state = level1(player)
+
         elif current_state == "shop":
             shop_instance = Shop(player)
             current_state = shop_instance.shop()
+
         elif current_state == "gameover":
-            current_state == game_over()
+            current_state = game_over()
+
         elif current_state == "cutscene2":
-            current_state == cutscene2()
+            current_state = cutscene2()
+
+        elif current_state == "intro2":
+            current_state = intro2(player)
 
 
 # ==== INTRO 1 ====
@@ -123,6 +130,97 @@ def intro1(player: Player):
 
 
         pygame.display.flip()
+
+
+
+# ==== INTRO 2 ====
+def intro2(player: Player):
+    """
+    First intro level of the game.
+
+    """
+
+    # ========== Set up ===============
+
+    clock = pygame.time.Clock()
+    screen = pygame.display.set_mode(resolution)
+    background = pygame.image.load("assets/intro2.png").convert()  # Use convert() or convert_alpha()
+    profile = pygame.image.load("assets/Profile.png").convert_alpha() # Use convert_alpha() if it has transparency
+    font = pygame.font.SysFont("assets/Creepster-Regular.ttf", 25)  # Load font once
+
+
+    # ============ Initialize ================
+
+    # Initialize Inventory
+    inventory = Inventory()
+    for weapon in player.inventory.values(): # Assuming player.inventory is defined
+        inventory.add_item(weapon)
+
+    # Initialize Health Bar
+    player_health_bar = HealthBar(player.max_health)
+
+    # Initialize the Monetary System
+    monetary_system = MonetarySystem()
+
+    # Initialize the player
+    player_group = pygame.sprite.Group() #Group single player
+    player_group.add(player) #Add to the group
+
+    # Initialize the obstacles
+    obstacles = pygame.sprite.Group()  # If obstacles are used
+
+
+
+    # ========== Game Loop ===================
+
+    running = True
+    while running:
+
+        # Control frame rate
+        clock.tick(fps)
+        # Calculate delta time
+        dt = clock.tick(fps) / 1000.0
+
+        # ========== Event Handling ==============
+
+        for ev in pygame.event.get():
+            if ev.type == pygame.QUIT:
+                pygame.quit()
+                return
+
+            elif ev.type == pygame.KEYDOWN:
+                if ev.key == pygame.K_i:
+                    inventory.toggle_visibility()
+                elif pygame.K_1 <= ev.key <= pygame.K_9: #If event is number pad
+                    slot_index = ev.key - pygame.K_1
+                    inventory.change_slot(slot_index)
+                    selected_weapon = inventory.get_selected_item() #Get selected item
+                    if selected_weapon:
+                        player.weapon_switching(selected_weapon.name)
+
+        # ==== Updates (Grouped) ====
+        player_group.update(dt, obstacles)
+        player_health_bar.update(player.health)
+
+
+        # ========= Level Ending Conditions ===============
+        if player.rect.bottom >= height:
+            return "level2"  # Return the next game state
+
+
+        # =============== Draws ======================
+        screen.blit(background, (0, 0))
+        player_group.draw(screen)
+
+        # ======== User Interface Elements =============
+        screen.blit(profile, (0, 0))
+        inventory.render(screen)
+        player_health_bar.draw_in_profile(screen, profile) #Draw health inside the profile
+        monetary_system.show_balance(screen, font, 135, 40)  # Use the pre-loaded font
+
+
+        pygame.display.flip()
+
 
 
 # ==== GAME OVER ====
