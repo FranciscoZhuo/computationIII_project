@@ -3,30 +3,125 @@ import math
 import pygame
 from enemy import *
 from player import Player
-from powerups import PowerUpController
+from powerups import *
 from monetarysystem import MonetarySystem
 from shop import *
 from inventory import *
 from obstacle import *
 from health import *
 
-
+# ==== GAME LOOP =====
 def game_loop():
     player = Player()
     pygame.mixer.music.stop()
-    current_state = "main"
+    current_state = "intro1"
 
     while True:
-        if current_state == "main":
-            current_state = execute_game(player)
+        if current_state == "intro1":
+            current_state = intro1(player)
+        elif current_state == "level1":
+            current_state = level1(player)
         elif current_state == "shop":
             current_state = shop()
         elif current_state == "gameover":
             current_state == game_over(screen)
 
+
+# ==== INTRO 1 ====
+
+def intro1(player: Player):
+    """
+    First intro level of the game.
+
+    """
+
+    # ========== Set up ===============
+
+    clock = pygame.time.Clock()
+    screen = pygame.display.set_mode(resolution)
+    background = pygame.image.load("assets/intro level.png").convert()  # Use convert() or convert_alpha()
+    profile = pygame.image.load("assets/Profile.png").convert_alpha() # Use convert_alpha() if it has transparency
+    font = pygame.font.SysFont("assets/Creepster-Regular.ttf", 25)  # Load font once
+
+
+    # ============ Initialize ================
+
+    # Initialize Inventory
+    inventory = Inventory()
+    for weapon in player.inventory.values(): # Assuming player.inventory is defined
+        inventory.add_item(weapon)
+
+    # Initialize Health Bar
+    player_health_bar = HealthBar(player.max_health)
+
+    # Initialize the Monetary System
+    monetary_system = MonetarySystem()
+
+    # Initialize the player
+    player_group = pygame.sprite.Group() #Group single player
+    player_group.add(player) #Add to the group
+
+    # Initialize the obstacles
+    obstacles = pygame.sprite.Group()  # If obstacles are used
+
+
+
+    # ========== Game Loop ===================
+
+    running = True
+    while running:
+
+        # Control frame rate
+        clock.tick(fps)
+        # Calculate delta time
+        dt = clock.tick(fps) / 1000.0
+
+        # ========== Event Handling ==============
+
+        for ev in pygame.event.get():
+            if ev.type == pygame.QUIT:
+                pygame.quit()
+                return
+
+            elif ev.type == pygame.KEYDOWN:
+                if ev.key == pygame.K_i:
+                    inventory.toggle_visibility()
+                elif pygame.K_1 <= ev.key <= pygame.K_9: #If event is number pad
+                    slot_index = ev.key - pygame.K_1
+                    inventory.change_slot(slot_index)
+                    selected_weapon = inventory.get_selected_item() #Get selected item
+                    if selected_weapon:
+                        player.weapon_switching(selected_weapon.name)
+
+        # ==== Updates (Grouped) ====
+        player_group.update(dt, obstacles)
+        player_health_bar.update(player.health)
+
+
+        # ========= Level Ending Conditions ===============
+        if player.rect.bottom >= height:
+            return "level1"  # Return the next game state
+
+
+        # =============== Draws ======================
+        screen.blit(background, (0, 0))
+        player_group.draw(screen)
+
+        # ======== User Interface Elements =============
+        screen.blit(profile, (0, 0))
+        inventory.render(screen)
+        player_health_bar.draw_in_profile(screen, profile) #Draw health inside the profile
+        monetary_system.show_balance(screen, font, 135, 40)  # Use the pre-loaded font
+
+
+        pygame.display.flip()
+
+
+# ==== GAME OVER ====
 def game_over(screen):
     """
     Display a game over screen.
+
     """
 
     # Background configs
@@ -67,7 +162,9 @@ def game_over(screen):
 
         pygame.display.flip()
 
-def execute_game(player: Player):
+
+# ==== LEVEL 1 ====
+def level1(player: Player):
     """
     Main function to execute the game loop
 
@@ -82,7 +179,7 @@ def execute_game(player: Player):
 
     # Setting up the background
     screen = pygame.display.set_mode(resolution)
-    background = pygame.image.load("assets/lvl2.jpg").convert()
+    background = pygame.image.load("assets/fundo game.png").convert()
     background = pygame.transform.scale(background, (width, height))
 
     profile = pygame.image.load("assets/Profile.png")
@@ -123,26 +220,20 @@ def execute_game(player: Player):
 
     #Initialize the PowerUpController
     power_up_controller = PowerUpController()
+    power_up_controller.set_allowed_powerups([LifePowerUp, SlowZombiesPowerUp])  # Restrict power-ups
 
     #Initialize Monetary System
     monetary_system = MonetarySystem() #we can put inside of the MonetarySystem() the initial_balance = amount,
     # for example initial_balance = 50, which means the player will always start the game with 50€.
 
-    # Initialize House obstacles using a list and a loop
-    house_definitions = [
-        (495, 254, 45, 125),
-        (542, 185, 28, 195),
-        (570, 172, 179, 235),
-        (749, 187, 29, 195),
-        (778, 249, 81, 135),
-        (859, 249, 115, 125)
-    ]
-
-    for x, y, hwidth, hheight in house_definitions:
-        obstacles.add(Obstacle(x, y, hwidth, hheight))
 
     # Initialize health bar
     player_health_bar = HealthBar(player.max_health)
+
+    # Fade-in setup
+    fade_surface = pygame.Surface(resolution)
+    fade_surface.fill((0, 0, 0))
+    fade_alpha = 255
 
 
     # ==== GAME LOOP ====
@@ -198,21 +289,14 @@ def execute_game(player: Player):
         if zombies_spawn_timer > 0:
             zombies_spawn_timer -= 1
 
-        # Weighted random selection
-        zombie_type = random.choices(
-                [FastZombie, TankZombie, ExplodingZombie, Enemy],
-                weights=[0.2, 0.2, 0.1, 0.5],  # 20% Fast, 20% Tank, 10% Exploding, 50% Normal Enemy
-                k=1
-            )[0]
 
-        # Spawning the enemies
+        # Spawn
         if zombies_spawn_timer <= 0:
             # Randomly select a zombie type
-            zombie_type = random.choice([FastZombie, TankZombie, ExplodingZombie, NormalZombie])
+            zombie_type = random.choice([NormalZombie])
             new_enemy = zombie_type()  # Instantiate the selected zombie type
             zombies.add(new_enemy)
             zombies_spawn_timer = fps  # Every two seconds
-
 
 
 
@@ -286,5 +370,10 @@ def execute_game(player: Player):
         # Draw the health bar inside the profile
         player_health_bar.draw_in_profile(screen, profile)
 
+        # Apply fade-in effect
+        if fade_alpha > 0:
+            fade_surface.set_alpha(fade_alpha)
+            screen.blit(fade_surface, (0, 0))
+            fade_alpha -= 5  # Adjust speed as needed
 
         pygame.display.flip()
