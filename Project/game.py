@@ -10,7 +10,7 @@ from inventory import *
 from obstacle import *
 from health import *
 
-
+# ==== GAME LOOP ====
 def game_loop():
     player = Player()
     pygame.mixer.music.stop()
@@ -21,33 +21,49 @@ def game_loop():
             current_state = execute_game(player)
         elif current_state == "shop":
             current_state = shop()
+        elif current_state == "interface":
+            current_state = interface()
+        elif current_state == "gameover":
+            current_state = game_over(screen)
 
-def game_over_screen(screen):
+def game_over(screen):
     """
     Display a game over screen.
     """
+
+    # Background configs
+    gif_frame_bg = 0
+    clock_bg = pygame.time.Clock()
+
     bloodcrowfont = pygame.font.Font("assets/bloodcrow.ttf", 35)
     text = bloodcrowfont.render("Game Over", True, (255, 0, 0))
     text_rect = text.get_rect(center=(width // 2, height // 2))
 
-    screen.fill((0, 0, 0))  # Fill the screen with black
-    screen.blit(text, text_rect)
     pygame.display.flip()
 
-    waiting = True
-    while waiting:
+    running = True
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:  # Return to main menu on Enter key
-                    from interface import interface
-                    interface()
-                    return
+                    return "interface"
                 elif event.key == pygame.K_ESCAPE:  # Quit game on Escape key
                     pygame.quit()
                     return
+
+        # Background
+        clock_bg.tick(20)
+        if gif_frame_bg != 125:
+            screen.blit(pygame.image.load(f'assets/gameover/frame_{gif_frame_bg}.png'), (0, 0))
+
+            gif_frame_bg += 1
+        else:
+            return "interface"
+
+        screen.blit(text, text_rect)
 
         pygame.display.flip()
 
@@ -216,6 +232,11 @@ def execute_game(player: Player):
         for zombie in zombies:
             if pygame.sprite.collide_rect(player, zombie):
                 player.take_damage(zombie.damage)  # Player takes 10 damage
+
+        # Check if player's health is zero or less
+        if player.health <= 0:
+            pygame.mixer.music.stop()
+            return "gameover"
 
 
 
