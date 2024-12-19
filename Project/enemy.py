@@ -33,7 +33,7 @@ class Enemy(pygame.sprite.Sprite):
     def update(self, player, dt):
         """
         Update the enemy's position according to the player's.
-
+        and Avoid damaging the player if they are invulnerable.
         Args
         ---
         player (Player):
@@ -124,6 +124,7 @@ class NormalZombie(Enemy):
         """
         Update the zombie's behavior and animation.
         """
+
         # Update position
         super().update(player, dt)
 
@@ -201,6 +202,7 @@ class FastZombie(Enemy):
         """
         Update the zombie's behavior and animation.
         """
+
         # Update position
         super().update(player, dt)
 

@@ -9,6 +9,8 @@ from shop import *
 from inventory import *
 from obstacle import *
 from health import *
+from treasurechest import *
+
 
 # ==== GAME LOOP =====
 def game_loop():
@@ -223,6 +225,11 @@ def level1(player: Player):
     power_up_controller = PowerUpController()
     power_up_controller.set_allowed_powerups([LifePowerUp, SlowZombiesPowerUp])  # Restrict power-ups
 
+    # Initialize the chest
+    treasure_chest = TreasureChest()
+    chest_group = pygame.sprite.Group()  # Group for the chest
+    chest_group.add(treasure_chest)
+
     #Initialize Monetary System
     monetary_system = MonetarySystem() #we can put inside of the MonetarySystem() the initial_balance = amount,
     # for example initial_balance = 50, which means the player will always start the game with 50€.
@@ -305,7 +312,11 @@ def level1(player: Player):
             zombies.add(new_enemy)
             zombies_spawn_timer = fps  # Every two seconds
 
-
+        #Spawning the chest
+        treasure_chest.update()
+        if treasure_chest.spawned:
+            chest_group.add(treasure_chest)
+            print("Chest added to group.")
 
 
         # ==== CHECKERS ====
@@ -332,6 +343,15 @@ def level1(player: Player):
 
 
 
+        # Check for collisions between player and treasure chest
+        if pygame.sprite.spritecollide(player, chest_group, True):  # Remove chest after collection
+            treasure_chest.spawned = False  # Mark the chest as inactive
+            running = False  # Pause the game
+            treasure_chest.display_reward_screen(screen)
+            running=True
+
+
+
         # ==== UPDATES ====
 
         # Update positions
@@ -346,7 +366,11 @@ def level1(player: Player):
 
         # Update the draw power-ups
         power_up_controller.update(player,zombies)
-        power_up_controller.draw(screen)
+        # Update player state (handles invisibility expiration)
+        player.update(dt, obstacles)
+
+
+
 
 
 
@@ -362,6 +386,11 @@ def level1(player: Player):
         for bullet in bullets:
             bullet.draw(screen)
 
+        # draw powerups
+        power_up_controller.draw(screen)
+
+        # Render the player
+        player.render(screen)
 
         inventory.render(screen)
         screen.blit(profile, (0, 0))
@@ -379,6 +408,11 @@ def level1(player: Player):
         # Draw the health bar inside the profile
         player_health_bar.draw_in_profile(screen, profile)
 
+        # Draw the treasure chest
+        chest_group.draw(screen)
+
+
+        inventory.render(screen)
         # Apply fade-in effect
         if fade_alpha > 0:
             fade_surface.set_alpha(fade_alpha)
