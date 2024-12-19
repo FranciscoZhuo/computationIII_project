@@ -22,7 +22,8 @@ def game_loop():
         elif current_state == "level1":
             current_state = level1(player)
         elif current_state == "shop":
-            current_state = Shop(player)
+            shop_instance = Shop(player)
+            current_state = shop_instance.shop()
         elif current_state == "gameover":
             current_state == game_over(screen)
 

@@ -17,9 +17,10 @@ class Shop():
         self.monetary_system = player.monetary_system
         self.screen = pygame.display.set_mode(resolution)
         self.shop_background = pygame.image.load("assets/Fundo_shop.png").convert()
-        self.shop_background = pygame.transform.scale(self.shop_background, resolution)
+        #self.shop_background = pygame.transform.scale(self.shop_background, resolution)
         self.font = pygame.font.Font("assets/Creepster-Regular.ttf", 30)
         self.clock=pygame.time.Clock()
+        self.running = True
 
         self.items = [
             {"name": "Machine Gun", "type": "weapon", "price": 100, "object": MachineGun()},
@@ -36,33 +37,45 @@ class Shop():
         self.selected_item= None #For now
 
     def shop(self):
-        self.screen.blit(self.shop_background, (0,0)) #Drawing the background of the shop
+        while self.running:
+            self.screen.blit(self.shop_background, (0, 0))  # Drawing the background of the shop
 
-        x_start = 120 #Where x starts, initial position
-        y_start = 200 #Where y starts, initial position
-        x_gap = 200 #Gap between squares horizontal
-        y_gap = 150 #Gap between squares vertically
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        return "level1"
 
-        for index, item in enumerate(self.items):
-             #Square position
-            row = index // 4 #Divide by 4
-            col = index % 4  #Divide by 4
 
-            x = x_start + (col*x_gap)
-            y = y_start +(row * y_gap)
+            x_start = 120 #Where x starts, initial position
+            y_start = 200 #Where y starts, initial position
+            x_gap = 200 #Gap between squares horizontal
+            y_gap = 150 #Gap between squares vertically
 
-            #Draw the squares (we need to have 8 aquares)
-            pygame.draw.rect(self.screen, dark, (x, y, 100, 100), 0) #going to be the dark square
-            pygame.draw.rect(self.screen, white, (x, y, 100, 100), 2) #going to be the white square borda(?)
+            for index, item in enumerate(self.items):
+                 #Square position
+                row = index // 4 #Divide by 4
+                col = index % 4  #Divide by 4
 
-            #Item name
-            text_item = self.font.render(item["name"], True, white)
-            self.screen.blit(text_item, (x+5, y+110)) #just ajustments to text appears above the sqaure (em cima do quadrado)
+                x = x_start + (col*x_gap)
+                y = y_start +(row * y_gap)
 
-            #price
-            price_item = self.font.render(f"{item['price']} coins", True, (0,255,0))
-            self.screen.blit(price_item, (x+20, y+130))
+                #Draw the squares (we need to have 8 aquares)
+                pygame.draw.rect(self.screen, dark, (x, y, 100, 100), 0) #going to be the dark square
+                pygame.draw.rect(self.screen, white, (x, y, 100, 100), 2) #going to be the white square borda(?)
 
-        if self.player.monetary_system.spend_money(item["price"]):
-            #if we have enough balance:
-            self.player.inventory[item["name"]] = item["object"]
+                #Item name
+                text_item = self.font.render(item["name"], True, white)
+                self.screen.blit(text_item, (x+5, y+110)) #just ajustments to text appears above the sqaure (em cima do quadrado)
+
+                #price
+                price_item = self.font.render(f"{item['price']} coins", True, (0,255,0))
+                self.screen.blit(price_item, (x+20, y+130))
+
+            if self.player.monetary_system.spend_money(item["price"]):
+                #if we have enough balance:
+                self.player.inventory[item["name"]] = item["object"]
+
+            pygame.display.flip()
+            self.clock.tick(60)
