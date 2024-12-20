@@ -1,5 +1,4 @@
 from utils import * #acho que não é preciso
-from utils import under_construction #acho que não é preciso
 import pygame
 from config import resolution, width, height
 from weapons import MachineGun, ShotGun, SniperRifle, Flamethrower
@@ -37,14 +36,14 @@ class Shop():
 
     def shop(self):
         square_positions = [
-            (170, 210, 270, 310),  # Quadrado 1
-            (320, 210, 420, 310),  # Quadrado 2
-            (470, 210, 570, 310),  # Quadrado 3
-            (620, 210, 720, 310),  # Quadrado 4
-            (170, 360, 270, 460),  # Quadrado 5
-            (320, 360, 420, 460),  # Quadrado 6
-            (470, 360, 570, 460),  # Quadrado 7
-            (620, 360, 720, 460),  # Quadrado 8
+            (254, 318, 358, 422),  # Quadrado 1
+            (390, 318, 494, 422),  # Quadrado 2
+            (528, 318, 632, 422),  # Quadrado 3
+            (666, 318, 770, 422),  # Quadrado 4
+            (254, 477, 358, 581),  # Quadrado 5
+            (390, 477, 494, 581),  # Quadrado 6
+            (528, 477, 632, 581),  # Quadrado 7
+            (666, 477, 770, 581),  # Quadrado 8
         ]
 
         while self.running:

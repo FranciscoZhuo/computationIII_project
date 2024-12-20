@@ -17,7 +17,7 @@ from treasurechest import *
 def game_loop():
     player = Player()
     pygame.mixer.music.stop()
-    current_state = "intro1"
+    current_state = "shop"
 
     while True:
         if current_state == "intro1":
