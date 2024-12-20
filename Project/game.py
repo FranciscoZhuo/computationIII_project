@@ -301,7 +301,7 @@ def level1(player: Player):
     pygame.mixer.music.play(-1)
 
     # Timer Setup
-    level_duration = 30  # Level duration in seconds (e.g., 5 minutes)
+    level_duration = 10  # Level duration in seconds (e.g., 5 minutes)
     start_time = pygame.time.get_ticks()  # Record the start time
 
     # Screen setup
@@ -382,7 +382,7 @@ def level1(player: Player):
                 pygame.display.flip()
                 clock.tick(fps)
 
-            return "cutscene2"  # Transition to shop
+            return "shop"  # Transition to shop
 
         # Event Handling
         for event in pygame.event.get():

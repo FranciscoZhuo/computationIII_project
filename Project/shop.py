@@ -37,18 +37,27 @@ class Shop():
 
     def shop(self):
         square_positions = [
-            (170, 210, 270, 310),  # Quadrado 1
-            (320, 210, 420, 310),  # Quadrado 2
-            (470, 210, 570, 310),  # Quadrado 3
-            (620, 210, 720, 310),  # Quadrado 4
-            (170, 360, 270, 460),  # Quadrado 5
-            (320, 360, 420, 460),  # Quadrado 6
-            (470, 360, 570, 460),  # Quadrado 7
-            (620, 360, 720, 460),  # Quadrado 8
+            (300, 330, 400, 430),  # Quadrado 1
+            (420, 330, 520, 430),  # Quadrado 2
+            (540, 330, 640, 430),  # Quadrado 3
+            (660, 330, 760, 430),  # Quadrado 4
+            (300, 490, 400, 590),  # Quadrado 5
+            (420, 490, 520, 590),  # Quadrado 6
+            (540, 490, 640, 590),  # Quadrado 7
+            (660, 490, 760, 590),  # Quadrado 8
         ]
 
+        #Confirmation button of the
         while self.running:
             self.screen.blit(self.shop_background, (0, 0))  # Drawing the background of the shop
+
+            #Show the current balance
+            balance_text = self.font.render(f"Coins: {self.monetary_system.balance}", True, )
+            self.screen.blit(balance_text, (50, 50))
+
+            #Message
+            instruction_text = self.font.render("Click on the item you want to purchase.", True, white)
+            self.screen.blit(instruction_text, (50, 700))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -58,6 +67,7 @@ class Shop():
                         return "level1"
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         mouse_x, mouse_y = pygame.mouse.get_pos()
+
                         for index, item in enumerate(self.items):
                             x1, y1, x2, y2 = square_positions[index]
 
@@ -77,22 +87,22 @@ class Shop():
                 y_center = (y1 +y2)  // 2
 
                 #Draw the squares (we need to have 8 aquares)
-                pygame.draw.rect(self.screen, dark, (x1, y1, x2 - x1, y2 - y1), 0) #going to be the dark square
-                pygame.draw.rect(self.screen, white, (x1, y1, x2 - x1, y2 - y1), 2) #going to be the white square borda(?)
+                pygame.draw.rect(self.screen, (211, 211, 211), (x1, y1, x2 - x1, y2 - y1), border_radius=10) #going to be the dark square
+                pygame.draw.rect(self.screen, (41, 0, 48), (x1, y1, x2 - x1, y2 - y1), 2, border_radius=10) #going to be the white square borda(?)
 
                 #imagem
                 image_item = pygame.transform.scale(item["object"].image, (80,80))
                 self.screen.blit(image_item, (x_center-40, y_center-40))
 
                 #Item name
-                text_item = self.font.render(item["name"], True, white)
-                text_rect = text_item.get_rect(center=(x_center, y2 + 10))
-                self.screen.blit(text_item, text_rect) #just ajustments to text appears above the sqaure (em cima do quadrado)
+                #text_item = self.font.render(item["name"], True, white)
+                #text_rect = text_item.get_rect(center=(x_center, y2 + 10))
+                #self.screen.blit(text_item, text_rect) #just ajustments to text appears above the sqaure (em cima do quadrado)
 
                 #price
-                price_item = self.font.render(f"{item['price']} coins", True, (0,255,0))
-                price_rect=price_item.get_rect(center=(x_center, y2+30))
-                self.screen.blit(price_item, price_rect)
+                #price_item = self.font.render(f"{item['price']} coins", True, (0,255,0))
+                #price_rect=price_item.get_rect(center=(x_center, y2+35))
+                #self.screen.blit(price_item, price_rect)
 
             pygame.display.flip()
             self.clock.tick(60)
