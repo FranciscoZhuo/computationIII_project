@@ -92,7 +92,7 @@ class Inventory:
         else:
             return None
 class Item(pygame.sprite.Sprite):
-    def __init__(self, name, icon_path, x, y):
+    def __init__(self, name, icon_path, x, y, player):
         super().__init__()
         self.name = name
         self.icon_path = icon_path
@@ -100,6 +100,8 @@ class Item(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (30, 30))  # Adjust size
         self.rect = self.image.get_rect(topleft=(x, y))
 
+        for weapon in player.inventory.items: #iterates over items on the inventory
+            player.inventory.add_item(weapon) #adds weapons to the inventory
 
 
 

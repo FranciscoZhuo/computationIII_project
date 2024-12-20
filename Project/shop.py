@@ -23,14 +23,14 @@ class Shop():
         self.running = True
 
         self.items = [
-            {"name": "Machine Gun", "type": "weapon", "price": 100, "object": MachineGun()},
+            {"name": "Machine Gun", "type": "weapon", "price": 50, "object": MachineGun()},
             {"name": "Shot Gun", "type": "weapon", "price": 150, "object": ShotGun()},
-            {"name": "Sniper Rifle", "type": "weapon", "price": 200, "object": SniperRifle()},
-            {"name": "Flamethrower", "type": "weapon", "price": 250, "object": Flamethrower()},
-            {"name": "Extra Speed", "type": "ability", "price": 100, "object": ExtraSpeed()},
-            {"name": "Shield", "type": "ability", "price": 150, "object": Shield()},
-            {"name": "New Life", "type": "ability", "price": 200, "object": NewLife()},
-            {"name": "Double Damage", "type": "ability", "price": 200, "object": DoubleDamage()},
+            {"name": "Sniper Rifle", "type": "weapon", "price": 100, "object": SniperRifle()},
+            {"name": "Flamethrower", "type": "weapon", "price": 200, "object": Flamethrower()},
+            {"name": "Extra Speed", "type": "ability", "price": 30, "object": ExtraSpeed()},
+            {"name": "Shield", "type": "ability", "price": 50, "object": Shield()},
+            {"name": "New Life", "type": "ability", "price": 75, "object": NewLife()},
+            {"name": "Double Damage", "type": "ability", "price": 50, "object": DoubleDamage()},
         ]
 
         #self.selected_item= None #For now
@@ -50,6 +50,8 @@ class Shop():
         message = ""
         message_time = 0
 
+        small_font = pygame.font.Font("assets/Creepster-Regular.ttf", 20)
+
         #Confirmation button of the
         while self.running:
             self.screen.blit(self.shop_background, (0, 0))  # Drawing the background of the shop
@@ -63,8 +65,10 @@ class Shop():
 
             #Temporary Message
             if message and pygame.time.get_ticks() - message_time < 2000: #2 seconds
-                message_text = self.font.render(message, True, (255, 0, 0)) #red
-                self.screen.blit(message_text, (400, 50)) #where the message is going to appear
+                message_color = (0, 204, 0) if "added to inventory" in message else (255, 102, 102)
+                message_text = self.font.render(message, True, message_color)
+                message_rect = message_text.get_rect(center=(self.screen.get_width() // 2, 50))
+                self.screen.blit(message_text, message_rect) #where the message is going to appear
             elif message:
                 message="" #Clean the message
 
@@ -86,7 +90,7 @@ class Shop():
                                     self.inventory.add_item(item["object"])
                                 elif item["type"] == "ability":
                                     self.inventory.add_ability(item["object"])
-                                message = f"{item['name']} bought!"
+                                message = f"{item['name']} added to inventory!"
                                 message_time = pygame.time.get_ticks()
                             else:
                                 message = "Not enough money!"
@@ -99,7 +103,21 @@ class Shop():
                 x_center = (x1 + x2) // 2
                 y_center = (y1 +y2)  // 2
 
-                #Draw the squares (we need to have 8 aquares)
+                if item["type"] == "weapon" and any(isinstance(i, type(item["object"])) for i in self.inventory.items):
+                    square_color = (255, 153, 153)  # Vermelho para itens comprados
+                elif self.monetary_system.balance < item["price"]:
+                    square_color = (192, 192, 192)  # Cinza para itens não acessíveis
+                else:
+                    square_color = (204, 255, 204)  # Verde para itens disponíveis
+
+                #if item["type"] == "weapon" and item["object"] in self.inventory.items:
+                #    square_color = (255, 153, 153)  # Red for items already purchased
+                #elif self.monetary_system.balance < item["price"]:
+                #    square_color = (192, 192, 192)  # Gray for items not affordable
+                #else:
+                #    square_color = (204, 255, 204)  # Green for items available
+
+                    #Draw the squares (we need to have 8 aquares)
                 pygame.draw.rect(self.screen, (204, 255, 204), (x1, y1, x2 - x1, y2 - y1), border_radius=10) #going to be the dark square
                 pygame.draw.rect(self.screen, (41, 0, 48), (x1, y1, x2 - x1, y2 - y1), 2, border_radius=10) #going to be the white square borda(?)
 
@@ -107,15 +125,16 @@ class Shop():
                 image_item = pygame.transform.scale(item["object"].image, (80,80))
                 self.screen.blit(image_item, (x_center-40, y_center-40))
 
-                #Item name
-                #text_item = self.font.render(item["name"], True, white)
-                #text_rect = text_item.get_rect(center=(x_center, y2 + 10))
-                #self.screen.blit(text_item, text_rect) #just ajustments to text appears above the sqaure (em cima do quadrado)
+                # name item and price item
+                name_text = small_font.render(item["name"], True, white)
+                price_text = small_font.render(f"{item['price']} coins", True, (255,255,102))
 
-                #price
-                #price_item = self.font.render(f"{item['price']} coins", True, (0,255,0))
-                #price_rect=price_item.get_rect(center=(x_center, y2+35))
-                #self.screen.blit(price_item, price_rect)
+                if index < 4: #superior line
+                    self.screen.blit(name_text, (x_center - name_text.get_width() // 2, y1 - 55))
+                    self.screen.blit(price_text, (x_center -price_text.get_width() // 2, y1-35))
+                else: #inferior line
+                    self.screen.blit(name_text, (x_center - name_text.get_width() // 2, y2 + 5))
+                    self.screen.blit(price_text, (x_center - price_text.get_width() // 2, y2 + 25))
 
             pygame.display.flip()
             self.clock.tick(60)

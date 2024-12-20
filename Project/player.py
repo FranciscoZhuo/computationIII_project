@@ -6,8 +6,9 @@ from config import *
 from weapons import Pistol, MachineGun, ShotGun, SniperRifle, Flamethrower
 from health import *
 from monetarysystem import MonetarySystem
-
+from inventory import Inventory
 from powerups import *
+from weapons import Pistol  # Ensure the import for Pistol is correct
 
 
 class Player(pygame.sprite.Sprite):
@@ -21,7 +22,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.inflate_ip(-20, -10)
         self.rect.center = (width // 2, height // 2)
         self.active_powerups={} #Dictionary for the active powerups. This allows monitorization of all the powerups effects
-
+        self.inventory = Inventory()
 
         # Invisibility attributes
         self.invisible = False
@@ -59,9 +60,10 @@ class Player(pygame.sprite.Sprite):
         self.dead = False  # Flag for player death
 
         #Inventory system
-        self.inventory = {"Pistol": Pistol()}
-        self.weapon =self.inventory["Pistol"] #To make pistol the default weapon
-
+        # Add the default weapon to the inventory
+        pistol = Pistol()
+        self.inventory.add_item(pistol)  # Add Pistol to the Inventory
+        self.weapon = pistol  # Set Pistol as the default weapon
         self.monetary_system = MonetarySystem(initial_balance=0)
 
     def update(self, dt, obstacles):

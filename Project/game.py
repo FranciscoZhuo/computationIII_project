@@ -78,7 +78,7 @@ def intro1(player: Player):
 
     # Initialize Inventory
     inventory = Inventory()
-    for weapon in player.inventory.values(): # Assuming player.inventory is defined
+    for weapon in player.inventory.items: # items as a listw
         inventory.add_item(weapon)
 
     # Initialize Health Bar
@@ -386,7 +386,7 @@ def level1(player: Player):
 
     # Initialize Inventory
     inventory = Inventory()
-    for weapon in player.inventory.values():
+    for weapon in player.inventory.items:
         inventory.add_item(weapon) # adding weapons to the inventory
 
     #Initialize the PowerUpController

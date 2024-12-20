@@ -62,7 +62,7 @@ class Pistol(Weapon):
 
 class MachineGun(Weapon):
     def __init__(self):
-        super().__init__(damage=20, fire_rate=0.1, name="Machine Gun", icon="assets/machinegun.png")
+        super().__init__(damage=20, fire_rate=0.3, name="Machine Gun", icon="assets/machinegun.png")
         #strong damage but slower fire rate
 
 class ShotGun(Weapon):
@@ -75,5 +75,5 @@ class SniperRifle(Weapon):
 
 class Flamethrower(Weapon):
     def __init__(self):
-        super().__init__(damage=35, fire_rate=0.2, name="Flamethrower", icon="assets/Flamethrower.png") #MORE EXPENSIVE WEAPON
+        super().__init__(damage=35, fire_rate=0.1, name="Flamethrower", icon="assets/Flamethrower.png") #MORE EXPENSIVE WEAPON
 
