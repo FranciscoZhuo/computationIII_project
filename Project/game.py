@@ -18,6 +18,7 @@ def game_loop():
     player = Player()
     pygame.mixer.music.stop()
     current_state = "intro1"
+    shop_visits = 0  # Track how many times the shop has been visited
 
     while True:
         if current_state == "intro1":
@@ -29,6 +30,14 @@ def game_loop():
         elif current_state == "shop":
             shop_instance = Shop(player)
             current_state = shop_instance.shop()
+            if shop_visits == 0:  # First shop visit
+                current_state = "cutscene2"
+            elif shop_visits == 1:  # Second shop visit
+                current_state = "cutscene3"
+            shop_visits += 1
+
+
+
 
         elif current_state == "gameover":
             current_state = game_over()
@@ -53,6 +62,7 @@ def game_loop():
 
         elif current_state == "endgame":
             current_state = endgame()
+
 
 
 # ==== INTRO 1 ====
@@ -694,7 +704,7 @@ def level2(player: Player):
                 pygame.display.flip()
                 clock.tick(fps)
 
-            return "cutscene3"  # Transition to shop
+            return "shop"  # Transition to shop
 
         # Event Handling
         for event in pygame.event.get():
