@@ -32,7 +32,7 @@ class Ability(ABC, pygame.sprite.Sprite):
 
 class Shield(Ability):
     def __init__(self):
-        super().__init__(name="Shield", duration=30000, image="assets/shield.png")
+        super().__init__(name="Shield", duration=20000, image="assets/shield.png")
         self.start_time = None
         #self.image = pygame.image.load("assets/heart.png").convert_alpha()
         #self.image = pygame.transform.scale(self.image, (40, 40))
@@ -52,7 +52,7 @@ class Shield(Ability):
 
 class ExtraSpeed(Ability):
     def __init__(self):
-        super().__init__(name="Extra Speed", duration=30000, image="assets/rocket.png")
+        super().__init__(name="Extra Speed", duration=20000, image="assets/rocket.png")
         self.start_time = None
         # self.image = pygame.image.load("assets/heart.png").convert_alpha()
         # self.image = pygame.transform.scale(self.image, (40, 40))
@@ -85,5 +85,24 @@ class NewLife(Ability):
 
     def end_ability(self, player):
         pass #no need
+    
+class DoubleDamage(Ability):
+    def __init__(self):
+        super().__init__(name="Double Damage", duration= 20000, image="assets/bullet.png")
+        self.start_time = None
+
+    def apply_ability(self, player):
+        """
+        Double damage on the zombies
+        """
+        self.active=True
+        player.damage *= 2
+        self.start_time = pygame.time.get_ticks()
+
+    def end_ability(self, player):
+        if self.active and pygame.time.get_ticks() - self.start_time >= self.duration:
+            self.active=False
+            player.damage /= 2
+
 
 

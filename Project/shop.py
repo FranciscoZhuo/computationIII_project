@@ -3,7 +3,7 @@ from utils import under_construction #acho que não é preciso
 import pygame
 from config import resolution, width, height
 from weapons import MachineGun, ShotGun, SniperRifle, Flamethrower
-from abilities import ExtraSpeed, Shield, NewLife
+from abilities import ExtraSpeed, Shield, NewLife, DoubleDamage
 from inventory import Inventory
 from monetarysystem import MonetarySystem
 
@@ -30,34 +30,44 @@ class Shop():
             {"name": "Extra Speed", "type": "ability", "price": 100, "object": ExtraSpeed()},
             {"name": "Shield", "type": "ability", "price": 150, "object": Shield()},
             {"name": "New Life", "type": "ability", "price": 200, "object": NewLife()},
-            {"name": "New Life", "type": "ability", "price": 200, "object": NewLife()},
+            {"name": "Double Damage", "type": "ability", "price": 200, "object": DoubleDamage()},
         ]
 
         #self.selected_item= None #For now
 
     def shop(self):
         square_positions = [
-            (300, 330, 400, 430),  # Quadrado 1
-            (420, 330, 520, 430),  # Quadrado 2
-            (540, 330, 640, 430),  # Quadrado 3
-            (660, 330, 760, 430),  # Quadrado 4
-            (300, 490, 400, 590),  # Quadrado 5
-            (420, 490, 520, 590),  # Quadrado 6
-            (540, 490, 640, 590),  # Quadrado 7
-            (660, 490, 760, 590),  # Quadrado 8
+            (254, 318, 360, 428),
+            (390, 318, 496, 428),
+            (528, 318, 634, 428),
+            (666, 318, 772, 428),
+            (254, 477, 360, 589),
+            (390, 477, 496, 589),
+            (528, 477, 634, 589),
+            (666, 477, 772, 589),
         ]
+
+        message = ""
+        message_time = 0
 
         #Confirmation button of the
         while self.running:
             self.screen.blit(self.shop_background, (0, 0))  # Drawing the background of the shop
 
             #Show the current balance
-            balance_text = self.font.render(f"Coins: {self.monetary_system.balance}", True, )
+            balance_text = self.font.render(f"Coins: {self.monetary_system.balance}", True, white)
             self.screen.blit(balance_text, (50, 50))
 
-            #Message
+            #Instructions
             instruction_text = self.font.render("Click on the item you want to purchase.", True, white)
             self.screen.blit(instruction_text, (50, 700))
+
+            #Temporary Message
+            if message and pygame.time.get_ticks() - message_time < 2000: #2 seconds
+                message_text = self.font.render(message, True, (255, 0, 0)) #red
+                self.screen.blit(message_text, (400, 50)) #where the message is going to appear
+            elif message:
+                message="" #Clean the message
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -65,19 +75,23 @@ class Shop():
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         return "level1"
-                    elif event.type == pygame.MOUSEBUTTONDOWN:
-                        mouse_x, mouse_y = pygame.mouse.get_pos()
-
-                        for index, item in enumerate(self.items):
-                            x1, y1, x2, y2 = square_positions[index]
-
-                            if x1 <= mouse_x <= x2 and y1 <= mouse_y <= y2:
-                                #Tries to buy
-                                if self.monetary_system.spend_money(item["price"]):
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_x, mouse_y = pygame.mouse.get_pos()
+                    #Verifies if the player clicked on the item
+                    for index, item in enumerate(self.items):
+                        x1, y1, x2, y2 = square_positions[index]
+                        if x1 <= mouse_x <= x2 and y1 <= mouse_y <= y2:
+                            #Tries to buy
+                            if self.monetary_system.spend_money(item["price"]):
+                                if item["type"] == "weapon":
                                     self.inventory.add_item(item["object"])
-                                    print(f"{item['name']} bought")
-                                else:
-                                    print(f"Not enough money!")
+                                elif item["type"] == "ability":
+                                    self.inventory.add_ability(item["object"])
+                                message = f"{item['name']} bought!"
+                                message_time = pygame.time.get_ticks()
+                            else:
+                                message = "Not enough money!"
+                                message_time=pygame.time.get_ticks()
 
 
 
@@ -87,7 +101,7 @@ class Shop():
                 y_center = (y1 +y2)  // 2
 
                 #Draw the squares (we need to have 8 aquares)
-                pygame.draw.rect(self.screen, (211, 211, 211), (x1, y1, x2 - x1, y2 - y1), border_radius=10) #going to be the dark square
+                pygame.draw.rect(self.screen, (204, 255, 204), (x1, y1, x2 - x1, y2 - y1), border_radius=10) #going to be the dark square
                 pygame.draw.rect(self.screen, (41, 0, 48), (x1, y1, x2 - x1, y2 - y1), 2, border_radius=10) #going to be the white square borda(?)
 
                 #imagem
