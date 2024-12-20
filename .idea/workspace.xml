@@ -4,15 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b01a6e04-67da-48af-afd1-59626e59c860" name="Changes" comment="Design level 1" />
-    <list default="true" id="b01a6e04-67da-48af-afd1-59626e59c860" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Project/assets/Monologue Tay.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/computationIII_project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/computationIII_project.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_17_12_2024_20_37__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_17_12_2024_20_37__Changes_.xml" afterDir="false" />
+    <list default="true" id="b01a6e04-67da-48af-afd1-59626e59c860" name="Changes" comment="Design level 1">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/cutscene.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/cutscene.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/game.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,6 +130,5 @@
     <MESSAGE value="Corrected few issues" />
     <MESSAGE value="Design level 1" />
     <option name="LAST_COMMIT_MESSAGE" value="Design level 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>
