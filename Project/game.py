@@ -51,6 +51,9 @@ def game_loop():
         elif current_state == "level3":
             current_state = level3(player)
 
+        elif current_state == "endgame":
+            current_state = endgame()
+
 
 # ==== INTRO 1 ====
 
@@ -361,7 +364,7 @@ def level1(player: Player):
     pygame.mixer.music.play(-1)
 
     # Timer Setup
-    level_duration = 30  # Level duration in seconds (e.g., 5 minutes)
+    level_duration = 10  # Level duration in seconds (e.g., 5 minutes)
     start_time = pygame.time.get_ticks()  # Record the start time
 
     # Screen setup
@@ -941,21 +944,8 @@ def level3(player: Player):
 
         # End the level when time runs out
         if remaining_time <= 0:
-            # Display the transition message
-            fontc = pygame.font.SysFont("assets/Creepster-Regular.ttf", 40)
-            message = ("Congratulations for surviving!"
-                       " Now entering the shop....")
-            start_time = pygame.time.get_ticks()
 
-            while (pygame.time.get_ticks() - start_time) / 1000 < 5:
-                screen.fill(deep_black)  # Clear screen with black
-                text_surface = fontc.render(message, True, red)
-                text_rect = text_surface.get_rect(center=(width // 2, height // 2))
-                screen.blit(text_surface, text_rect)
-                pygame.display.flip()
-                clock.tick(fps)
-
-            return "cutscene3"  # Transition to shop
+            return "endgame"  # Transition to shop
 
         # Event Handling
         for event in pygame.event.get():
@@ -1155,3 +1145,74 @@ def game_over():
 
 
 # ==== END SCREEN ====
+
+def endgame():
+    # Initialize pygame and screen
+    pygame.init()
+    screen = pygame.display.set_mode(resolution)
+    pygame.display.set_caption("Surge of the Silence")
+
+    # Load background
+    background = pygame.image.load("assets/endscreenbg.png")
+    background = pygame.transform.scale(background, resolution)
+
+    # Load music
+    pygame.mixer.music.load("assets/Taylor Swift - End Game ft. Ed Sheeran, Future.mp3")
+    pygame.mixer.music.play(-1)
+
+    # Fonts
+    font = pygame.font.Font("assets/Creepster-Regular.ttf", 50)
+    font20 = pygame.font.Font("assets/Creepster-Regular.ttf", 20)
+
+    # Texts
+    saved_text = font.render("You saved the world!", True, white)
+    saved_text_rect = saved_text.get_rect(center=(resolution[0] // 2, 150))
+
+    thanks_text = font.render("Thanks for playing!", True, white)
+    thanks_text_rect = thanks_text.get_rect(center=(resolution[0] // 2, 150))
+
+    prompt_text = font20.render('Press "Enter" to return', True, white)
+    prompt_text_rect = prompt_text.get_rect(bottomright=(resolution[0] - 20, resolution[1] - 20))
+
+    # Clock
+    clock = pygame.time.Clock()
+
+    # Phases
+    phase = 0  # 0: Show 'saved', 1: Fade into 'thanks'
+    alpha = 0
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+        screen.fill(deep_black)
+
+        if phase == 0:
+            screen.blit(background, (0, 0))
+            saved_text.set_alpha(alpha)
+            screen.blit(saved_text, saved_text_rect)
+            alpha += 5  # Adjust fade-in speed
+            if alpha >= 255:
+                alpha = 255
+                pygame.time.delay(3000)  # Show for 3 seconds
+                phase = 1
+                alpha = 0
+        elif phase == 1:
+            screen.blit(background, (0, 0))
+            thanks_text.set_alpha(alpha)
+            screen.blit(thanks_text, thanks_text_rect)
+            screen.blit(prompt_text, prompt_text_rect)
+            alpha += 5  # Adjust fade-in speed
+            if alpha >= 255:
+                alpha = 255
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_RETURN]:
+            from interface import interface
+            interface()
+            return
+
+        pygame.display.flip()
+        clock.tick(fps)
