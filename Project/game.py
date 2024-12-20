@@ -359,7 +359,7 @@ def level1(player: Player):
     pygame.mixer.music.play(-1)
 
     # Timer Setup
-    level_duration = 10  # Level duration in seconds (e.g., 5 minutes)
+    level_duration = 30  # Level duration in seconds (e.g., 5 minutes)
     start_time = pygame.time.get_ticks()  # Record the start time
 
     # Screen setup
@@ -548,7 +548,7 @@ def level1(player: Player):
             bullet.draw(screen)
 
         # draw powerups
-        power_up_controller.draw(screen)
+        power_up_controller.draw(screen )
 
         # Render the player
         player.render(screen)
@@ -806,7 +806,7 @@ def level2(player: Player):
             bullet.draw(screen)
 
         # draw powerups
-        power_up_controller.draw(screen)
+        power_up_controller.draw(screen, player)
 
         # Render the player
         player.render(screen)

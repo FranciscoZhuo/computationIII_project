@@ -39,6 +39,18 @@ class PowerUp(ABC, pygame.sprite.Sprite):
         """
         return pygame.time.get_ticks() - self.spawn_time > self.effect_duration  #the player has 15 seconds to get the power up, else it desappears
 
+    def apply_visual_effect(self,player):
+        """
+        This is for the effect on the player when it catches the powerup
+        """
+        pass
+
+    def remove_effect(self, player):
+        """
+        This is for the effect on the player when it catches the powerup and expires
+        """
+        pass
+
 class LifePowerUp(PowerUp):
     def __init__(self, x, y):
         super().__init__(x,y,effect_duration=15000) #the power-up for receiving more 20% of life
@@ -51,17 +63,24 @@ class LifePowerUp(PowerUp):
         Increases the player´s life by 20%
         """
         player.health = min(player.health + player.max_health * 0.2, player.max_health)
+        self.apply_visual_effect()
 
+    def apply_visual_effect(self,player):
+        player.image.fill((0,255,0), special_flags = pygame.BLEND_RGB_ADD) #This will give a green shine
+
+    def remove_effect(self, player):
+        player.image.fill((0,0,0), special_flags = pygame.BLEND_RGB_SUBTRACT) # REMOVES THE GREEN SHINE
 class SlowZombiesPowerUp(PowerUp):
     def __init__(self, x, y):
         super().__init__(x,y,effect_duration=15000) #15 sec
         self.image = pygame.image.load("assets/snail.png")
         self.image = pygame.transform.scale(self.image,(40, 40))
         self.rect = self.image.get_rect(topleft = (x,y))
+        self.original_speed={}
 
     def apply_powerup(self,player, zombies = None):
         """
-        Applies the effect on the zombies.
+        Applies the effect on the zombies. Slows down zombies by 50%.
 
         Args:
             player(Player): Player object
@@ -69,7 +88,11 @@ class SlowZombiesPowerUp(PowerUp):
 
         """
         for zombie in zombies:
+            self.original_speed[zombie]=zombie.speed
             zombie.speed = max(1, zombie.speed // 2)
+
+    def render_visual_effect(self, screen, player_rect):
+        pygame.draw.circle(screen, (0,0,255), player_rect, 50, 3) #Blue aura to the player
 
 class DeSpawnerPowerUp(PowerUp):
     def __init__(self, x, y):
@@ -94,7 +117,7 @@ class DeSpawnerPowerUp(PowerUp):
 class InvisibilityPowerUP(PowerUp):
     def __init__(self, x, y):
         super().__init__(x, y, effect_duration=15000)
-        self.image = pygame.image.load("assets/ghost.png")
+        self.image = pygame.image.load("assets/potion.png")
         self.image = pygame.transform.scale(self.image,(40, 40))
         self.rect = self.image.get_rect(topleft=(x, y))
 

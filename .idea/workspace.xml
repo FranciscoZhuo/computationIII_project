@@ -12,9 +12,13 @@
       <change beforePath="$PROJECT_DIR$/.idea/computationIII_project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/computationIII_project.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_17_12_2024_20_37__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_17_12_2024_20_37__Changes_.xml" afterDir="false" />
+    <list default="true" id="b01a6e04-67da-48af-afd1-59626e59c860" name="Changes" comment="self.galo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/cutscene.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/cutscene.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/player.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/powerups.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/powerups.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/shop.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project/shop.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,5 +147,7 @@
     <option name="LAST_COMMIT_MESSAGE" value="" />
     <MESSAGE value="Added a monologo to intro 1 and created cutscene 2" />
     <option name="LAST_COMMIT_MESSAGE" value="Added a monologo to intro 1 and created cutscene 2" />
+    <MESSAGE value="self.galo" />
+    <option name="LAST_COMMIT_MESSAGE" value="self.galo" />
   </component>
 </project>
