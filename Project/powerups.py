@@ -166,10 +166,11 @@ class PowerUpController:
         if current_time - self.last_spawn > self.interval_spawn:
             x = random.randint (50, 750)
             y = random.randint(50, 550)
-            type_powerup = random.choice([LifePowerUp, SlowZombiesPowerUp, DeSpawnerPowerUp,InvisibilityPowerUP]) #basically, we want the power-up to spawn randomly
-            power_up = type_powerup(x,y)
-            self.power_ups.add(power_up)
-            self.last_spawn = current_time
+            if self.allowed_powerups:  # Ensure there are allowed power-ups to choose from
+                type_powerup = random.choice(self.allowed_powerups)
+                power_up = type_powerup(x, y)
+                self.power_ups.add(power_up)
+                self.last_spawn = current_time
 
     def collisions(self, player, zombies):
         """
