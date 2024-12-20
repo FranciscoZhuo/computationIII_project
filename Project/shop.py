@@ -51,8 +51,7 @@ class Shop():
             self.screen.blit(self.shop_background, (0, 0))  # Drawing the background of the shop
 
             #Show the current balance
-            balance_text = self.font.render(f"Coins: {self.monetary_system.balance}", True, white )
-            self.screen.blit(balance_text, (50, 50))
+            show_coins(self.screen, self.player,x= 50, y=50)
 
             #Message
             instruction_text = self.font.render("Click on the item you want to purchase.", True, white)

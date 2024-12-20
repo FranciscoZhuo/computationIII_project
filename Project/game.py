@@ -17,7 +17,7 @@ from treasurechest import *
 def game_loop():
     player = Player()
     pygame.mixer.music.stop()
-    current_state = "shop"
+    current_state = "intro1"
 
     while True:
         if current_state == "intro1":
@@ -141,7 +141,7 @@ def intro1(player: Player):
         screen.blit(profile, (0, 0))
         inventory.render(screen)
         player_health_bar.draw_in_profile(screen, profile) #Draw health inside the profile
-        monetary_system.show_balance(screen, font, 135, 40)  # Use the pre-loaded font
+        show_coins(screen, player)
 
 
         pygame.display.flip()
@@ -233,8 +233,7 @@ def intro2(player: Player):
         screen.blit(profile, (0, 0))
         inventory.render(screen)
         player_health_bar.draw_in_profile(screen, profile) #Draw health inside the profile
-        monetary_system.show_balance(screen, font, 135, 40)  # Use the pre-loaded font
-
+        show_coins(screen, player)
 
         pygame.display.flip()
 
@@ -331,7 +330,7 @@ def intro3(player: Player):
         screen.blit(profile, (0, 0))
         inventory.render(screen)
         player_health_bar.draw_in_profile(screen, profile) #Draw health inside the profile
-        monetary_system.show_balance(screen, font, 135, 40)  # Use the pre-loaded font
+        show_coins(screen, player)
 
 
         pygame.display.flip()
@@ -500,7 +499,7 @@ def level1(player: Player):
                 bullet.kill()  # Destroy the bullet
                 if zombie.health <= 0:
                     zombie.kill()  # Destroy the enemy
-                    monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
+                    player.monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
 
         # Check for collisions between player and enemies
         for zombie in zombies:
@@ -563,8 +562,7 @@ def level1(player: Player):
 
 
         # Shows monetary balance
-        font1 = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 25)
-        monetary_system.show_balance(screen, font1, 135, 40)
+        show_coins(screen, player)
 
         # Draw timer on the screen
         font = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 30)
@@ -758,7 +756,7 @@ def level2(player: Player):
                 bullet.kill()  # Destroy the bullet
                 if zombie.health <= 0:
                     zombie.kill()  # Destroy the enemy
-                    monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
+                    player.monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
 
         # Check for collisions between player and enemies
         for zombie in zombies:
@@ -821,8 +819,7 @@ def level2(player: Player):
 
 
         # Shows monetary balance
-        font1 = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 25)
-        monetary_system.show_balance(screen, font1, 135, 40)
+        show_coins(screen, player)
 
         # Draw timer on the screen
         font = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 30)
@@ -1007,7 +1004,7 @@ def level3(player: Player):
                 bullet.kill()  # Destroy the bullet
                 if zombie.health <= 0:
                     zombie.kill()  # Destroy the enemy
-                    monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
+                    player.monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
 
         # Check for collisions between player and enemies
         for zombie in zombies:
@@ -1070,8 +1067,7 @@ def level3(player: Player):
 
 
         # Shows monetary balance
-        font1 = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 25)
-        monetary_system.show_balance(screen, font1, 135, 40)
+        show_coins(screen, player)
 
         # Draw timer on the screen
         font = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 30)
