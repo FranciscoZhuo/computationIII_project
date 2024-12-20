@@ -142,14 +142,13 @@ class Player(pygame.sprite.Sprite):
         if self.invisible and pygame.time.get_ticks() - self.invisibility_start > 15000:  # Lasts 15 seconds
             self.invisible = False
             self.invulnerable = False  # Reset immunity
-        # making sure that the powerups effect are applied while active
+            print("Invisibility and invulnerability expired!")
+
         for powerup, start_time in list(self.active_powerups.items()):
             if pygame.time.get_ticks() - start_time > powerup.effect_duration:
                 #Removes the powerup effect when its expired
                 del self.active_powerups[powerup] #del=delete
                 powerup.remove_effect(self) #New powerup method
-            else:
-                powerup.apply_visual_effect(self)
 
     def take_damage(self, amount):
         """
@@ -179,7 +178,7 @@ class Player(pygame.sprite.Sprite):
             screen.blit(temp_image, self.rect.topleft)
         else:
             screen.blit(self.image, self.rect.topleft)
-        # drawing the visual effects
+
         for powerup in self.active_powerups:
             powerup.render_visual_effect(screen, self.rect)
 
@@ -250,6 +249,3 @@ class Player(pygame.sprite.Sprite):
         Draw a red outline around the player's rect for debugging.
         """
         pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)  # Red color, width=2
-
-
-
