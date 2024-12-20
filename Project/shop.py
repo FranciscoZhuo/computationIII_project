@@ -1,5 +1,4 @@
 from utils import * #acho que não é preciso
-from utils import under_construction #acho que não é preciso
 import pygame
 from config import resolution, width, height
 from weapons import MachineGun, ShotGun, SniperRifle, Flamethrower
@@ -9,7 +8,7 @@ from monetarysystem import MonetarySystem
 
 white=(255, 255, 255)
 dark = (50, 50, 50)
-class Shop():
+class Shop:
     def __init__(self, player):
         pygame.init()
         self.player=player
@@ -76,8 +75,9 @@ class Shop():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        return "level1"
+                    if event.key == pygame.K_RETURN:
+                        return "shop"
+
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_x, mouse_y = pygame.mouse.get_pos()
                     #Verifies if the player clicked on the item
@@ -137,4 +137,4 @@ class Shop():
                     self.screen.blit(price_text, (x_center - price_text.get_width() // 2, y2 + 25))
 
             pygame.display.flip()
-            self.clock.tick(60)
+            self.clock.tick(fps)
