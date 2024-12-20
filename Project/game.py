@@ -29,13 +29,16 @@ def game_loop():
 
         elif current_state == "shop":
             shop_instance = Shop(player)
-            current_state = shop_instance.shop()
-            if shop_visits == 0:  # First shop visit
-                current_state = "cutscene2"
-            elif shop_visits == 1:  # Second shop visit
-                current_state = "cutscene3"
-            shop_visits += 1
+            shop_return_state = shop_instance.shop()
+            print(f"Shop returned: {shop_return_state}")
 
+            if shop_return_state == "shop":
+                if shop_visits == 0:
+                    current_state = "cutscene2"
+                elif shop_visits == 1:
+                    current_state = "cutscene3"
+                shop_visits += 1  # Increment shop visits only after valid return
+                pygame.time.delay(200)  # Delay to avoid immediate event handling
 
 
 
@@ -264,6 +267,8 @@ def intro3(player: Player):
     profile = pygame.image.load("assets/Profile.png").convert_alpha() # Use convert_alpha() if it has transparency
     font = pygame.font.SysFont("assets/Creepster-Regular.ttf", 25)  # Load font once
 
+    pygame.mixer.music.load("assets/Monologue Monkey King.mp3")
+    pygame.mixer.music.play(1)
 
 
     # ============ Initialize ================
@@ -442,15 +447,13 @@ def level1(player: Player):
         if remaining_time <= 0:
             # Display the transition message
             fontc = pygame.font.SysFont("assets/Creepster-Regular.ttf", 40)
-            message = ("Congratulations for surviving!"
-                       " Now entering the shop....")
+            message = fontc.render("Entering the shop....", True, red)
             start_time = pygame.time.get_ticks()
 
             while (pygame.time.get_ticks() - start_time) / 1000 < 5:
                 screen.fill(deep_black)  # Clear screen with black
-                text_surface = fontc.render(message, True, red)
-                text_rect = text_surface.get_rect(center=(width // 2, height // 2))
-                screen.blit(text_surface, text_rect)
+                text_rect = message.get_rect(center=(width // 2, height // 2))
+                screen.blit(message, text_rect)
                 pygame.display.flip()
                 clock.tick(fps)
 
@@ -496,7 +499,7 @@ def level1(player: Player):
         treasure_chest.update()
         if treasure_chest.spawned:
             chest_group.add(treasure_chest)
-            print("Chest added to group.")
+
 
 
         # ==== CHECKERS ====
@@ -753,7 +756,7 @@ def level2(player: Player):
         treasure_chest.update()
         if treasure_chest.spawned:
             chest_group.add(treasure_chest)
-            print("Chest added to group.")
+
 
 
         # ==== CHECKERS ====
@@ -1001,7 +1004,6 @@ def level3(player: Player):
         treasure_chest.update()
         if treasure_chest.spawned:
             chest_group.add(treasure_chest)
-            print("Chest added to group.")
 
 
         # ==== CHECKERS ====
