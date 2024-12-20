@@ -36,14 +36,14 @@ class Shop():
 
     def shop(self):
         square_positions = [
-            (254, 318, 358, 422),  # Quadrado 1
-            (390, 318, 494, 422),  # Quadrado 2
-            (528, 318, 632, 422),  # Quadrado 3
-            (666, 318, 770, 422),  # Quadrado 4
-            (254, 477, 358, 581),  # Quadrado 5
-            (390, 477, 494, 581),  # Quadrado 6
-            (528, 477, 632, 581),  # Quadrado 7
-            (666, 477, 770, 581),  # Quadrado 8
+            (254, 318, 360, 428),  # Quadrado 1
+            (390, 318, 496, 428),  # Quadrado 2
+            (528, 318, 634, 428),  # Quadrado 3
+            (666, 318, 772, 428),  # Quadrado 4
+            (254, 477, 360, 589),  # Quadrado 5
+            (390, 477, 496, 589),  # Quadrado 6
+            (528, 477, 634, 589),  # Quadrado 7
+            (666, 477, 772, 589),  # Quadrado 8
         ]
 
         #Confirmation button of the
@@ -51,7 +51,7 @@ class Shop():
             self.screen.blit(self.shop_background, (0, 0))  # Drawing the background of the shop
 
             #Show the current balance
-            balance_text = self.font.render(f"Coins: {self.monetary_system.balance}", True, )
+            balance_text = self.font.render(f"Coins: {self.monetary_system.balance}", True, white )
             self.screen.blit(balance_text, (50, 50))
 
             #Message
