@@ -63,7 +63,7 @@ class LifePowerUp(PowerUp):
         Increases the player´s life by 20%
         """
         player.health = min(player.health + player.max_health * 0.2, player.max_health)
-        self.apply_visual_effect()
+        self.apply_visual_effect(player)
 
     def apply_visual_effect(self,player):
         player.image.fill((0,255,0), special_flags = pygame.BLEND_RGB_ADD) #This will give a green shine

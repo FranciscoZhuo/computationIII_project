@@ -275,9 +275,9 @@ def intro3(player: Player):
     obstacles = pygame.sprite.Group()
 
     # Create obstacles
-    door1 = Obstacle(464, 158, 8, 16)  # Example dimensions and position
-    door2 = Obstacle(646, 254, 8, 16)
-    obstacles.add(door1, door2)
+    door1 = pygame.Rect(464, 158, 8, 16)  # Example dimensions and position
+    door2 = pygame.Rect(646, 254, 8, 16)
+
 
 
 
@@ -314,8 +314,10 @@ def intro3(player: Player):
 
 
         # ========= Level Ending Conditions ===============
-        if player.rect.bottom >= height:
-            return "level3"  # Return the next game state
+        if door1.colliderect(player.rect):
+            return "level3"
+        if door2.colliderect(player.rect):
+            return "level3"
 
 
         # =============== Draws ======================
@@ -806,7 +808,7 @@ def level2(player: Player):
             bullet.draw(screen)
 
         # draw powerups
-        power_up_controller.draw(screen, player)
+        power_up_controller.draw(screen)
 
         # Render the player
         player.render(screen)
