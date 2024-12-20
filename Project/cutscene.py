@@ -95,11 +95,9 @@ def cutscene2():
     # Screen setup
     screen = pygame.display.set_mode(resolution)
     # Font for the text that fades in
-    roboto_font = pygame.font.SysFont("Roboto", 40)
     creepster_font = pygame.font.Font("assets/Creepster-Regular.ttf", 50)
 
     # Font for the skip button
-    roboto_font20 = pygame.font.SysFont("Roboto", 20)
     creepster_font20 = pygame.font.Font("assets/Creepster-Regular.ttf", 20)
 
     # Text setup
