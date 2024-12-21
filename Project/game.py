@@ -419,7 +419,7 @@ def level1(player: Player):
         inventory.add_item(weapon) # adding weapons to the inventory
 
     #Initialize the PowerUpController
-    power_up_controller = PowerUpController()
+    power_up_controller = PowerUpController(player)
     power_up_controller.set_allowed_powerups([LifePowerUp, SlowZombiesPowerUp])  # Restrict power-ups
 
     # Initialize the chest
@@ -547,7 +547,7 @@ def level1(player: Player):
                 bullet.kill()  # Destroy the bullet
                 if zombie.health <= 0:
                     zombie.kill()  # Destroy the enemy
-                    player.monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
+                    player.monetary_system.money_earned(zombie.reward) #Ganha 10€ por zombie derrotado
 
         # Check for collisions between player and enemies
         for zombie in zombies:
@@ -701,7 +701,7 @@ def level2(player: Player):
         inventory.add_item(weapon) # adding weapons to the inventory
 
     #Initialize the PowerUpController
-    power_up_controller = PowerUpController()
+    power_up_controller = PowerUpController(player)
     power_up_controller.set_allowed_powerups([LifePowerUp, SlowZombiesPowerUp, InvisibilityPowerUP])  # Restrict power-ups
 
     # Initialize the chest
@@ -829,7 +829,7 @@ def level2(player: Player):
                 bullet.kill()  # Destroy the bullet
                 if zombie.health <= 0:
                     zombie.kill()  # Destroy the enemy
-                    player.monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
+                    player.monetary_system.money_earned(zombie.reward) #Ganha 10€ por zombie derrotado
 
         # Check for collisions between player and enemies
         for zombie in zombies:
@@ -986,7 +986,7 @@ def level3(player: Player):
         inventory.add_item(weapon) # adding weapons to the inventory
 
     #Initialize the PowerUpController
-    power_up_controller = PowerUpController()
+    power_up_controller = PowerUpController(player)
     power_up_controller.set_allowed_powerups([LifePowerUp, SlowZombiesPowerUp, InvisibilityPowerUP, DeSpawnerPowerUp])  # Restrict power-ups
 
     # Initialize the chest
@@ -1088,7 +1088,7 @@ def level3(player: Player):
                 bullet.kill()  # Destroy the bullet
                 if zombie.health <= 0:
                     zombie.kill()  # Destroy the enemy
-                    player.monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
+                    player.monetary_system.money_earned(zombie.reward) #Ganha 10€ por zombie derrotado
 
         # Check for collisions between player and enemies
         for zombie in zombies:

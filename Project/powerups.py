@@ -171,7 +171,8 @@ class InvisibilityPowerUP(PowerUp):
 #which makes the code more easy to expand but also makes the code more organized and separated by responsabilities.
 
 class PowerUpController:
-    def __init__(self):
+    def __init__(self, player):
+        self.player = player
         self.power_ups = pygame.sprite.Group()
         self.interval_spawn = 10000 #10 sec
         self.last_spawn = pygame.time.get_ticks() #keeps tracking of the last time that a power-up appeared
