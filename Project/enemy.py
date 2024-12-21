@@ -403,5 +403,15 @@ class ExplodingZombie(Enemy):
                 else:  # Player is to the left
                     self.set_animation("run_left")
 
+        if player.invisible:
+            return
+
+
+            direction = math.atan2(player.rect.y - self.rect.y, player.rect.x - self.rect.x)
+            self.rect.x += self.speed * math.cos(direction)
+            self.rect.y += self.speed * math.sin(direction)
+            self.rect.x = int(self.rect.x)
+            self.rect.y = int(self.rect.y)
+
          # Animate movement or attack
         self.animate(dt)

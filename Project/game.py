@@ -386,7 +386,7 @@ def level1(player: Player):
     pygame.mixer.music.play(-1)
 
     # Timer Setup
-    level_duration = 15 # Level duration in seconds
+    level_duration = 60 # Level duration in seconds
     post_level_duration = 10  # Time after zombies stop spawning
     start_time = pygame.time.get_ticks()  # Record the start time
 
@@ -415,7 +415,7 @@ def level1(player: Player):
 
     #Initialize the PowerUpController
     power_up_controller = PowerUpController()
-    power_up_controller.set_allowed_powerups([LifePowerUp, SlowZombiesPowerUp])  # Restrict power-ups
+    power_up_controller.set_allowed_powerups([LifePowerUp, SlowZombiesPowerUp, DeSpawnerPowerUp, InvisibilityPowerUP])  # Restrict power-ups
 
     # Initialize the chest
     treasure_chest = TreasureChest()

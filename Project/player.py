@@ -150,9 +150,10 @@ class Player(pygame.sprite.Sprite):
 
         for powerup, start_time in list(self.active_powerups.items()):
             if pygame.time.get_ticks() - start_time > powerup.effect_duration:
-                #Removes the powerup effect when its expired
-                del self.active_powerups[powerup] #del=delete
-                powerup.remove_effect(self) #New powerup method
+                powerup.remove_effect(self)  # Removes the visual effect
+                del self.active_powerups[powerup]
+            else:
+                powerup.apply_visual_effect(self)
 
     def take_damage(self, amount):
         """

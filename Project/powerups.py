@@ -66,7 +66,7 @@ class LifePowerUp(PowerUp):
         self.apply_visual_effect(player)
 
     def apply_visual_effect(self,player):
-        player.image.fill((0,255,0), special_flags = pygame.BLEND_RGB_ADD) #This will give a green shine
+        player.image.fill((0, 153, 0), special_flags=pygame.BLEND_RGB_ADD)  # green for health
 
     def remove_effect(self, player):
         player.image.fill((0,0,0), special_flags = pygame.BLEND_RGB_SUBTRACT) # REMOVES THE GREEN SHINE
@@ -94,6 +94,19 @@ class SlowZombiesPowerUp(PowerUp):
     def render_visual_effect(self, screen, player_rect):
         pygame.draw.circle(screen, (0,0,255), player_rect, 50, 3) #Blue aura to the player
 
+    def apply_visual_effect(self,player):
+        """
+            Applies a bright blue
+        """
+        player.image.fill((51, 153, 255), special_flags=pygame.BLEND_RGB_ADD)  # bright blue
+
+    def remove_effect(self, player):
+        """
+        Removes the bright blue
+        """
+        player.image.fill((0, 0, 0), special_flags=pygame.BLEND_RGB_SUBTRACT)  # Remove o brilho azul
+
+
 class DeSpawnerPowerUp(PowerUp):
     def __init__(self, x, y):
         super().__init__(x, y, effect_duration= 15000)
@@ -112,12 +125,23 @@ class DeSpawnerPowerUp(PowerUp):
             for zombie in zombies:
                 zombie.kill()
 
+    def apply_visual_effect(self,player):
+        """
+        Applies bright yellow
+        """
+        player.image.fill((255, 255, 153), special_flags=pygame.BLEND_RGB_ADD)  # bright yellow
+
+    def remove_effect(self, player):
+        """
+        removes the bright yellow
+        """
+        player.image.fill((0, 0, 0), special_flags=pygame.BLEND_RGB_SUBTRACT)
 
 
 class InvisibilityPowerUP(PowerUp):
     def __init__(self, x, y):
         super().__init__(x, y, effect_duration=15000)
-        self.image = pygame.image.load("assets/potion.png")
+        self.image = pygame.image.load("assets/ghost.png")
         self.image = pygame.transform.scale(self.image,(40, 40))
         self.rect = self.image.get_rect(topleft=(x, y))
 
@@ -128,10 +152,21 @@ class InvisibilityPowerUP(PowerUp):
         player.invisible = True
         player.invulnerable=True
         player.invisibility_start = pygame.time.get_ticks()
-        print("Player is now invisible and invulnerable!")
-        print(f"Player invisibility status: {player.invisible}")  # Check if player becomes invisible
 
+    def apply_visual_effect(self,player):
+        """
+        Leaves the player a little transparent
+        """
+        player.image.set_alpha(100)
 
+    def remove_effect(self, player):
+        """
+        Removes transparency
+
+        """
+        player.image.set_alpha(255)
+        player.invisible = False
+        player.invulnerable = False
 #It´s important now to create a class, called PowerUpController, because we will implement more than the 2 power-ups that are mandatory
 #which makes the code more easy to expand but also makes the code more organized and separated by responsabilities.
 
@@ -182,16 +217,18 @@ class PowerUpController:
         """
         for power_up in list(self.power_ups): #It´s suposed to create a copy to avoid redundancy
             if pygame.sprite.collide_rect(player, power_up):
-                power_up.apply_powerup(player, zombies)
-                self.power_ups.remove(power_up)
+                power_up.apply_powerup(player, zombies) #applies the power-up effect
+                power_up.apply_visual_effect(player) #applies the visual effect
+                self.power_ups.remove(power_up) #remove the powerup from the screen
 
     def remove_powerups(self):
         """
         Removes power-ups after appears for 15 seconds
         """
-        for power_up in self.power_ups:
-            if power_up.end_powerup():
-                self.power_ups.remove(power_up)
+        for power_up in list(self.power_ups):
+            if power_up.end_powerup(): #verifies if the time has expired
+                power_up.remove_effect(self.player)
+                self.power_ups.remove(power_up)  # Removes the power-up from the list
 
     def draw(self, screen):
         """
