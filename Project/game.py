@@ -29,7 +29,7 @@ def game_loop(player=None, current_state="intro1"):
 
         elif current_state == "level1":
             current_state = level1(player)
-            save_game(player, current_state)  # Auto-save after level 1
+
 
 
         elif current_state == "shop":
@@ -57,8 +57,8 @@ def game_loop(player=None, current_state="intro1"):
             current_state = intro2(player)
 
         elif current_state == "level2":
+
             current_state = level2(player)
-            save_game(player, current_state)  # Auto-save after level 2
 
         elif current_state == "cutscene3":
             current_state = cutscene3()
@@ -71,12 +71,6 @@ def game_loop(player=None, current_state="intro1"):
 
         elif current_state == "endgame":
             current_state = endgame()
-
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_l:  # Manual save
-                    save_game(player, current_state)
-                    print("Game saved manually.")
 
 
 # ==== INTRO 1 ====
@@ -397,7 +391,7 @@ def level1(player: Player):
     pygame.mixer.music.play(-1)
 
     # Timer Setup
-    level_duration = 60 # Level duration in seconds
+    level_duration = 30 # Level duration in seconds
     post_level_duration = 10  # Time after zombies stop spawning
     start_time = pygame.time.get_ticks()  # Record the start time
 
@@ -426,7 +420,7 @@ def level1(player: Player):
 
     #Initialize the PowerUpController
     power_up_controller = PowerUpController()
-    power_up_controller.set_allowed_powerups([LifePowerUp, SlowZombiesPowerUp, DeSpawnerPowerUp, InvisibilityPowerUP])  # Restrict power-ups
+    power_up_controller.set_allowed_powerups([LifePowerUp, SlowZombiesPowerUp])  # Restrict power-ups
 
     # Initialize the chest
     treasure_chest = TreasureChest()
@@ -993,7 +987,7 @@ def level3(player: Player):
 
     #Initialize the PowerUpController
     power_up_controller = PowerUpController()
-    power_up_controller.set_allowed_powerups([LifePowerUp, SlowZombiesPowerUp, InvisibilityPowerUP])  # Restrict power-ups
+    power_up_controller.set_allowed_powerups([LifePowerUp, SlowZombiesPowerUp, InvisibilityPowerUP, DeSpawnerPowerUp])  # Restrict power-ups
 
     # Initialize the chest
     treasure_chest = TreasureChest()

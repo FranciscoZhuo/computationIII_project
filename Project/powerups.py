@@ -232,7 +232,7 @@ class PowerUpController:
 
     def draw(self, screen):
         """
-        Active power-ups
+        Active power-upsa
 
         Args:
             screen(Surface): Game screen

@@ -68,13 +68,11 @@ def interface():
                         rules_()
                     elif 475 < mouse[1] < 535:  # CREDITS
                         credits_()
-                    elif 550 < mouse[1] < 610:  # QUIT
-                        player = Player()  # Create a new player instance
-                        loaded_level = load_game(player)  # Load the saved game
-                        if loaded_level:
-                            print(f"Game loaded! Starting at: {loaded_level}")
-                            game_loop(player, loaded_level)  # Pass player and loaded state
-                    elif 625  < mouse[1] < 685:  # QUIT
+
+                    elif 550 < mouse[1] < 610:  # load
+                        pass
+
+                elif 625  < mouse[1] < 685:  # QUIT
                         pygame.quit()
 
             if ev.type == pygame.MOUSEBUTTONDOWN:
