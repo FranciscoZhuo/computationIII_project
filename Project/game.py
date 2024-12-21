@@ -14,11 +14,14 @@ from treasurechest import *
 
 
 # ==== GAME LOOP =====
-def game_loop():
-    player = Player()
+def game_loop(player=None, current_state="intro1"):
+    if player is None:
+        player = Player()  # Create a new player if none is provided
     pygame.mixer.music.stop()
-    current_state = "intro1"
+
+    pygame.mixer.music.stop()
     shop_visits = 0  # Track how many times the shop has been visited
+
 
     while True:
         if current_state == "intro1":
@@ -26,6 +29,8 @@ def game_loop():
 
         elif current_state == "level1":
             current_state = level1(player)
+            save_game(player, current_state)  # Auto-save after level 1
+
 
         elif current_state == "shop":
             shop_instance = Shop(player)
@@ -53,6 +58,7 @@ def game_loop():
 
         elif current_state == "level2":
             current_state = level2(player)
+            save_game(player, current_state)  # Auto-save after level 2
 
         elif current_state == "cutscene3":
             current_state = cutscene3()
@@ -66,6 +72,11 @@ def game_loop():
         elif current_state == "endgame":
             current_state = endgame()
 
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_l:  # Manual save
+                    save_game(player, current_state)
+                    print("Game saved manually.")
 
 
 # ==== INTRO 1 ====

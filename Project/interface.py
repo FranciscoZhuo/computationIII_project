@@ -69,6 +69,12 @@ def interface():
                     elif 475 < mouse[1] < 535:  # CREDITS
                         credits_()
                     elif 550 < mouse[1] < 610:  # QUIT
+                        player = Player()  # Create a new player instance
+                        loaded_level = load_game(player)  # Load the saved game
+                        if loaded_level:
+                            print(f"Game loaded! Starting at: {loaded_level}")
+                            game_loop(player, loaded_level)  # Pass player and loaded state
+                    elif 625  < mouse[1] < 685:  # QUIT
                         pygame.quit()
 
             if ev.type == pygame.MOUSEBUTTONDOWN:
@@ -136,14 +142,16 @@ def interface():
         wilderness_color = light_blue_green if 325 < mouse[1] < 385 and 362 < mouse[0] < 662 else purple
         rules_color = light_blue_green if 400 < mouse[1] < 460 and 362 < mouse[0] < 662 else purple
         credits_color = light_blue_green if 475 < mouse[1] < 537 and 362 < mouse[0] < 662 else purple
-        quit_color = light_blue_green if 550 < mouse[1] < 610 and 362 < mouse[0] < 662 else purple
+        load_color = light_blue_green if 550 < mouse[1] < 610 and 362 < mouse[0] < 662 else purple
+        quit_color = light_blue_green if 625 < mouse[1] < 685 and 362 < mouse[0] < 662 else purple
 
         #text colors
         black = (0, 0, 0)
         wilderness_text_color = black if 325 < mouse[1] < 385 and 362 < mouse[0] < 662 else white
         rules_text_color = black if 400 < mouse[1] < 460 and 362 < mouse[0] < 662 else white
         credits_text_color = black if 475 < mouse[1] < 537 and 362 < mouse[0] < 662 else white
-        quit_text_color = black if 550 < mouse[1] < 610 and 362 < mouse[0] < 662 else white
+        load_text_color = black if 550 < mouse[1] < 610 and 362 < mouse[0] < 662 else white
+        quit_text_color = black if 625 < mouse[1] < 685 and 362 < mouse[0] < 662 else white
 
 
         #Centralizing the buttons
@@ -157,12 +165,14 @@ def interface():
         pygame.draw.rect(screen, wilderness_color, [x_button, 325, width_button, height_button], border_radius=15)
         pygame.draw.rect(screen, rules_color, [x_button, 400, width_button, height_button], border_radius=15)
         pygame.draw.rect(screen, credits_color, [x_button, 475, width_button, height_button], border_radius=15)
-        pygame.draw.rect(screen, quit_color, [x_button, 550, width_button, height_button], border_radius=15)
+        pygame.draw.rect(screen, load_color, [x_button, 550, width_button, height_button], border_radius=15)
+        pygame.draw.rect(screen, quit_color, [x_button, 625, width_button, height_button], border_radius=15)
 
         # text
         start_text = creepster_font.render("START GAME", True, wilderness_text_color)
         rules_text = creepster_font.render("RULES", True, rules_text_color)
         credits_text = creepster_font.render("CREDITS", True, credits_text_color)
+        load_text = creepster_font.render("LOAD GAME", True, load_text_color)
         quit_text = creepster_font.render("QUIT", True, quit_text_color)
 
 
@@ -188,10 +198,17 @@ def interface():
         )
         screen.blit(credits_text, credit_rect)
 
+        # Load
+        # pygame.draw.rect(screen, light_blue_green, [860, 690, 150, 60], border_radius=20)
+        load_rect = load_text.get_rect(
+            center=(x_center, 550 + height_button // 2)
+        )
+        screen.blit(load_text, load_rect)
+
         # Quit
         #pygame.draw.rect(screen, light_blue_green, [860, 690, 150, 60], border_radius=20)
         quit_rect = quit_text.get_rect(
-            center=(x_center, 550 + height_button // 2)
+            center=(x_center, 625 + height_button // 2)
         )
         screen.blit(quit_text, quit_rect)
 
