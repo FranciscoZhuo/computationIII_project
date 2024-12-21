@@ -331,7 +331,9 @@ def intro3(player: Player):
                     if selected_weapon:
                         player.weapon_switching(selected_weapon.name)
 
+
         # ==== Updates (Grouped) ====
+        
         player_group.update(dt, obstacles)
         player_health_bar.update(player.health)
 
@@ -567,6 +569,9 @@ def level1(player: Player):
 
 
         # ==== UPDATES ====
+
+        #Update the active abilities on the player
+        player.update_abilities()
 
         # Update positions
         player_group.update(dt, obstacles)
@@ -836,6 +841,9 @@ def level2(player: Player):
 
         # ==== UPDATES ====
 
+        # Update the active abilities on the player
+        player.update_abilities()
+
         # Update positions
         player_group.update(dt, obstacles)
         player_health_bar.update(player.health)
@@ -1082,6 +1090,9 @@ def level3(player: Player):
 
 
         # ==== UPDATES ====
+
+        # Update the active abilities on the player
+        player.update_abilities()
 
         # Update positions
         player_group.update(dt, obstacles)

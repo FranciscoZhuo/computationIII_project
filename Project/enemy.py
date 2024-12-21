@@ -75,7 +75,7 @@ class NormalZombie(Enemy):
         self.health = 50  # Same health as Enemy
         self.health_bar = HealthBar(self.health)  # Add health bar
         self.damage = 10
-        self.reward = 10 #The coins gained for killing this zombie
+        self.reward = 15 #The coins gained for killing this zombie
 
 
         # Load animation frames
@@ -155,7 +155,7 @@ class FastZombie(Enemy):
         self.health = 35  # Lower health since they're faster
         self.health_bar = HealthBar(self.health)  # Add health bar
         self.damage = 5
-        self.reward = 15
+        self.reward = 30
 
         # Load animation frames
         self.animations = {
@@ -234,7 +234,7 @@ class TankZombie(Enemy):
         self.health = 70  # Much higher health
         self.health_bar = HealthBar(self.health)  # Add health bar
         self.damage = 7
-        self.reward = 25
+        self.reward = 50
 
         # Load animation frames
         self.animations = {
@@ -317,6 +317,7 @@ class ExplodingZombie(Enemy):
         self.has_damaged = False  # Track if damage has been dealt
         self.damage = 50  # Explosion damage
         self.damage_radius = 50  # Explosion radius
+        self.reward = 70
 
         self.exploding = False
 
