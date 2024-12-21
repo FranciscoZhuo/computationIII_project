@@ -108,12 +108,12 @@ class Shop:
                 x_center = (x1 + x2) // 2
                 y_center = (y1 +y2)  // 2
 
-                if item["type"] == "weapon" and item["object"] in self.inventory.items:
-                    square_color = (255, 153, 153)  # Vermelho para itens comprados
+                if item["type"] == "weapon" and item["object"] in self.inventory.items: #Checks if the item is already on the inventory
+                    square_color = (192, 192, 192) # Grey to the items bought
                 elif self.monetary_system.balance < item["price"]:
-                    square_color = (192, 192, 192)  # Cinza para itens não acessíveis
+                    square_color = (255, 153, 153)  # Red if you don´t have enough money.
                 else:
-                    square_color = (204, 255, 204)  # Verde para itens disponíveis
+                    square_color = (204, 255, 204)  # Green if you have enough money and not bought yet.
 
                     #Draw the squares (we need to have 8 aquares)
                 pygame.draw.rect(self.screen, square_color, (x1, y1, x2 - x1, y2 - y1), border_radius=10) #going to be the dark square
