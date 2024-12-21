@@ -186,7 +186,7 @@ def intro2(player: Player):
 
     # Initialize Inventory
     inventory = Inventory()
-    for weapon in player.inventory.items: # Assuming player.inventory is defined
+    for weapon in player.inventory.items:
         inventory.add_item(weapon)
 
     # Initialize Health Bar
@@ -504,9 +504,6 @@ def level1(player: Player):
                     selected_weapon = inventory.get_selected_item()
                     if selected_weapon:
                         player.weapon_switching(selected_weapon.name)
-                    else:
-                        print("No weapon selected.")
-
         # Shooting
         player.shoot(bullets, zombies)
 
@@ -543,7 +540,7 @@ def level1(player: Player):
                 bullet.kill()  # Destroy the bullet
                 if zombie.health <= 0:
                     zombie.kill()  # Destroy the enemy
-                    player.monetary_system.money_earned(zombie.reward)
+                    player.monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
 
         # Check for collisions between player and enemies
         for zombie in zombies:
@@ -666,7 +663,8 @@ def level2(player: Player):
     pygame.mixer.music.play(-1)
 
     # Timer Setup
-    level_duration = 10  # Level duration in seconds (e.g., 5 minutes)
+    level_duration = 15 # Level duration in seconds
+    post_level_duration = 10  # Time after zombies stop spawning
     start_time = pygame.time.get_ticks()  # Record the start time
 
     # Screen setup
@@ -714,6 +712,15 @@ def level2(player: Player):
     fade_surface.fill((0, 0, 0))
     fade_alpha = 255
 
+    # Game phases
+    phase = "main"  # "main" or "post_level"
+    post_level_start_time = None
+
+    # Flickering message setup
+    flicker_timer = 0
+    flicker_interval = 500  # Message visibility toggles every 500ms
+    show_message = True
+    font = pygame.font.Font("assets/Creepster-Regular.ttf", 60)
 
     # ==== GAME LOOP ====
     running = True
@@ -731,23 +738,34 @@ def level2(player: Player):
         elapsed_time = (pygame.time.get_ticks() - start_time) / 1000  # Convert to seconds
         remaining_time = max(level_duration - elapsed_time, 0)  # Remaining time in seconds
 
-        # End the level when time runs out
-        if remaining_time <= 0:
-            # Display the transition message
-            fontc = pygame.font.SysFont("assets/Creepster-Regular.ttf", 40)
-            message = ("Congratulations for surviving!"
-                       " Now entering the shop....")
-            start_time = pygame.time.get_ticks()
+        # Phase transition
+        if phase == "main" and remaining_time <= 0:
+            phase = "post_level"
+            post_level_start_time = pygame.time.get_ticks()
+            zombies.empty()
 
-            while (pygame.time.get_ticks() - start_time) / 1000 < 5:
-                screen.fill(deep_black)  # Clear screen with black
-                text_surface = fontc.render(message, True, red)
-                text_rect = text_surface.get_rect(center=(width // 2, height // 2))
-                screen.blit(text_surface, text_rect)
-                pygame.display.flip()
-                clock.tick(fps)
+        # Transition to shop after post-level duration
+        if phase == "post_level" and post_level_start_time:
+            post_elapsed_time = (pygame.time.get_ticks() - post_level_start_time) / 1000
+            if post_elapsed_time >= post_level_duration:
+                # Start fade-out effect
+                for alpha in range(0, 256, 5):  # Gradually increase alpha
+                    fade_surface.set_alpha(alpha)  # Set the transparency level
+                    screen.blit(background, (0, 0))  # Redraw the background
+                    player_group.draw(screen)  # Redraw the player
+                    inventory.render(screen)  # Redraw the inventory
+                    screen.blit(profile, (0, 0))  # Redraw the profile
+                    screen.blit(fade_surface, (0, 0))  # Overlay the fade-out surface
+                    pygame.display.flip()  # Update the display
+                    clock.tick(fps)  # Control the frame rate
+                return "shop"
 
-            return "shop"  # Transition to shop
+        # Flickering message logic
+        if phase == "post_level":
+            flicker_timer += clock.get_time()
+            if flicker_timer >= flicker_interval:
+                show_message = not show_message  # Toggle message visibility
+                flicker_timer = 0
 
         # Event Handling
         for event in pygame.event.get():
@@ -763,10 +781,8 @@ def level2(player: Player):
                     slot_index = event.key - pygame.K_1  # 1 maps to slot 0, 2 to slot 1, etc.
                     inventory.change_slot(slot_index)
                     selected_weapon = inventory.get_selected_item()
-                    if selected_weapon and hasattr(selected_weapon, 'name'):
+                    if selected_weapon:
                         player.weapon_switching(selected_weapon.name)
-                    else:
-                        print("No weapon selected")
         # Shooting
         player.shoot(bullets, zombies)
 
@@ -774,25 +790,17 @@ def level2(player: Player):
 
         # ==== SPAWN ====
 
-        # Spawn timer
-        if zombies_spawn_timer > 0:
-            zombies_spawn_timer -= 1
+        if phase == "main":
+            # Spawn timer
+            if zombies_spawn_timer > 0:
+                zombies_spawn_timer -= 1
 
-        # Weighted random selection
-        zombie_type = random.choices(
-                [FastZombie, TankZombie, NormalZombie],
-                weights=[0.2, 0.2, 0.6],  # 20% Fast, 20% Tank, 10% Exploding, 50% Normal Enemy
-                k=1
-           )[0]
-
-
-        # Spawn
-        if zombies_spawn_timer <= 0:
-            # Randomly select a zombie type
-            zombie_type = random.choice([NormalZombie, FastZombie, TankZombie])
-            new_enemy = zombie_type()  # Instantiate the selected zombie type
-            zombies.add(new_enemy)
-            zombies_spawn_timer = fps  # Every two seconds
+            if zombies_spawn_timer <= 0:
+                # Randomly select a zombie type
+                zombie_type = random.choice([NormalZombie, TankZombie])
+                new_enemy = zombie_type()  # Instantiate the selected zombie type
+                zombies.add(new_enemy)
+                zombies_spawn_timer = fps  # Spawn every second
 
         #Spawning the chest
         treasure_chest.update()
@@ -811,7 +819,7 @@ def level2(player: Player):
                 bullet.kill()  # Destroy the bullet
                 if zombie.health <= 0:
                     zombie.kill()  # Destroy the enemy
-                    player.monetary_system.money_earned(zombie.reward) #Ganha 10€ por zombie derrotado
+                    player.monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
 
         # Check for collisions between player and enemies
         for zombie in zombies:
@@ -841,8 +849,10 @@ def level2(player: Player):
         player_health_bar.update(player.health)
         bullets.update()
         # Update zombies with animation
-        for zombie in zombies:
-            zombie.update(player, dt)
+        if phase == "main":
+            # Update zombies with animation
+            for zombie in zombies:
+                zombie.update(player, dt)
 
 
 
@@ -864,7 +874,7 @@ def level2(player: Player):
             bullet.draw(screen)
 
         # draw powerups
-        power_up_controller.draw(screen)
+        power_up_controller.draw(screen )
 
         # Render the player
         player.render(screen)
@@ -876,10 +886,17 @@ def level2(player: Player):
         # Shows monetary balance
         show_coins(screen, player)
 
-        # Draw timer on the screen
-        fontc = pygame.font.SysFont("assets/Creepster-Regular.ttf)", 30)
-        timer_text = fontc.render(f"Time Left: {int(remaining_time)}s", True, (128, 0, 128))
-        screen.blit(timer_text, (860, 30))
+        # Show remaining time in main phase
+        if phase == "main":
+            fontc = pygame.font.Font("assets/Creepster-Regular.ttf", 25)
+            timer_text = fontc.render(f"Time Left: {int(remaining_time)}s", True, white)
+            screen.blit(timer_text, (860, 30))
+
+        # Show flickering message in post-level phase
+        if phase == "post_level" and show_message:
+            message = font.render("Entering the Monkey Shop...", True, red)
+            message_rect = message.get_rect(center=(width // 2, height // 2))
+            screen.blit(message, message_rect)
 
         # Draw the health bar inside the profile
         player_health_bar.draw_in_profile(screen, profile)
@@ -1058,7 +1075,7 @@ def level3(player: Player):
                 bullet.kill()  # Destroy the bullet
                 if zombie.health <= 0:
                     zombie.kill()  # Destroy the enemy
-                    player.monetary_system.money_earned(zombie.reward) #Ganha 10€ por zombie derrotado
+                    player.monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
 
         # Check for collisions between player and enemies
         for zombie in zombies:
