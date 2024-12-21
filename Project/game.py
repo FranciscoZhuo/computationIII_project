@@ -384,7 +384,7 @@ def level1(player: Player):
     pygame.mixer.music.play(-1)
 
     # Timer Setup
-    level_duration = 150 # Level duration in seconds
+    level_duration = 15 # Level duration in seconds
     post_level_duration = 10  # Time after zombies stop spawning
     start_time = pygame.time.get_ticks()  # Record the start time
 

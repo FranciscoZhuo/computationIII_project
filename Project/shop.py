@@ -136,5 +136,10 @@ class Shop:
                     self.screen.blit(name_text, (x_center - name_text.get_width() // 2, y2 + 5))
                     self.screen.blit(price_text, (x_center - price_text.get_width() // 2, y2 + 25))
 
+            # Render the "Press Enter to continue" message in the bottom-right corner
+            enter_text = small_font.render('Press "Enter" to continue game', True, white)
+            enter_text_rect = enter_text.get_rect(bottomright=(resolution[0] - 20, resolution[1] - 20))
+            self.screen.blit(enter_text, enter_text_rect)
+
             pygame.display.flip()
             self.clock.tick(fps)
