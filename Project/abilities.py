@@ -34,53 +34,54 @@ class Shield(Ability):
     def __init__(self):
         super().__init__(name="Shield", duration=20000, image="assets/shield.png")
         self.start_time = None
-        #self.image = pygame.image.load("assets/heart.png").convert_alpha()
-        #self.image = pygame.transform.scale(self.image, (40, 40))
-        #self.rect = self.image.get_rect(topleft=(x, y))
 
     def apply_ability(self, player):
+        """
+        Receives no damage.
+        """
         self.active = True
         player.shield_active = True
-        self.start_time= pygame.time.get_ticks()
-        #Activates the shield for the player
+        player.active_abilities[self] = pygame.time.get_ticks()
 
     def end_ability(self, player):
-        if self.active and pygame.time.get_ticks() - self.start_time >= self.duration:
+        """
+        Deactivates the shield.
+        """
+        if self.active:
             self.active = False
             player.shield_active = False
-            # Deactivates the shield for the player
 
 class ExtraSpeed(Ability):
     def __init__(self):
         super().__init__(name="Extra Speed", duration=20000, image="assets/rocket.png")
         self.start_time = None
-        # self.image = pygame.image.load("assets/heart.png").convert_alpha()
-        # self.image = pygame.transform.scale(self.image, (40, 40))
-        # self.rect = self.image.get_rect(topleft=(x, y))
 
     def apply_ability(self, player):
+        """
+        Dubles the velocity of the player
+        """
         self.active = True
         player.speed *= 2
-        self.start_time= pygame.time.get_ticks()
-        # Activates the Extra Speed for the player
+        player.active_abilities[self] = pygame.time.get_ticks()
 
     def end_ability(self, player):
-        if self.active and pygame.time.get_ticks() - self.start_time >= self.duration:
+        """
+        Brings the velocity back to normal
+        """
+        if self.active:
             self.active = False
             player.speed /= 2
-            # Deactivates the Extra Speed for the player
 
-#This ability will regenerate by 100% the player´s life
 class NewLife(Ability):
     def __init__(self):
         super().__init__(name="New Life", duration=0, image="assets/health_pack.png")
 
     def apply_ability(self, player):
         """
-        REstores 100% of the player´s health.
+        Restores 100% of the player´s health.
         """
         self.active = True
-        player.health_bar.update(player.health_bar.max_health)
+        player.health = player.max_health
         self.active = False
 
     def end_ability(self, player):
@@ -98,13 +99,16 @@ class DoubleDamage(Ability):
         self.active=True
         if player.weapon:
             player.weapon.damage *= 2
-        self.start_time = pygame.time.get_ticks()
+        player.active_abilities[self] = pygame.time.get_ticks()  # to garantee that the effect expires correctly, we need to know when the ability was activated
 
     def end_ability(self, player):
-        if self.active and pygame.time.get_ticks() - self.start_time >= self.duration:
+        """
+        Removes the effect
+        """
+        if self.active:
             self.active=False
             if player.weapon:
-                player.damage /= 2
+                player.weapon.damage //= 2
 
 
 

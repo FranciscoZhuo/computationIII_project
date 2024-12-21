@@ -9,6 +9,7 @@ from monetarysystem import MonetarySystem
 from inventory import Inventory
 from powerups import *
 from weapons import Pistol  # Ensure the import for Pistol is correct
+from abilities import Ability, DoubleDamage, NewLife, Shield, ExtraSpeed
 
 
 class Player(pygame.sprite.Sprite):
@@ -23,6 +24,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.center = (width // 2, height // 2)
         self.active_powerups={} #Dictionary for the active powerups. This allows monitorization of all the powerups effects
         self.inventory = Inventory()
+        self.active_abilities={}
 
         # Invisibility attributes
         self.invisible = False
@@ -148,9 +150,10 @@ class Player(pygame.sprite.Sprite):
 
         for powerup, start_time in list(self.active_powerups.items()):
             if pygame.time.get_ticks() - start_time > powerup.effect_duration:
-                #Removes the powerup effect when its expired
-                del self.active_powerups[powerup] #del=delete
-                powerup.remove_effect(self) #New powerup method
+                powerup.remove_effect(self)  # Removes the visual effect
+                del self.active_powerups[powerup]
+            else:
+                powerup.apply_visual_effect(self)
 
     def take_damage(self, amount):
         """
@@ -262,3 +265,14 @@ class Player(pygame.sprite.Sprite):
         Draw a red outline around the player's rect for debugging.
         """
         pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)  # Red color, width=2
+
+    def update_abilities(self):
+        """
+        update the status of the active abilities, applying continous effects
+        """
+        for ability, start_time in list(self.active_abilities.items()):
+            if pygame.time.get_ticks() - start_time > ability.duration: #Verifies if expired
+                ability.end_ability(self)
+                del self.active_abilities[ability]
+
+   

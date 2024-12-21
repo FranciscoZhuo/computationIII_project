@@ -57,12 +57,12 @@ class Weapon:
 #Subclasses for the weapons
 class Pistol(Weapon):
     def __init__(self):
-        super().__init__(damage=25, fire_rate=0.5, name="Pistol", icon="assets/pistol.png")
+        super().__init__(damage=15, fire_rate=0.5, name="Pistol", icon="assets/pistol.png")
         #more weak/standard damage and shooting time
 
 class MachineGun(Weapon):
     def __init__(self):
-        super().__init__(damage=10, fire_rate=0.2, name="Machine Gun", icon="assets/machinegun.png")
+        super().__init__(damage=25, fire_rate=0.2, name="Machine Gun", icon="assets/machinegun.png")
         #strong damage but slower fire rate
 
 class ShotGun(Weapon):

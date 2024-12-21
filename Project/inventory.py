@@ -1,6 +1,6 @@
 import pygame
 from config import *
-
+from abilities import Ability
 class Inventory:
     def __init__(self):
         self.items = []  # List to store items in the inventory
@@ -82,15 +82,13 @@ class Inventory:
         """
         Use it when the player is playing
         """
-        if 0 <=index< len(self.items):
+        if 0 <= index < len(self.items):
             ability = self.items[index]
-            if ability.active:
-                return None #ativar
-            self.items.pop(index) #the ability dessapears depending on how much abilities we buy on store
-            ability.apply_ability(player)
-            return ability
-        else:
-            return None
+            if isinstance(ability, Ability): #verifies if it´s an ability
+                self.items.pop(index) #the ability desapears depending on how much abilities we buy on store
+                ability.apply_ability(player)
+                return ability
+        return None
 class Item(pygame.sprite.Sprite):
     def __init__(self, name, icon_path, x, y, player):
         super().__init__()

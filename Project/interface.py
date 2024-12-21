@@ -390,8 +390,9 @@ def load_pages():
     pages = []
     pages.append(pygame.transform.scale(pygame.image.load("assets/pag1.png"), (1024, 768)))
     pages.append(pygame.transform.scale(pygame.image.load("assets/pag2.png"), (1024, 768)))
-    pages.append(pygame.transform.scale(pygame.image.load("assets/pag3.png"), (1024, 768)))
+    pages.append(pygame.transform.scale(pygame.image.load("assets/pag3 .png"), (1024, 768)))
     pages.append(pygame.transform.scale(pygame.image.load("assets/pag4.png"), (1024, 768)))
+    pages.append(pygame.transform.scale(pygame.image.load("assets/pag5.png"), (1024, 768)))
     return pages
 
 

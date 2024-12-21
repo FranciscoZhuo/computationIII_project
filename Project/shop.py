@@ -86,7 +86,7 @@ class Shop:
                         x1, y1, x2, y2 = square_positions[index]
                         if x1 <= mouse_x <= x2 and y1 <= mouse_y <= y2:
                             #Prevent rebuying weapons
-                            if item["type"] == "weapon" and item["object"] in self.inventory.items: #checks if the exact same object exists in the inventory
+                            if item["type"] == "weapon" and any(isinstance(w, type(item["object"])) for w in self.inventory.items):
                                 message = f"{item['name']} is already in your inventory!"
                                 message_time = pygame.time.get_ticks()
                             #Tries to buy
@@ -108,7 +108,7 @@ class Shop:
                 x_center = (x1 + x2) // 2
                 y_center = (y1 +y2)  // 2
 
-                if item["type"] == "weapon" and item["object"] in self.inventory.items: #Checks if the item is already on the inventory
+                if item["type"] == "weapon" and any(isinstance(w, type(item["object"])) for w in self.inventory.items):  #https://stackoverflow.com/questions/33311258/python-check-if-variable-isinstance-of-any-type-in-list
                     square_color = (192, 192, 192) # Grey to the items bought
                 elif self.monetary_system.balance < item["price"]:
                     square_color = (255, 153, 153)  # Red if you don´t have enough money.
