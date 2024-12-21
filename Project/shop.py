@@ -48,7 +48,6 @@ class Shop:
 
         message = ""
         message_time = 0
-
         small_font = pygame.font.Font("assets/Creepster-Regular.ttf", 20)
 
         #Confirmation button of the
@@ -56,7 +55,8 @@ class Shop:
             self.screen.blit(self.shop_background, (0, 0))  # Drawing the background of the shop
 
             #Show the current balance
-            show_coins(self.screen, self.player,x= 50, y=50)
+            balance_text = self.font.render(f"Coins: {self.monetary_system.balance}", True, white)
+            self.screen.blit(balance_text, (50, 50))
 
             #Instructions
             instruction_text = self.font.render("Click on the item you want to purchase.", True, white)
@@ -66,7 +66,7 @@ class Shop:
             if message and pygame.time.get_ticks() - message_time < 2000: #2 seconds
                 message_color = (0, 204, 0) if "added to inventory" in message else (255, 102, 102)
                 message_text = self.font.render(message, True, message_color)
-                message_rect = message_text.get_rect(center=(self.screen.get_width() // 2, 50))
+                message_rect = message_text.get_rect(center=(self.screen.get_width() // 2, 50)) #center the text
                 self.screen.blit(message_text, message_rect) #where the message is going to appear
             elif message:
                 message="" #Clean the message
@@ -74,9 +74,10 @@ class Shop:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
-                        return "shop"
+                        return "next_level"
 
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -84,8 +85,12 @@ class Shop:
                     for index, item in enumerate(self.items):
                         x1, y1, x2, y2 = square_positions[index]
                         if x1 <= mouse_x <= x2 and y1 <= mouse_y <= y2:
+                            #Prevent rebuying weapons
+                            if item["type"] == "weapon" and item["object"] in self.inventory.items: #checks if the exact same object exists in the inventory
+                                message = f"{item['name']} is already in your inventory!"
+                                message_time = pygame.time.get_ticks()
                             #Tries to buy
-                            if self.monetary_system.spend_money(item["price"]):
+                            elif self.monetary_system.spend_money(item["price"]):
                                 if item["type"] == "weapon":
                                     self.inventory.add_item(item["object"])
                                 elif item["type"] == "ability":
@@ -103,22 +108,15 @@ class Shop:
                 x_center = (x1 + x2) // 2
                 y_center = (y1 +y2)  // 2
 
-                if item["type"] == "weapon" and any(isinstance(i, type(item["object"])) for i in self.inventory.items):
+                if item["type"] == "weapon" and item["object"] in self.inventory.items:
                     square_color = (255, 153, 153)  # Vermelho para itens comprados
                 elif self.monetary_system.balance < item["price"]:
                     square_color = (192, 192, 192)  # Cinza para itens não acessíveis
                 else:
                     square_color = (204, 255, 204)  # Verde para itens disponíveis
 
-                #if item["type"] == "weapon" and item["object"] in self.inventory.items:
-                #    square_color = (255, 153, 153)  # Red for items already purchased
-                #elif self.monetary_system.balance < item["price"]:
-                #    square_color = (192, 192, 192)  # Gray for items not affordable
-                #else:
-                #    square_color = (204, 255, 204)  # Green for items available
-
                     #Draw the squares (we need to have 8 aquares)
-                pygame.draw.rect(self.screen, (204, 255, 204), (x1, y1, x2 - x1, y2 - y1), border_radius=10) #going to be the dark square
+                pygame.draw.rect(self.screen, square_color, (x1, y1, x2 - x1, y2 - y1), border_radius=10) #going to be the dark square
                 pygame.draw.rect(self.screen, (41, 0, 48), (x1, y1, x2 - x1, y2 - y1), 2, border_radius=10) #going to be the white square borda(?)
 
                 #imagem

@@ -180,7 +180,7 @@ def intro2(player: Player):
 
     # Initialize Inventory
     inventory = Inventory()
-    for weapon in player.inventory.values(): # Assuming player.inventory is defined
+    for weapon in player.inventory.items: # Assuming player.inventory is defined
         inventory.add_item(weapon)
 
     # Initialize Health Bar
@@ -270,7 +270,7 @@ def intro3(player: Player):
 
     # Initialize Inventory
     inventory = Inventory()
-    for weapon in player.inventory.values(): # Assuming player.inventory is defined
+    for weapon in player.inventory.items: # Assuming player.inventory is defined
         inventory.add_item(weapon)
 
     # Initialize Health Bar
@@ -472,6 +472,9 @@ def level1(player: Player):
                     selected_weapon = inventory.get_selected_item()
                     if selected_weapon:
                         player.weapon_switching(selected_weapon.name)
+                    else:
+                        print("No weapon selected.")
+
         # Shooting
         player.shoot(bullets, zombies)
 
@@ -509,7 +512,7 @@ def level1(player: Player):
                 bullet.kill()  # Destroy the bullet
                 if zombie.health <= 0:
                     zombie.kill()  # Destroy the enemy
-                    player.monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
+                    player.monetary_system.money_earned(zombie.reward)
 
         # Check for collisions between player and enemies
         for zombie in zombies:
@@ -646,7 +649,7 @@ def level2(player: Player):
 
     # Initialize Inventory
     inventory = Inventory()
-    for weapon in player.inventory.values():
+    for weapon in player.inventory.items:
         inventory.add_item(weapon) # adding weapons to the inventory
 
     #Initialize the PowerUpController
@@ -720,8 +723,10 @@ def level2(player: Player):
                     slot_index = event.key - pygame.K_1  # 1 maps to slot 0, 2 to slot 1, etc.
                     inventory.change_slot(slot_index)
                     selected_weapon = inventory.get_selected_item()
-                    if selected_weapon:
+                    if selected_weapon and hasattr(selected_weapon, 'name'):
                         player.weapon_switching(selected_weapon.name)
+                    else:
+                        print("No weapon selected")
         # Shooting
         player.shoot(bullets, zombies)
 
@@ -766,7 +771,7 @@ def level2(player: Player):
                 bullet.kill()  # Destroy the bullet
                 if zombie.health <= 0:
                     zombie.kill()  # Destroy the enemy
-                    player.monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
+                    player.monetary_system.money_earned(zombie.reward) #Ganha 10€ por zombie derrotado
 
         # Check for collisions between player and enemies
         for zombie in zombies:
@@ -907,7 +912,7 @@ def level3(player: Player):
 
     # Initialize Inventory
     inventory = Inventory()
-    for weapon in player.inventory.values():
+    for weapon in player.inventory.items:
         inventory.add_item(weapon) # adding weapons to the inventory
 
     #Initialize the PowerUpController
@@ -1014,7 +1019,7 @@ def level3(player: Player):
                 bullet.kill()  # Destroy the bullet
                 if zombie.health <= 0:
                     zombie.kill()  # Destroy the enemy
-                    player.monetary_system.money_earned(10) #Ganha 10€ por zombie derrotado
+                    player.monetary_system.money_earned(zombie.reward) #Ganha 10€ por zombie derrotado
 
         # Check for collisions between player and enemies
         for zombie in zombies:

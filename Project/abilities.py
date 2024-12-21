@@ -96,13 +96,15 @@ class DoubleDamage(Ability):
         Double damage on the zombies
         """
         self.active=True
-        player.damage *= 2
+        if player.weapon:
+            player.weapon.damage *= 2
         self.start_time = pygame.time.get_ticks()
 
     def end_ability(self, player):
         if self.active and pygame.time.get_ticks() - self.start_time >= self.duration:
             self.active=False
-            player.damage /= 2
+            if player.weapon:
+                player.damage /= 2
 
 
 

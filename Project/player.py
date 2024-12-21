@@ -236,15 +236,26 @@ class Player(pygame.sprite.Sprite):
         dy = zombie.rect.centery - self.rect.centery
         return math.sqrt(dx ** 2 + dy ** 2)
 
-    def weapon_switching(self, name_weapon):
+    def weapon_switching(self, name_weapon, weapon=None):
         """
-        When the player is fighing, it´s possible to switch the weapons he has
+        When the player is fighing, it´s possible to switch weapons
 
         Args:
             name_weapon(str): The name of the weapon we want to switch to
         """
-        if name_weapon in self.inventory:
-            self.weapon = self.inventory[name_weapon]
+        #if weapon is not passed
+        if weapon is None:
+            for w in self.inventory.items:
+                if w.name == name_weapon:
+                    weapon=w
+                    break
+        if name_weapon in self.inventory.items:
+            if weapon.name == name_weapon:
+                self.weapon = weapon
+                print(f"Switched to weapon: {name_weapon}")
+                return
+            print(f"Weapon {name_weapon} not found in inventory.")
+
 
     def draw_debug_rect(self, screen):
         """
