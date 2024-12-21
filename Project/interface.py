@@ -227,7 +227,7 @@ def credits_():
     clock = pygame.time.Clock()
 
     # FONTS
-    bloodcrowfont = pygame.font.Font("assets/bloodcrow.ttf", 35)
+    creepster_font = pygame.font.Font("assets/Creepster-Regular.ttf", 30)
 
     # Background Image
     background = pygame.image.load("img/credits_bg.png")
@@ -239,19 +239,33 @@ def credits_():
 
     # Credits Text
     credits = [
-        "Credits",
+        "Professors",
         "",
-        "Augusto Santos, ajrsantos@novaims.unl.pt",
-        "Diogo Rasteiro, drasteiro@novaims.unl.pt",
-        "Liah Rosenfeld, lrosenfel@novaims.unl.pt",
+        "Augusto Santos",
+        "Diogo Rasteiro",
+        "Liah Rosenfeld",
         "",
-        "Special Thanks:",
-        "Our Amazing Players",
-        "And You for Playing!",
+        "",
+        "Students Names",
+        "",
+        "Bhawna Pawnar 2023xxxx",
+        "Carolina Freire 20231663",
+        "Francisco Zhuo 2023xxxx",
+        "",
+        "",
+        "Voices",
+        "",
+        "Laura Lisboa as Taylor",
+        "André Nicolau as Travis",
+        "Tomás Rodrigues as Monkey",
+        "",
+        "",
+        "",
+        "Thank you for playing!",
     ]
 
     # Render Text Surfaces
-    rendered_text = [bloodcrowfont.render(line, True, white) for line in credits]
+    rendered_text = [creepster_font.render(line, True, (204, 255, 209)) for line in credits]
 
     # Scrolling Variables
     scroll_y = resolution[1]  # Start below the screen
@@ -289,7 +303,7 @@ def credits_():
 
         # Draw the back button [x, y, width, height]
         pygame.draw.rect(screen, deep_black, [450, 600, 140, 60])
-        back_text = bloodcrowfont.render("Back", True, grey)
+        back_text = creepster_font.render("Back", True, grey)
         back_rect = back_text.get_rect(center=(450 + 140 // 2, 600 + 60 // 2))
         screen.blit(back_text, back_rect)
 
